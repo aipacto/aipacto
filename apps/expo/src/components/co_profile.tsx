@@ -1,8 +1,7 @@
+import { CoText } from '@aipacto/shared-ui-core/components'
 import { useUser } from '@clerk/clerk-expo'
 import type React from 'react'
-import { XStack, YStack, useMedia } from 'tamagui'
-
-import { CoText } from '@aipacto/shared-ui-core/components'
+import { useMedia, XStack, YStack } from 'tamagui'
 
 interface CoProfileProps {
 	onPress?: () => void

@@ -1,12 +1,12 @@
+import { CoPage } from '@aipacto/shared-ui-core/components'
+import { useTranslation } from '@aipacto/shared-ui-localization'
+import { logExpoAuth } from '@aipacto/shared-utils-logging'
 import { useSignIn, useSignUp } from '@clerk/clerk-expo'
 import { Effect, Match } from 'effect'
 import { router, useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { showMessage } from 'react-native-flash-message'
 
-import { CoPage } from '@aipacto/shared-ui-core/components'
-import { useTranslation } from '@aipacto/shared-ui-localization'
-import { logExpoAuth } from '@aipacto/shared-utils-logging'
 import { CoAuthVerification } from '~components'
 
 export default function AuthVerificationScreen() {

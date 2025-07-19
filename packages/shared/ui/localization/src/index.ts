@@ -1,11 +1,13 @@
 import type { i18n as I18nInstance } from 'i18next'
+
 import { initI18n } from './i18n'
 
 // Exports
 export { useTranslation } from 'react-i18next'
+
 export {
-	default as i18n,
 	changeLanguage,
+	default as i18n,
 	detectLanguage,
 	initI18n,
 } from './i18n'

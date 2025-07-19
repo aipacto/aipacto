@@ -1,7 +1,31 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"organizeImports": {
-		"enabled": true
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							[
+								":NODE:",
+								":BUN:",
+								":URL:",
+								":PACKAGE_WITH_PROTOCOL:",
+								":PACKAGE:"
+							],
+							":BLANK_LINE:",
+							["@aipacto/**", ":ALIAS:", ":PATH:"]
+						]
+					}
+				}
+			}
+		}
+	},
+	"css": {
+		"formatter": {
+			"enabled": true
+		}
 	},
 	"linter": {
 		"enabled": true,
@@ -36,6 +60,11 @@
 		"lineWidth": 80,
 		"lineEnding": "lf"
 	},
+	"html": {
+		"formatter": {
+			"enabled": true
+		}
+	},
 	"javascript": {
 		"formatter": {
 			"arrowParentheses": "asNeeded",
@@ -50,18 +79,21 @@
 		}
 	},
 	"files": {
-		"ignore": [
-			"./**/.next",
-			"./**/.tamagui",
-			"./**/.yarn",
-			"./**/build",
-			"./**/dist",
-			"./**/node_modules",
-			"./**/public",
-			"./**/scripts",
-			"./services",
-			"apps/marketing/src/payload-types.ts"
+		"includes": [
+			"**",
+			"!./**/.tamagui",
+			"!./**/.tanstack",
+			"!./**/.yarn",
+			"!./**/dist",
+			"!./**/node_modules",
+			"!flake.lock",
+			"!flake.nix"
 		],
 		"ignoreUnknown": true
+	},
+	"vcs": {
+		"enabled": true,
+		"useIgnoreFile": true,
+		"clientKind": "git"
 	}
 }

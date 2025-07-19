@@ -1,6 +1,6 @@
-import { type GetProps, ScrollView, View, YStack, styled } from 'tamagui'
-
 import { useTranslation } from '@aipacto/shared-ui-localization'
+import { type GetProps, ScrollView, styled, View, YStack } from 'tamagui'
+
 import { DEFAULT_BOTTOM_FREE_SPACE } from '../theme'
 import { CoText } from './co_text'
 

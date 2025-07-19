@@ -1,6 +1,5 @@
-import { Schema as S } from 'effect'
-
 import { Entity, ZonedDateTimeString } from '@aipacto/shared-domain'
+import { Schema as S } from 'effect'
 
 /**
  * Status of a harvesting job

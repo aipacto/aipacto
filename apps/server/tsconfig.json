@@ -2,8 +2,7 @@
 	"extends": "@aipacto/shared-tsconfig/node.json",
 	"compilerOptions": {
 		"rootDir": "src",
-		"outDir": "dist",
-		"resolveJsonModule": true
+		"outDir": "dist"
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", "dist"],

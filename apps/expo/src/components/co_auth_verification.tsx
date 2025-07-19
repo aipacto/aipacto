@@ -1,10 +1,3 @@
-import { useClerk, useSignIn, useSignUp } from '@clerk/clerk-expo'
-import { Data, Effect } from 'effect'
-import { useRouter } from 'expo-router'
-import React, { useState } from 'react'
-import { showMessage } from 'react-native-flash-message'
-import { XStack, YStack } from 'tamagui'
-
 import {
 	CoButtonText,
 	CoText,
@@ -12,6 +5,12 @@ import {
 } from '@aipacto/shared-ui-core/components'
 import { useTranslation } from '@aipacto/shared-ui-localization'
 import { logExpoComponents } from '@aipacto/shared-utils-logging'
+import { useClerk, useSignIn, useSignUp } from '@clerk/clerk-expo'
+import { Data, Effect } from 'effect'
+import { useRouter } from 'expo-router'
+import React, { useState } from 'react'
+import { showMessage } from 'react-native-flash-message'
+import { XStack, YStack } from 'tamagui'
 
 class VerificationFailed extends Data.TaggedError('VerificationFailed') {}
 class ClientStateInvalid extends Data.TaggedError('ClientStateInvalid') {}

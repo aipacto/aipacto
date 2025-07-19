@@ -1,3 +1,5 @@
+import { tamaguiConfig } from '@aipacto/shared-ui-core/theme'
+import { logAppExpo } from '@aipacto/shared-utils-logging'
 import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import {
@@ -31,8 +33,6 @@ import FlashMessage from 'react-native-flash-message'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { TamaguiProvider } from 'tamagui'
 
-import { tamaguiConfig } from '@aipacto/shared-ui-core/theme'
-import { logAppExpo } from '@aipacto/shared-utils-logging'
 import { CoAnimatedSplashScreen } from '~components'
 import { LocalizationProvider, ThemeProvider, useTheme } from '~hooks'
 

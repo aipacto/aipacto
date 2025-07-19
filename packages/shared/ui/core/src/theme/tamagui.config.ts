@@ -10,7 +10,7 @@ import { media, pageConstraints } from './media'
 import { gap, spacing } from './spacing'
 import { zIndices } from './z_indices'
 
-// Hold down Option for a second to see some helpful visuals
+// Hold down Alt/Option for a second to see some helpful visuals
 setupDev({
 	visualizer: {
 		key: 'Alt',
@@ -29,6 +29,10 @@ const radius = {
 	...defaultConfig.tokens.radius,
 	...borderRadii,
 	true: borderRadii.none,
+}
+const size = {
+	...defaultConfig.tokens.size,
+	...iconSizes,
 }
 const space = {
 	...defaultConfig.tokens.space,
@@ -54,17 +58,17 @@ export const tamaguiConfig = createTamagui({
 		color: {
 			true: themes.light.onSurface,
 		},
-		iconSizes,
 		radius,
 		page: {
 			...pageConstraints,
 		},
-		size: defaultConfig.tokens.size,
+		size,
 		space,
 		zIndex,
 	}),
 	settings: {
 		defaultFont: 'body',
+		disableSSR: true,
 		// shouldAddPrefersColorThemes: true,
 		// themeClassNameOnRoot: true,
 	},
@@ -72,8 +76,3 @@ export const tamaguiConfig = createTamagui({
 
 // For Babel in Expo app
 export default tamaguiConfig
-
-// export type CustomTamaguiConfigType = typeof tamaguiConfig
-// declare module 'tamagui' {
-// 	interface TamaguiCustomConfig extends CustomTamaguiConfigType {}
-// }

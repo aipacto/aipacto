@@ -1,8 +1,8 @@
+import { logSharedUtils } from '@aipacto/shared-utils-logging'
 import { Path } from '@effect/platform'
 import { NodePath } from '@effect/platform-node'
 import { Effect, Layer } from 'effect'
 
-import { logSharedUtils } from '@aipacto/shared-utils-logging'
 import { Dotenv } from './dotenv'
 
 const log = logSharedUtils.getChildCategory('utils/env')

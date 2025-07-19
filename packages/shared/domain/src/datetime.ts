@@ -1,4 +1,4 @@
-import { Data, Either, Schema as S, pipe } from 'effect'
+import { Data, Either, pipe, Schema as S } from 'effect'
 import { Temporal } from 'temporal-polyfill'
 
 export const ZonedDateTime = Temporal.ZonedDateTime

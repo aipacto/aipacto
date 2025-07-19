@@ -1,8 +1,10 @@
 import { END, START, StateGraph } from '@langchain/langgraph'
 
 import { retrieveDocumentsNode } from './nodes/retrieve_documents'
-import { summarizeRetrievedContentNode } from './nodes/summarize_retrieved_content'
-import { SUMMARIZER_PROMPT_TEMPLATE } from './nodes/summarize_retrieved_content'
+import {
+	SUMMARIZER_PROMPT_TEMPLATE,
+	summarizeRetrievedContentNode,
+} from './nodes/summarize_retrieved_content'
 import { SummarizerAgentState, type SummarizerAgentStateType } from './types'
 
 const summarizerAgentGraph = new StateGraph(SummarizerAgentState)

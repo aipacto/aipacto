@@ -16,6 +16,27 @@
 		"**/dist": true,
 		"**/yarn.lock": true
 	},
+	"terminal.integrated.defaultProfile.linux": "nix-shell",
+	"terminal.integrated.defaultProfile.osx": "nix-shell",
+	"terminal.integrated.defaultProfile.windows": "nix-shell",
+	"terminal.integrated.profiles.linux": {
+		"nix-shell": {
+			"path": "nix",
+			"args": ["develop"]
+		}
+	},
+	"terminal.integrated.profiles.osx": {
+		"nix-shell": {
+			"path": "nix",
+			"args": ["develop"]
+		}
+	},
+	"terminal.integrated.profiles.windows": {
+		"nix-shell": {
+			"path": "nix",
+			"args": ["develop"]
+		}
+	},
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"yaml.customTags": ["!env scalar"]

@@ -1,8 +1,8 @@
+import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import type { RunnableConfig } from '@langchain/core/runnables'
 import { ChatOpenAI } from '@langchain/openai'
 
-import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import type { ImpactAgentStateType } from '../types'
 
 export async function analyzeImpactNode(

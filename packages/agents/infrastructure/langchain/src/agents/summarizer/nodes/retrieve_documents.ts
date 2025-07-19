@@ -1,7 +1,7 @@
-import type { RunnableConfig } from '@langchain/core/runnables'
-
 import { ListLanguageCodes } from '@aipacto/shared-domain'
 import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
+import type { RunnableConfig } from '@langchain/core/runnables'
+
 import { detectLanguage } from '../../../tools/language_detector'
 import { languageAwareEmbeddings } from '../../../utils/embedding_robertaca'
 import { getLocalizedErrorMessage } from '../../../utils/errors'

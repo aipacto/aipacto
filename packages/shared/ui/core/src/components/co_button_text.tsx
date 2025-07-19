@@ -8,9 +8,9 @@ import {
 	ButtonFrame as ButtonFrameTamagui,
 	Button as ButtonTamagui,
 	type GetProps,
-	View,
 	getTokenValue,
 	styled,
+	View,
 } from 'tamagui'
 
 import type { IconProps } from '../icons'

@@ -1,14 +1,17 @@
 import 'dotenv/config'
-import { clerkPlugin } from '@clerk/fastify'
+import { Env } from '@aipacto/shared-utils-env'
+import { logAppServer } from '@aipacto/shared-utils-logging'
 import cors from '@fastify/cors'
 import formbodyPlugin from '@fastify/formbody'
+import webSocketPlugin from '@fastify/websocket'
 import { Effect } from 'effect'
 import Fastify from 'fastify'
 
-import { Env } from '@aipacto/shared-utils-env'
-import { logAppServer } from '@aipacto/shared-utils-logging'
-import { routesAgents } from './routes/agents'
-import { routesThreads } from './routes/threads'
+// import { routesAgents } from './routes/agents'
+// import { routesThreads } from './routes/threads'
+import { routesAuth } from './routes/auth'
+import { routesDocuments } from './routes/documents'
+import { routesDocuments as routesOldDocuments } from './routes/old_documents'
 
 async function main() {
 	try {
@@ -21,11 +24,9 @@ async function main() {
 		process.exit(1)
 	}
 
-	logAppServer.info('Starting server at', process.env.SERVER_URL)
-
 	const serverOptions = {
 		logger: {
-			level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+			level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
 			transport: {
 				target: 'pino-pretty',
 				options: {
@@ -39,7 +40,14 @@ async function main() {
 
 	const server = Fastify(serverOptions)
 
-	// Register formbody plugin to parse form data (required by Clerk)
+	logAppServer.info('Registering WebSocket plugin...')
+	await server.register(webSocketPlugin, {
+		options: {
+			maxPayload: 1048576, // 1MB max message size
+		},
+	})
+
+	// Register formbody plugin to parse form data
 	logAppServer.info('Registering Formbody plugin')
 	server.register(formbodyPlugin)
 
@@ -70,38 +78,46 @@ async function main() {
 		strictPreflight: true,
 	})
 
-	// Register authentication
-	logAppServer.info('Registering Clerk plugin')
-	server.register(clerkPlugin)
-
-	logAppServer.info('Setting error handler')
 	server.setErrorHandler((err, request, reply) => {
+		logAppServer.error('Server error:', err)
+
 		if (!reply.sent) {
 			reply.status(500).send({ error: 'Internal Server Error' })
 		}
 	})
 
-	// Register routes
-	logAppServer.info('Registering routes')
-	await routesAgents(server)
-	await routesThreads(server)
-
-	// Health check route
-	server.get('/check', async () => {
-		return { message: 'Health check' }
+	// Health check route (no authentication required)
+	logAppServer.info('Registering health check route')
+	server.get('/api/health', async () => {
+		return { message: 'OK' }
 	})
 
+	// Authentication routes (no authentication required)
+	logAppServer.info('Registering authentication routes')
+	await routesAuth(server)
+
+	logAppServer.info('Registering API routes under /api prefix...')
+
+	// Register all API routes under /api prefix
+	await server.register(
+		async apiServer => {
+			// await routesAgents(apiServer)
+			await routesOldDocuments(apiServer)
+			await routesDocuments(apiServer)
+			// await routesThreads(apiServer)
+		},
+		{ prefix: '/api' },
+	)
+
 	try {
-		server.listen(
-			{
-				host: process.env.SERVER_HOST || '',
-				port: Number.parseInt(process.env.SERVER_PORT || '', 10),
-			},
-			(err, address) => {
-				if (err) throw err
-				server.log.info(`Server listening at ${address}`)
-			},
-		)
+		const port = 3000
+		await server.listen({
+			host: process.env.SERVER_HOST || '0.0.0.0',
+			port,
+		})
+
+		server.log.info(`Server listening at http://localhost:${port}`)
+		server.log.info(`API available at http://localhost:${port}/api`)
 	} catch (error) {
 		if (error instanceof Error) {
 			logAppServer.error(error.toString())

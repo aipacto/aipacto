@@ -1,9 +1,9 @@
+import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { END } from '@langchain/langgraph'
 import { ChatOpenAI } from '@langchain/openai'
 import { z } from 'zod'
 
-import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import type { SupervisorState, SupervisorUpdate } from '../types'
 
 // List of available agents for routing

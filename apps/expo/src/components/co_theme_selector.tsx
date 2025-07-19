@@ -1,9 +1,9 @@
-import { View, XStack, YStack, styled } from 'tamagui'
-
 import { CoText } from '@aipacto/shared-ui-core/components'
 import { IconMonitor } from '@aipacto/shared-ui-core/icons'
 import { type ThemeName, themes } from '@aipacto/shared-ui-core/theme'
 import { useTranslation } from '@aipacto/shared-ui-localization'
+import { styled, View, XStack, YStack } from 'tamagui'
+
 import { useTheme } from '~hooks'
 
 const ThemeOption = styled(View, {

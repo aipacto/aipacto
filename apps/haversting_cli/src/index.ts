@@ -1,16 +1,14 @@
 import 'dotenv/config'
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import * as p from '@clack/prompts'
-import { Effect, pipe } from 'effect'
-import color from 'picocolors'
-
-import { Crawler } from '@aipacto/harvesting-infra-pipeline'
-import { Scraper } from '@aipacto/harvesting-infra-pipeline'
 import type {
 	CrawlOutput,
 	ScrapeOutput,
 } from '@aipacto/harvesting-infra-pipeline'
+import { Crawler, Scraper } from '@aipacto/harvesting-infra-pipeline'
+import * as p from '@clack/prompts'
+import { Effect, pipe } from 'effect'
+import color from 'picocolors'
 
 import {
 	confirmOperation,

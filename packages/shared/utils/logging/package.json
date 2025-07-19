@@ -9,20 +9,19 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js",
 			"require": "./dist/index.js",
-			"web": "./dist/index.js"
+			"default": "./dist/index.js"
 		}
 	},
 	"scripts": {
 		"build": "tsdown ./src/index.ts --dts --sourcemap --platform neutral",
-		"check-types": "tsc --noEmit",
-		"watch": "tsc --watch --preserveWatchOutput"
+		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
 		"typescript-logging": "^2.2.0",
 		"typescript-logging-category-style": "^2.2.0"
 	},
 	"peerDependencies": {
-		"effect": "^3.14.8"
+		"effect": "^3.17.5"
 	},
 	"devDependencies": {
 		"tsdown": "^0.12.7"

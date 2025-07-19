@@ -34,7 +34,7 @@ pre-commit:
     lint:
       run: |
         echo "✨ Running lint checks..."
-        yarn lint
+        yarn lint:syncpack && yarn lint:biome --staged --diagnostic-level=error
       stage_fixed: true
 
 pre-push:

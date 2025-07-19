@@ -21,7 +21,7 @@
 		"uuid": "^10.0.0"
 	},
 	"peerDependencies": {
-		"effect": "^3.14.8"
+		"effect": "^3.17.5"
 	},
 	"devDependencies": {
 		"@types/uuid": "^10.0.0",

@@ -1,9 +1,7 @@
-import { SplashScreen } from 'expo-router'
-import { useEffect } from 'react'
-import React from 'react'
-import { Animated, type ImageSourcePropType, StyleSheet } from 'react-native'
-
 import { logExpoComponents } from '@aipacto/shared-utils-logging'
+import { SplashScreen } from 'expo-router'
+import React, { useEffect } from 'react'
+import { Animated, type ImageSourcePropType, StyleSheet } from 'react-native'
 
 export function CoAnimatedSplashScreen({
 	children,
