@@ -1,14 +1,13 @@
-import { StringOutputParser } from '@langchain/core/output_parsers'
-import { ChatPromptTemplate } from '@langchain/core/prompts'
-import { DynamicTool } from '@langchain/core/tools'
-import { ChatOpenAI } from '@langchain/openai'
-
 import {
 	type LanguageCode,
 	ListLanguageCodes,
 	ListSupportedLanguagesCodes,
 } from '@aipacto/shared-domain'
 import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
+import { StringOutputParser } from '@langchain/core/output_parsers'
+import { ChatPromptTemplate } from '@langchain/core/prompts'
+import { DynamicTool } from '@langchain/core/tools'
+import { ChatOpenAI } from '@langchain/openai'
 
 /**
  * Tool for detecting the language of a text

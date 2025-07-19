@@ -1,12 +1,11 @@
-import type { UserResource } from '@clerk/types'
-import { useState } from 'react'
-import { showMessage } from 'react-native-flash-message'
-import { XStack, YStack } from 'tamagui'
-
 import type { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
 import { CoButtonText, CoText } from '@aipacto/shared-ui-core/components'
 import { changeLanguage, useTranslation } from '@aipacto/shared-ui-localization'
 import { logExpoPagesSettings } from '@aipacto/shared-utils-logging'
+import type { UserResource } from '@clerk/types'
+import { useState } from 'react'
+import { showMessage } from 'react-native-flash-message'
+import { XStack, YStack } from 'tamagui'
 
 export const CoLanguageSelector = ({
 	user,

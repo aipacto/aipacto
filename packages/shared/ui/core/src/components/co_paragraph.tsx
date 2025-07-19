@@ -3,8 +3,7 @@
  * https://tamagui.dev/docs/components/text
  */
 
-import type { AccessibilityRole } from 'react-native'
-import { Text, type TextProps, isWeb, styled } from 'tamagui'
+import { isWeb, styled, Text, type TextProps } from 'tamagui'
 
 type CoParagraphProps = {
 	lowercase?: boolean
@@ -18,12 +17,7 @@ type CoParagraphProps = {
  * CoParagraph component for paragraph text
  */
 export const CoParagraph = (props: CoParagraphProps) => (
-	<Base
-		{...props}
-		color={props.color ?? '$onSurface'}
-		// For RN compatibility, use 'accessibilityRole' instead of 'role'
-		{...(isWeb ? {} : { accessibilityRole: props.role as AccessibilityRole })}
-	/>
+	<Base {...props} color={props.color ?? '$onSurface'} />
 )
 
 const Base = styled(Text, {

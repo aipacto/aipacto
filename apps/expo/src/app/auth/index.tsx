@@ -1,11 +1,3 @@
-import { useSignIn, useSignUp } from '@clerk/clerk-expo'
-import { Data, Effect, Match, Schema } from 'effect'
-import { useRouter } from 'expo-router'
-import React, { useCallback, useRef, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { showMessage } from 'react-native-flash-message'
-import { YStack } from 'tamagui'
-
 import { Email } from '@aipacto/shared-domain'
 import {
 	CoButtonText,
@@ -15,7 +7,14 @@ import {
 } from '@aipacto/shared-ui-core/components'
 import { useTranslation } from '@aipacto/shared-ui-localization'
 import { logExpoPagesAuth } from '@aipacto/shared-utils-logging'
+import { useSignIn, useSignUp } from '@clerk/clerk-expo'
+import { Data, Effect, Match, Schema } from 'effect'
 import { UnknownException } from 'effect/Cause'
+import { useRouter } from 'expo-router'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { showMessage } from 'react-native-flash-message'
+import { YStack } from 'tamagui'
 
 const log = logExpoPagesAuth.getChildCategory('login')
 

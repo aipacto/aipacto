@@ -1,4 +1,5 @@
 import type { LanguageCode } from '@aipacto/shared-domain'
+
 import { getLocalizedErrorMessage } from './errors'
 
 /**

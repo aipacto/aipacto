@@ -1,11 +1,10 @@
+import { CoButtonText } from '@aipacto/shared-ui-core/components'
+import { useTranslation } from '@aipacto/shared-ui-localization'
+import { logExpoAuthComponents } from '@aipacto/shared-utils-logging'
 import { useClerk } from '@clerk/clerk-expo'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { showMessage } from 'react-native-flash-message'
-
-import { CoButtonText } from '@aipacto/shared-ui-core/components'
-import { useTranslation } from '@aipacto/shared-ui-localization'
-import { logExpoAuthComponents } from '@aipacto/shared-utils-logging'
 
 export function CoButtonSignOut() {
 	const { t } = useTranslation()

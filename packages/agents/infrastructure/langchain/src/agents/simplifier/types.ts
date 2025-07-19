@@ -1,7 +1,6 @@
-import { Annotation, MessagesAnnotation } from '@langchain/langgraph'
-
 import type { SimplifierOutput } from '@aipacto/agents-domain'
 import type { LanguageCode } from '@aipacto/shared-domain'
+import { Annotation, MessagesAnnotation } from '@langchain/langgraph'
 
 export const SimplifierAgentState = Annotation.Root({
 	// Messages for conversation history

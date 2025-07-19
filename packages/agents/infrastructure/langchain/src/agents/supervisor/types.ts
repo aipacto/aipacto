@@ -1,6 +1,5 @@
 import type { LanguageCode } from '@aipacto/shared-domain'
-import { Annotation, MessagesAnnotation } from '@langchain/langgraph'
-import { END } from '@langchain/langgraph'
+import { Annotation, END, MessagesAnnotation } from '@langchain/langgraph'
 
 // Agent supervisor loop state with context
 export const SupervisorAnnotation = Annotation.Root({

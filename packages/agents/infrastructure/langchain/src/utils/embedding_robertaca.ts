@@ -1,9 +1,9 @@
+import { ListLanguageCodes } from '@aipacto/shared-domain'
+import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import type { FeatureExtractionOutput } from '@huggingface/inference'
 import { Embeddings } from '@langchain/core/embeddings'
 import { OpenAIEmbeddings } from '@langchain/openai'
 
-import { ListLanguageCodes } from '@aipacto/shared-domain'
-import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { huggingFaceClient } from '../tools/huggingface'
 import { detectLanguage } from '../tools/language_detector'
 

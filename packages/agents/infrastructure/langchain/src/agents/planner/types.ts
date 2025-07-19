@@ -1,7 +1,6 @@
-import { Annotation, MessagesAnnotation } from '@langchain/langgraph'
-
 import type { PlannerOutput } from '@aipacto/agents-domain'
 import type { LanguageCode } from '@aipacto/shared-domain'
+import { Annotation, MessagesAnnotation } from '@langchain/langgraph'
 
 export const PlannerAgentState = Annotation.Root({
 	// Messages for conversation history

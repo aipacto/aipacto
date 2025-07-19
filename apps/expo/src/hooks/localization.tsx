@@ -1,8 +1,3 @@
-import { useAuth, useUser } from '@clerk/clerk-expo'
-import { useEffect, useState } from 'react'
-import type React from 'react'
-import { ActivityIndicator, View } from 'react-native'
-
 import { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
 import {
 	changeLanguage,
@@ -10,10 +5,16 @@ import {
 	initI18n,
 } from '@aipacto/shared-ui-localization'
 import { logAppExpo } from '@aipacto/shared-utils-logging'
+import { useAuth, useUser } from '@clerk/clerk-expo'
+import type React from 'react'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, View } from 'react-native'
 
 export function LocalizationProvider({
 	children,
-}: { children: React.ReactNode }) {
+}: {
+	children: React.ReactNode
+}) {
 	const { isSignedIn } = useAuth()
 	const { user, isLoaded: isUserLoaded } = useUser()
 	const [isLocalizationReady, setIsLocalizationReady] = useState(false)

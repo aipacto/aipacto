@@ -1,11 +1,3 @@
-import { useUser } from '@clerk/clerk-expo'
-import { format } from 'date-fns'
-import { useRouter } from 'expo-router'
-import { useState } from 'react'
-import React from 'react'
-import { showMessage } from 'react-native-flash-message'
-import { XStack, YStack } from 'tamagui'
-
 import type { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
 import {
 	CoButtonText,
@@ -15,6 +7,13 @@ import {
 } from '@aipacto/shared-ui-core/components'
 import { useTranslation } from '@aipacto/shared-ui-localization'
 import { logExpoPagesSettings } from '@aipacto/shared-utils-logging'
+import { useUser } from '@clerk/clerk-expo'
+import { format } from 'date-fns'
+import { useRouter } from 'expo-router'
+import React, { useState } from 'react'
+import { showMessage } from 'react-native-flash-message'
+import { XStack, YStack } from 'tamagui'
+
 import {
 	CoButtonSignOut,
 	CoLanguageSelector,

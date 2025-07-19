@@ -32,31 +32,43 @@
 		}
 	},
 	"scripts": {
-		"build": "tsdown --config tsdown.config.ts --dts --sourcemap --platform neutral",
+		"build": "tsdown --config tsdown.config.ts --dts --sourcemap --platform browser",
 		"check-types": "tsc --noEmit",
 		"watch": "tsc --watch --preserveWatchOutput"
 	},
 	"dependencies": {
-		"@tamagui/animations-css": "^1.126.1",
-		"@tamagui/animations-moti": "^1.126.1",
-		"@tamagui/config": "^1.126.1",
-		"@tamagui/helpers-icon": "^1.126.1",
-		"@tamagui/lucide-icons": "^1.126.1",
-		"@tamagui/use-direction": "^1.126.1",
+		"@tamagui/animations-css": "^1.132.7",
+		"@tamagui/animations-moti": "^1.132.7",
+		"@tamagui/config": "^1.132.7",
+		"@tamagui/helpers-icon": "^1.132.7",
+		"@tamagui/lucide-icons": "^1.132.7",
+		"@tamagui/use-direction": "^1.132.7",
 		"moti": "^0.30.0"
 	},
 	"peerDependencies": {
 		"@aipacto/shared-domain": "workspace:*",
 		"@aipacto/shared-ui-localization": "workspace:*",
-		"react": "18.3.1",
+		"react": "19.1.0",
 		"react-native": "0.76.9",
 		"react-native-reanimated": "~3.16.1",
 		"react-native-svg": "15.8.0",
-		"tamagui": "^1.126.1"
+		"tamagui": "^1.132.7"
 	},
 	"devDependencies": {
 		"@aipacto/shared-domain": "workspace:*",
 		"@aipacto/shared-ui-localization": "workspace:*",
+		"tamagui": "^1.132.7",
 		"tsdown": "^0.12.7"
+	},
+	"peerDependenciesMeta": {
+		"react-native": {
+			"optional": true
+		},
+		"react-native-reanimated": {
+			"optional": true
+		},
+		"react-native-svg": {
+			"optional": true
+		}
 	}
 }

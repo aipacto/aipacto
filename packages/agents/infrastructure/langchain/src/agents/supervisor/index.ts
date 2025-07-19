@@ -1,6 +1,6 @@
 import { RunnableLambda } from '@langchain/core/runnables'
-import { END, START, StateGraph } from '@langchain/langgraph'
 import type { CompiledGraph } from '@langchain/langgraph'
+import { END, START, StateGraph } from '@langchain/langgraph'
 
 import { simplifierAgentGraph } from '../simplifier'
 import { summarizerAgentGraph } from '../summarizer'

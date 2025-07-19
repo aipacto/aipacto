@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, View, XStack, styled } from 'tamagui'
+import { AnimatePresence, styled, View, XStack } from 'tamagui'
 
 import { IconX } from '../icons'
 import { useTextDirectionality } from '../theme'

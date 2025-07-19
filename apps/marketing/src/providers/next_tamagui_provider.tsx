@@ -3,6 +3,7 @@
 import '@tamagui/core/reset.css'
 import '@tamagui/polyfill-dev'
 
+import { tamaguiConfig } from '@aipacto/shared-ui-core/theme'
 import {
 	type ColorScheme,
 	NextThemeProvider,
@@ -12,8 +13,6 @@ import { useServerInsertedHTML } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
 import { TamaguiProvider } from 'tamagui'
-
-import { tamaguiConfig } from '@aipacto/shared-ui-core/theme'
 
 export const NextTamaguiProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setTheme] = useRootTheme()

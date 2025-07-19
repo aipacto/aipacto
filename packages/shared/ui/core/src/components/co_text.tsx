@@ -2,8 +2,7 @@
  * Inspired in https://tamagui.dev/ui/headings and https://github.com/status-im/status-web/blob/main/packages/components/src/text/text.tsx
  */
 
-import type { AccessibilityRole } from 'react-native'
-import { Text, type TextProps, isWeb, styled } from 'tamagui'
+import { styled, Text, type TextProps } from 'tamagui'
 
 type CoTextProps = {
 	lowercase?: boolean
@@ -17,12 +16,7 @@ type CoTextProps = {
  * CoText based on Material Design https://m3.material.io/styles/typography/
  */
 export const CoText = (props: CoTextProps) => (
-	<Base
-		{...props}
-		color={props.color ?? '$onSurface'}
-		// For RN compatibility, use 'accessibilityRole' instead of 'role'
-		{...(isWeb ? {} : { accessibilityRole: props.role as AccessibilityRole })}
-	/>
+	<Base {...props} color={props.color ?? '$onSurface'} />
 )
 
 const Base = styled(Text, {

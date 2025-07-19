@@ -1,10 +1,10 @@
+import type { SummarizerOutput } from '@aipacto/agents-domain'
+import { ListLanguageCodes } from '@aipacto/shared-domain'
+import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import type { RunnableConfig } from '@langchain/core/runnables'
 import { ChatOpenAI } from '@langchain/openai'
 
-import type { SummarizerOutput } from '@aipacto/agents-domain'
-import { ListLanguageCodes } from '@aipacto/shared-domain'
-import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { getLocalizedErrorMessage } from '../../../utils/errors'
 import { extractKeyPoints } from '../../../utils/text_analysis'
 import type { SummarizerAgentStateType } from '../types'

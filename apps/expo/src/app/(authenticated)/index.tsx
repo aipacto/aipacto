@@ -1,8 +1,3 @@
-import { useRouter } from 'expo-router'
-import { useState } from 'react'
-import React from 'react'
-import { ScrollView, XStack, YStack } from 'tamagui'
-
 import {
 	CoButtonIcon,
 	CoPage,
@@ -10,6 +5,10 @@ import {
 	CoTextField,
 } from '@aipacto/shared-ui-core/components'
 import { IconSend } from '@aipacto/shared-ui-core/icons'
+import { useRouter } from 'expo-router'
+import React, { useState } from 'react'
+import { ScrollView, XStack, YStack } from 'tamagui'
+
 import { CoProfile } from '~components'
 
 export default function ChatHome() {

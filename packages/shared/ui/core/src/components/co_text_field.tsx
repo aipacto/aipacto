@@ -2,10 +2,10 @@ import { useDirection } from '@tamagui/use-direction'
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import {
 	type GetProps,
+	styled,
 	Input as TamaguiInput,
 	XStack,
 	YStack,
-	styled,
 } from 'tamagui'
 
 import { IconCircleX } from '../icons'
@@ -32,6 +32,7 @@ export const CoTextField = forwardRef<any, CoTextFieldProps>(
 		const [isFocused, setIsFocused] = useState(false)
 		const [hasValue, setHasValue] = useState(false)
 		const inputRef = useRef<any>(null)
+		const direction = useDirection()
 
 		// Use a combined ref to maintain the original ref functionality
 		const combinedRef = (instance: any) => {
@@ -127,8 +128,8 @@ export const CoTextField = forwardRef<any, CoTextFieldProps>(
 							color='$error'
 							marginStart='$spacingXs'
 							position='absolute'
-							right={useDirection() === 'rtl' ? '$spacingMd' : 'auto'}
-							left={useDirection() === 'rtl' ? 'auto' : '$spacingMd'}
+							right={direction === 'rtl' ? '$spacingMd' : 'auto'}
+							left={direction === 'rtl' ? 'auto' : '$spacingMd'}
 						/>
 					)}
 				</XStack>

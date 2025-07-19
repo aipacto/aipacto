@@ -1,14 +1,14 @@
+import { useTranslation } from '@aipacto/shared-ui-localization'
 import {
 	CardFrame,
 	CardHeader,
+	styled,
 	type TextProps,
+	withStaticProperties,
 	XStack,
 	YStack,
-	styled,
-	withStaticProperties,
 } from 'tamagui'
 
-import { useTranslation } from '@aipacto/shared-ui-localization'
 import { CoSpinner } from './co_spinner'
 import { CoText } from './co_text'
 

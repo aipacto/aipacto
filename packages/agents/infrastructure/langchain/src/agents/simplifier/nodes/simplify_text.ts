@@ -1,9 +1,9 @@
+import type { SimplifierLevel } from '@aipacto/agents-domain'
+import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import type { RunnableConfig } from '@langchain/core/runnables'
 import { ChatOpenAI } from '@langchain/openai'
 
-import type { SimplifierLevel } from '@aipacto/agents-domain'
-import { logAgentsInfraLangchain } from '@aipacto/shared-utils-logging'
 import { calculateComplexityScore } from '../../../utils/text_analysis'
 import type { SimplifierAgentStateType } from '../types'
 

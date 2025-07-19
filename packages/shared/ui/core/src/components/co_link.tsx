@@ -1,5 +1,5 @@
 import type React from 'react'
-import { Anchor, type TextProps, isWeb, styled } from 'tamagui'
+import { Anchor, isWeb, styled, type TextProps } from 'tamagui'
 
 interface LinkProps extends TextProps {
 	children: React.ReactNode

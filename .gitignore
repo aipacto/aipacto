@@ -70,5 +70,8 @@ cache
 # Repomix
 repomix_*.md
 
+# Rules
+.kilocode
+
 # Others
 *.log

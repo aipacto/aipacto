@@ -18,7 +18,7 @@
 	},
 	"peerDependencies": {
 		"@aipacto/workspace-domain": "workspace:*",
-		"effect": "^3.14.8"
+		"effect": "^3.17.5"
 	},
 	"devDependencies": {
 		"@aipacto/workspace-domain": "workspace:*",
