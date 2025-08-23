@@ -4,69 +4,75 @@
 
 ## Vision & Mission
 
-Aipacto is an open-source, AI-powered chat platform designed to revolutionize decision-making and transparency in local and regional governments. Our vision is to set a new global standard for AI in politics and governance, starting with Catalan-speaking regions and expanding internationally. By leveraging advanced language models (like Aina Kit's Salamandra-7b-instruct), we empower public administrations and citizens with data-driven insights and accessible civic engagement tools.
+Aipacto is an open-source, AI-driven Operating System designed to revolutionize efficiency and transparency in city councils and local governments. Our vision is to set a new global standard for AI in public administration, starting in Spain and expanding internationally. By leveraging advanced language models and comprehensive data integration, we empower local governments with intelligent tools that streamline operations and enhance public service delivery.
 
 ### Why Aipacto?
 
-- **Empower Local Decision-Making**: Provide local governments with tools to analyze regional data and plan effectively, outperforming centralized systems by focusing on hyper-local context.
-- **Enhance Transparency & Access**: Make complex information accessible and actionable for citizens, fostering trust and participation.
-- **Scalable & Sustainable**: Designed for international adaptation, with a free self-hosted version and a paid cloud subscription for long-term viability.
+- **Streamline Public Operations**: Automate and optimize complex administrative processes, reducing bureaucracy and improving efficiency.
+- **Data-Driven Governance**: Transform vast amounts of public data into actionable insights for better decision-making.
+- **Scalable & Sustainable**: Designed for municipalities of all sizes, with a free self-hosted version and enterprise cloud solutions for long-term viability.
 
-### Example Use Cases
+### First Application: AI-Powered Tender Writer
 
-**For Citizens:**
+Our flagship application revolutionizes public procurement by leveraging comprehensive data from Spanish governmental tender portals:
 
-- "What did the city council decide about the new equality plan in the last meeting?"
-- "Where can I find information on local cultural events and their economic impact?"
-- "How do I report a broken streetlamp in my neighborhood?"
-- "Explain the Municipal Action Plan in simple terms."
-- "What is the city doing to address the perception that 'nothing ever happens here'?"
+**For Procurement Officers:**
 
-**For Government Officials & Staff:**
+- "Generate a complete tender document for road maintenance services based on similar successful tenders"
+- "Analyze market pricing trends for IT services in municipalities of similar size"
+- "Create technical specifications for urban lighting projects using best practices from other cities"
+- "Draft evaluation criteria that comply with Spanish public procurement law"
 
-- "Generate a draft social media thread summarizing the last council meeting."
-- "Identify strengths and weaknesses in the opposition's arguments."
-- "Summarize citizen complaints about street cleaning."
-- "Analyze a large planning document and extract the 5 most relevant points."
-- "Identify mentions of 'economic impact' and 'sustainability' in festival reports."
+**For Municipal Staff:**
+
+- "Find similar tenders from other councils for waste management contracts"
+- "Analyze tender requirements and suggest improvements based on successful awards"
+- "Generate procurement timelines that comply with legal requirements"
+- "Create budget justifications using comparable municipal data"
+
+**Key Features:**
+
+- **Comprehensive Data Integration**: Accesses all published tenders from Spanish governmental portals (PLACSP, regional platforms)
+- **Intelligent Document Generation**: Creates compliant tender documents using successful templates
+- **Market Intelligence**: Provides pricing insights and vendor analysis
+- **Legal Compliance**: Ensures all documents meet Spanish procurement regulations
 
 ### Economic & Social Impact
 
-- **Catalonia**: 900+ municipalities, €8B+ annual budget. Even 5% adoption could support €400M+ in managed resources.
-- **Efficiency Gains**: 2-5% savings in operational budgets, potentially €8-20M optimized annually in early stages.
-- **Scalability**: Designed for Spain (8,000+ municipalities, €60B budget) and beyond, with plans for multilingual support.
+- **Spain**: 8,000+ municipalities managing €60B+ in annual procurement. Even 5% adoption could optimize €3B+ in public spending.
+- **Procurement Efficiency**: Reduce tender preparation time by 70% while improving quality and compliance.
+- **Market Intelligence**: Enable better pricing negotiations, potentially saving 2-5% on municipal contracts.
+- **Scalability**: Starting in Spain with plans for EU expansion, leveraging multilingual AI capabilities.
 
 ## Architecture & Tech Stack
 
-Aipacto is built with a modern, robust architecture:
+Aipacto is built with a modern, enterprise-grade architecture:
 
-- **Clean Architecture & DDD**: The codebase is organized into bounded contexts, following Clean Architecture and Domain-Driven Design principles for maintainability and scalability.
-- **TypeScript Everywhere**: Full stack, cross-platform development in TypeScript for consistency and safety.
-- **Frontend**: React, React Native, Expo, Tamagui (Material Design 3, custom tokens for theming).
-- **Backend**: Fastify (Node.js), Effect, containerized for secure computation.
-- **AI Orchestration**: LangChain, LangGraph for multi-agent workflows.
-- **Semantic Search**: Qdrant.
-- **Core LLMs**: Aina Kit's Salamandra models, with support for OpenAI, DeepSeek, Grok, etc.
-- **Data Storage**: PostgreSQL, Databricks.
-- **Other Tools**: Mass data processing, internet search, GitHub for open-source collaboration.
+- **Clean Architecture & DDD**: Organized into bounded contexts following Clean Architecture and Domain-Driven Design for maintainability and scalability.
+- **TypeScript Everywhere**: Full-stack development in TypeScript for consistency, safety, and developer productivity.
+- **Frontend**: React, React Native, Expo with Tamagui (Material Design 3) for cross-platform municipal applications.
+- **Backend**: Fastify (Node.js), Effect for functional programming, containerized for secure multi-tenant deployment.
+- **AI Orchestration**: LangChain, LangGraph for multi-agent workflows processing tender documents and procurement data.
+- **Data Integration**: Comprehensive crawlers for Spanish governmental tender portals (PLACSP, regional platforms).
+- **Search & Analytics**: Qdrant for semantic search across tender documents, PostgreSQL for structured data.
+- **LLM Support**: Spanish-optimized models with fallback to OpenAI, Claude, and other providers.
+- **Security & Compliance**: Built for public sector requirements with audit trails and data protection.
 
 ## Core Components
 
-1. **Chat Interface**: Cross-platform (web/mobile) chat UI for users to query data, generate insights, or request actions.
-2. **Data Crawlers**: Scripts to collect and structure regional data for analysis.
-3. **Agentic Workflows**: Multi-agent system orchestrated via LangChain and LangGraph.
-4. **Backend APIs**: Fastify server managing chat sessions, data processing, and agent tasks.
+1. **Tender Writer Interface**: Cross-platform (web/mobile) application for creating and managing procurement documents.
+2. **Spanish Tender Data Crawlers**: Automated scripts to collect and structure tender data from governmental portals.
+3. **Procurement AI Agents**: Multi-agent system specialized in tender analysis, document generation, and compliance checking.
+4. **Municipal APIs**: Fastify server managing procurement workflows, document processing, and tender intelligence.
 
 ## Getting Involved
 
-We are actively developing the core web and mobile interfaces and the AI agent orchestrator. If you're interested in making a significant impact at the intersection of AI, governance, and open source, we'd love to have you contribute!
+We are actively developing the tender writer application and AI procurement agents. If you're interested in revolutionizing public procurement through AI and making municipal operations more efficient, we'd love to have you contribute!
 
 Before you start, please read our [Contributing Guide](./CONTRIBUTING.md) for setup instructions, coding standards, and contribution workflow.
 
 ## License
 
-Licensed under the MIT License with a visible attribution clause.
-
-Any public use must display the text "Powered by AIPacto.com".
+Licensed under the GNU Affero General Public License v3.0.
 
 See [LICENSE](./LICENSE) for full details.

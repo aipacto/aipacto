@@ -1,72 +1,78 @@
 # Aipacto
 
-**Inglés**: Para la versión en inglés de este README, consulta [`README`](../README.md).
+**English**: For the English version of this README, see [`README.md`](../README.md).
 
 ## Visión y Misión
 
-Aipacto es una plataforma de chat de código abierto impulsada por IA, diseñada para revolucionar la toma de decisiones y la transparencia en gobiernos locales y regionales. Nuestra visión es establecer un nuevo estándar global para la IA en la política y la gobernanza, comenzando por las regiones de habla catalana y expandiéndose internacionalmente. Aprovechando modelos de lenguaje avanzados (como Salamandra-7b-instruct de Aina Kit), empoderamos a las administraciones públicas y a la ciudadanía con información basada en datos y herramientas accesibles para la participación cívica.
+Aipacto es un Sistema Operativo de código abierto, impulsado por IA y diseñado para revolucionar la eficiencia y la transparencia en ayuntamientos y gobiernos locales. Nuestra visión es establecer un nuevo estándar mundial para la IA en la administración pública, comenzando en España y expandiéndonos internacionalmente. Aprovechando modelos de lenguaje avanzados y una integración de datos exhaustiva, empoderamos a los gobiernos locales con herramientas inteligentes que optimizan las operaciones y mejoran la prestación de servicios públicos.
 
 ### ¿Por qué Aipacto?
 
-- **Potenciar la toma de decisiones local**: Proporcionar a los gobiernos locales herramientas para analizar datos regionales y planificar eficazmente, superando a los sistemas centralizados al centrarse en el contexto hiperlocal.
-- **Mejorar la transparencia y el acceso**: Hacer que la información compleja sea accesible y accionable para la ciudadanía, fomentando la confianza y la participación.
-- **Escalable y sostenible**: Diseñado para adaptarse internacionalmente, con una versión autoalojada gratuita y una suscripción en la nube para la viabilidad a largo plazo.
+- **Optimizar las Operaciones Públicas**: Automatizar y optimizar procesos administrativos complejos, reduciendo la burocracia y mejorando la eficiencia.
+- **Gobernanza Basada en Datos**: Transformar grandes volúmenes de datos públicos en información accionable para una mejor toma de decisiones.
+- **Escalable y Sostenible**: Diseñado para municipios de todos los tamaños, con una versión gratuita autoalojada y soluciones empresariales en la nube para una viabilidad a largo plazo.
 
-### Casos de uso
+### Primera Aplicación: Generador de Licitaciones Impulsado por IA
 
-**Para la ciudadanía:**
+Nuestra aplicación insignia revoluciona la contratación pública aprovechando datos exhaustivos de los portales de licitación gubernamentales de España:
 
-- "¿Qué decidió el ayuntamiento sobre el nuevo plan de igualdad en la última reunión?"
-- "¿Dónde puedo encontrar información sobre eventos culturales locales y su impacto económico?"
-- "¿Cómo reporto una farola rota en mi barrio?"
-- "Explica el Plan de Acción Municipal en términos sencillos."
-- "¿Qué está haciendo el ayuntamiento para abordar la percepción de que 'aquí nunca pasa nada'?"
+**Para Técnicos de Contratación:**
 
-**Para personal y cargos públicos:**
+- "Genera un pliego de licitación completo para servicios de mantenimiento de carreteras basado en licitaciones similares exitosas"
+- "Analiza las tendencias de precios del mercado para servicios de TI en municipios de tamaño similar"
+- "Crea las especificaciones técnicas para proyectos de alumbrado urbano utilizando las mejores prácticas de otras ciudades"
+- "Redacta los criterios de evaluación que cumplan con la ley de contratación pública española"
 
-- "Genera un borrador de hilo para redes sociales resumiendo la última reunión del pleno."
-- "Identifica fortalezas y debilidades en los argumentos de la oposición."
-- "Resume las quejas ciudadanas sobre la limpieza de calles."
-- "Analiza un documento de planificación extenso y extrae los 5 puntos más relevantes."
-- "Identifica menciones de 'impacto económico' y 'sostenibilidad' en los informes de festivales."
+**Para el Personal Municipal:**
 
-### Impacto económico y social
+- "Encuentra licitaciones similares de otros ayuntamientos para contratos de gestión de residuos"
+- "Analiza los requisitos de una licitación y sugiere mejoras basadas en adjudicaciones exitosas"
+- "Genera cronogramas de contratación que cumplan con los requisitos legales"
+- "Crea justificaciones presupuestarias utilizando datos municipales comparables"
 
-- **Cataluña**: 900+ municipios, más de 8.000 millones de euros de presupuesto anual. Incluso una adopción del 5% podría gestionar más de 400 millones de euros en recursos.
-- **Ahorros en eficiencia**: 2-5% de ahorro en presupuestos operativos, potencialmente 8-20 millones de euros optimizados anualmente en las primeras etapas.
-- **Escalabilidad**: Diseñado para España (8.000+ municipios, 60.000 millones de euros de presupuesto) y más allá, con planes para soporte multilingüe.
+**Características Clave:**
 
-## Arquitectura y stack tecnológico
+- **Integración Exhaustiva de Datos**: Accede a todas las licitaciones publicadas en los portales gubernamentales de España (PLACSP, plataformas autonómicas).
+- **Generación Inteligente de Documentos**: Crea pliegos de licitación conformes a la ley utilizando plantillas de éxito.
+- **Inteligencia de Mercado**: Proporciona información sobre precios y análisis de proveedores.
+- **Cumplimiento Legal**: Garantiza que todos los documentos cumplan con la normativa de contratación pública española.
 
-Aipacto está construido con una arquitectura moderna y robusta:
+### Impacto Económico y Social
 
-- **Clean Architecture y DDD**: El código está organizado en contextos delimitados, siguiendo principios de Clean Architecture y Domain-Driven Design para facilitar el mantenimiento y la escalabilidad.
-- **TypeScript en todo**: Desarrollo full stack y multiplataforma en TypeScript para mayor consistencia y seguridad.
-- **Frontend**: React, React Native, Expo, Tamagui (Material Design 3, tokens personalizados para el tema).
-- **Backend**: Fastify (Node.js), Effect, contenedores para computación segura.
-- **Orquestación IA**: LangChain, LangGraph para flujos de trabajo multiagente.
-- **Búsqueda semántica**: Qdrant.
-- **LLMs principales**: Modelos Salamandra de Aina Kit, con soporte para OpenAI, DeepSeek, Grok, etc.
-- **Almacenamiento de datos**: PostgreSQL, Databricks.
-- **Otras herramientas**: Procesamiento masivo de datos, búsqueda en internet, GitHub para colaboración open source.
+- **España**: Más de 8.000 municipios que gestionan más de 60.000 M€ en contratación anual. Incluso una adopción del 5% podría optimizar más de 3.000 M€ en gasto público.
+- **Eficiencia en la Contratación**: Reducir el tiempo de preparación de licitaciones en un 70%, mejorando al mismo tiempo la calidad y el cumplimiento normativo.
+- **Inteligencia de Mercado**: Facilitar mejores negociaciones de precios, con un ahorro potencial del 2-5% en contratos municipales.
+- **Escalabilidad**: Comenzando en España con planes de expansión a la UE, aprovechando las capacidades de IA multilingüe.
 
-## Componentes principales
+## Arquitectura y Stack Tecnológico
 
-1. **Interfaz de chat**: UI de chat multiplataforma (web/móvil) para consultar datos, generar información o solicitar acciones.
-2. **Rastreadores de datos**: Scripts para recopilar y estructurar datos regionales para su análisis.
-3. **Flujos de trabajo agentic**: Sistema multiagente orquestado mediante LangChain y LangGraph.
-4. **APIs backend**: Servidor Fastify que gestiona sesiones de chat, procesamiento de datos y tareas de agentes.
+Aipacto está construido con una arquitectura moderna y de nivel empresarial:
 
-## Cómo contribuir
+- **Arquitectura Limpia y DDD**: Organizado en contextos delimitados (*bounded contexts*) siguiendo los principios de Arquitectura Limpia y Diseño Guiado por el Dominio (*Domain-Driven Design*) para mantenibilidad y escalabilidad.
+- **TypeScript en todo el stack**: Desarrollo full-stack en TypeScript para consistencia, seguridad y productividad del desarrollador.
+- **Frontend**: React, React Native, Expo con Tamagui (Material Design 3) para aplicaciones municipales multiplataforma.
+- **Backend**: Fastify (Node.js), Effect para programación funcional, contenedorizado para un despliegue multi-tenant seguro.
+- **Orquestación de IA**: LangChain, LangGraph para flujos de trabajo multi-agente que procesan documentos de licitación y datos de contratación.
+- **Integración de Datos**: Rastreadores (*crawlers*) exhaustivos para los portales de licitación gubernamentales de España (PLACSP, plataformas autonómicas).
+- **Búsqueda y Analítica**: Qdrant para búsqueda semántica en documentos de licitación, PostgreSQL para datos estructurados.
+- **Soporte para LLMs**: Modelos optimizados para español con *fallback* a OpenAI, Claude y otros proveedores.
+- **Seguridad y Cumplimiento Normativo**: Diseñado para los requisitos del sector público con registros de auditoría y protección de datos.
 
-Estamos desarrollando activamente las interfaces web y móvil principales y el orquestador de agentes IA. Si te interesa tener un impacto significativo en la intersección de IA, gobernanza y open source, ¡nos encantaría contar contigo!
+## Componentes Principales
 
-Antes de empezar, por favor lee nuestra [Guía de contribución](../CONTRIBUTING.md) para instrucciones de configuración, estándares de código y flujo de trabajo de contribución.
+1. **Interfaz del Generador de Licitaciones**: Aplicación multiplataforma (web/móvil) para crear y gestionar documentos de contratación.
+2. **Rastreadores de Datos de Licitaciones de España**: Scripts automatizados para recopilar y estructurar datos de licitaciones de portales gubernamentales.
+3. **Agentes de IA para Contratación Pública**: Sistema multi-agente especializado en el análisis de licitaciones, generación de documentos y verificación del cumplimiento normativo.
+4. **APIs Municipales**: Servidor Fastify que gestiona los flujos de trabajo de contratación, el procesamiento de documentos y la inteligencia de licitaciones.
+
+## Cómo Colaborar
+
+Estamos desarrollando activamente la aplicación del generador de licitaciones y los agentes de IA para la contratación. Si te interesa revolucionar la contratación pública a través de la IA y hacer más eficientes las operaciones municipales, ¡nos encantaría que contribuyeras!
+
+Antes de empezar, por favor, lee nuestra [Guía de Contribución](../CONTRIBUTING.md) para ver las instrucciones de configuración, los estándares de codificación y el flujo de trabajo para las contribuciones.
 
 ## Licencia
 
-Licenciado bajo la Licencia MIT con una cláusula visible de atribución.
+Licencia GNU Affero General Public License v3.0.
 
-Cualquier uso público debe mostrar el texto "Powered by AIPacto.com".
-
-Consulta [LICENSE](../LICENSE) para más detalles.
+Consulta el archivo [LICENSE](../LICENSE) para ver todos los detalles.
