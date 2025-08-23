@@ -7,36 +7,36 @@ pre-commit:
           echo "Please use a feature branch and create a pull request."
           exit 1
         fi
-    secretlint:
-      run: |
-        echo "🔑 Running Secretlint..."
-        yarn secretlint "{staged_files}"
-      stage_fixed: false
-    generate-paths:
-      run: |
-        echo "🔄 Updating TypeScript paths..."
-        yarn generate-paths
-      stage_fixed: true
     check-deps:
       run: |
         echo "📦 Running dependency version consistency checks..."
         yarn check-deps
       stage_fixed: true
-    check-types:
+    secretlint:
       run: |
-        if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
-          echo "🔍 Running type checks..."
-          yarn check-types
-        else
-          echo "⏭️ Skipping type checks on non-main branch"
-        fi
-      stage_fixed: true
+        echo "🔑 Running Secretlint (staged files)..."
+        yarn secretlint "{staged_files}"
+      stage_fixed: false
     lint:
       run: |
         echo "✨ Running lint checks..."
-        yarn lint:syncpack && yarn lint:biome --staged --diagnostic-level=error
+        yarn lint
       stage_fixed: true
 
+# Prevent merge commits on main
+pre-merge-commit:
+  commands:
+    block-merge-on-main:
+      run: |
+        if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+          echo "❌ Merge commits on 'main' branch are not allowed."
+          echo "Please use rebase or squash instead of merge."
+          echo "To rebase: git pull --rebase origin main"
+          echo "To squash: git pull --squash origin main"
+          exit 1
+        fi
+
+# Enforce branch policy and run tests
 pre-push:
   commands:
     block-main-push:
@@ -45,4 +45,22 @@ pre-push:
           echo "❌ Direct pushes to the 'main' branch are not allowed."
           echo "Please use a feature branch and create a pull request."
           exit 1
+        fi
+    block-merge-commits:
+      run: |
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        if [ "$branch" = "main" ]; then
+          # Check for merge commits in the range to be pushed
+          merge_commits=$(git log origin/main..HEAD --merges --oneline)
+          if [ -n "$merge_commits" ]; then
+            echo "❌ Merge commits to 'main' are not allowed. Please use rebase or squash."
+            echo "Found merge commits:"
+            echo "$merge_commits"
+            echo ""
+            echo "To fix this:"
+            echo "1. git reset --soft origin/main"
+            echo "2. git commit -m 'Your commit message'"
+            echo "3. git push --force-with-lease origin main"
+            exit 1
+          fi
         fi
