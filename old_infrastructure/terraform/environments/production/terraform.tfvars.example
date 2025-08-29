@@ -1,0 +1,21 @@
+# Your Hetzner Cloud API token
+hcloud_token = "your-hetzner-cloud-api-token"
+
+# Your production domain
+domain_name = "aipacto.com"
+
+# Server location
+server_location = "fsn1"
+
+# PUBLIC SSH (default off)
+ssh_exposed     = false
+ssh_allowed_ips = ["127.0.0.1/32"]  # placeholder when ssh_exposed=false
+
+# # UI access (restrict!)
+# admin_allowed_ips = ["203.0.113.10/32"]  # your office/VPN IP
+
+# Tailscale
+# tailscale_auth_key = "tskey-auth-XXXX"  # set via env var TF_VAR_tailscale_auth_key, not committed
+tailscale_enable_ssh      = true
+tailscale_tags            = ["tag:prod"]
+tailscale_hostname_prefix = "aipacto"

@@ -75,4 +75,4 @@ Before you start, please read our [Contributing Guide](./CONTRIBUTING.md) for se
 
 Licensed under the GNU Affero General Public License v3.0.
 
-See [LICENSE](./LICENSE) for full details.
+See [LICENSE](./LICENSE.md) for full details.

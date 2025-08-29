@@ -1,0 +1,38 @@
+# Local development Caddy configuration
+
+{
+    admin :2019
+    local_certs
+}
+
+:2019 {
+    respond /health "OK" 200
+}
+
+localhost {
+    # Frontend
+    handle /* {
+        reverse_proxy web:80
+    }
+    
+    # API
+    handle /api/* {
+        reverse_proxy server:3000
+    }
+    
+    # WebSocket
+    handle /ws/* {
+        reverse_proxy server:3000 {
+            header_up Upgrade websocket
+            header_up Connection Upgrade
+        }
+    }
+    
+    encode gzip
+    
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+}

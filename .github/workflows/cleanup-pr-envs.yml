@@ -1,0 +1,61 @@
+name: Cleanup PR Environments
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Hetzner CLI
+        run: |
+          curl -L https://github.com/hetznercloud/cli/releases/latest/download/hcloud-linux-amd64.tar.gz | tar xz
+          sudo mv hcloud /usr/local/bin/
+
+      - name: Find expired PR environments
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+        run: |
+          # Find servers with ephemeral=true and check TTL
+          expired_prs=$(hcloud server list -o json | jq -r '
+            .[] | 
+            select(.labels.ephemeral == "true") |
+            select(.labels.project == "aipacto") |
+            select(
+              (now - (.created | fromdate)) > 
+              ((.labels.ttl | gsub("h$"; "") | tonumber) * 3600)
+            ) |
+            .labels.pr_number
+          ' | sort -u)
+
+          if [ -z "$expired_prs" ]; then
+            echo "No expired PR environments found"
+            exit 0
+          fi
+
+          echo "Found expired PR environments: $expired_prs"
+          echo "EXPIRED_PRS=$expired_prs" >> $GITHUB_ENV
+
+      - name: Destroy expired environments
+        if: env.EXPIRED_PRS != ''
+        env:
+          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-central-1
+        run: |
+          for pr in $EXPIRED_PRS; do
+            echo "Destroying PR environment #$pr"
+            cd packages/infrastructure/terraform/environments/pr
+            terraform init -backend-config="key=pr-$pr/terraform.tfstate"
+            terraform destroy -auto-approve -var="pr_number=$pr" || true
+          done

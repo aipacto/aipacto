@@ -81,6 +81,7 @@
 	"files": {
 		"includes": [
 			"**",
+			"!./**/.output",
 			"!./**/.tamagui",
 			"!./**/.tanstack",
 			"!./**/.yarn",

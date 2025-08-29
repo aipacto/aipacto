@@ -9,6 +9,10 @@
 	"explorer.fileNesting.patterns": {
 		"package.json": "package-lock.json, yarn.lock"
 	},
+	"files.associations": {
+		"*.nomad": "hcl",
+		"*.nomad.hcl": "hcl"
+	},
 	"search.exclude": {
 		"**/node_modules": true,
 		"**/.tamagui": true,

@@ -4,7 +4,7 @@
 		"build": {
 			"dependsOn": ["generate-paths", "^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": ["dist/**/*", "types/**/*"]
+			"outputs": [".output/**/*", "dist/**/*", "types/**/*"]
 		},
 		"check-types": {
 			"dependsOn": ["generate-paths", "^build"],

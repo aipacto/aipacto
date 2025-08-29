@@ -12,7 +12,6 @@ import tsConfigPaths from 'vite-tsconfig-paths'
 export default defineConfig(({ mode }) => ({
 	build: {
 		emptyOutDir: true,
-		outDir: '../dist',
 	},
 	envDir: '..',
 	resolve: {

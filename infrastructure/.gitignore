@@ -1,0 +1,5 @@
+kubeconfig
+kubeconfig.bak
+
+# External secrets
+infisical-universal-auth.yaml
