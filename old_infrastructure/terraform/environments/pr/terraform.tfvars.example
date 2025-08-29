@@ -1,0 +1,23 @@
+# Set via environment variable or CI/CD
+# hcloud_token = "your-token"
+
+# These are typically set by CI/CD
+# pr_number = 123
+# github_actor = "developer"
+# github_branch = "feature/awesome"
+# github_sha = "abc123"
+
+# PR environment lifetime (168h = 1 week)
+pr_ttl = "168h"
+
+base_domain_name = "aipacto.com"
+
+server_location = "fsn1"
+
+ssh_key_names = ["your-ssh-key-name"]
+
+# Team IPs who can access PR environments
+dev_team_ips = [
+  "203.0.113.0/32",     # Office
+  "198.51.100.0/24"     # VPN
+]

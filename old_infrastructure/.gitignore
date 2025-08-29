@@ -1,0 +1,46 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+!terraform.tfvars.example
+*.tfplan
+tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# SSH keys
+*.pem
+*.key
+*.pub
+id_rsa*
+id_ed25519*
+
+# Nomad
+.nomad/
+*.nomad.tmp
+
+# Consul
+.consul/
+consul.key
+
+# Docker
+docker-compose.override.yml
+.dockerignore.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# Secrets
+secrets/
+*.secret
+*.secrets

@@ -1,0 +1,64 @@
+{
+    admin :2019
+    email admin@aipacto.com
+}
+
+:2019 {
+    respond /health "OK" 200
+}
+
+aipacto.com {
+    # Frontend routes (SSR)
+    handle /* {
+        reverse_proxy aipacto-web.service.consul:3000 {
+            lb_policy least_conn
+            health_uri /
+            health_interval 10s
+            health_timeout 2s
+            fail_duration 30s
+        }
+    }
+    
+    # API routes
+    handle /api/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            lb_policy round_robin
+            health_uri /health
+            health_interval 10s
+            health_timeout 2s
+            fail_duration 30s
+        }
+    }
+    
+    # WebSocket support
+    handle /ws/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            header_up Upgrade websocket
+            header_up Connection Upgrade
+        }
+    }
+    
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    }
+    
+    # Compression
+    encode gzip zstd
+    
+    # Logging
+    log {
+        output stdout
+        format json
+        level ERROR
+    }
+}
+
+www.aipacto.com {
+    redir https://aipacto.com{uri} permanent
+}

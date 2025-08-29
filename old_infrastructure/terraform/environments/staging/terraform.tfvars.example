@@ -1,0 +1,10 @@
+hcloud_token = "your-hetzner-cloud-api-token"
+
+base_domain_name = "aipacto.com"
+
+server_location = "fsn1"
+
+# Keep SSH closed publicly, but retain a key for recovery
+ssh_exposed     = false
+ssh_key_names   = ["ops-admin"] # The name, not the key contents
+ssh_allowed_ips = ["127.0.0.1/32"] # Harmless placeholder since ssh_exposed=false

@@ -43,6 +43,9 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+*~
 
 # Monorepo
 .turbo
@@ -73,5 +76,7 @@ repomix_*.md
 # Rules
 .kilocode
 
-# Others
+# Logs
 *.log
+logs/
+*.out

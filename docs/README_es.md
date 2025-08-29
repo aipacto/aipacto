@@ -75,4 +75,4 @@ Antes de empezar, por favor, lee nuestra [Guía de Contribución](../CONTRIBUTIN
 
 Licencia GNU Affero General Public License v3.0.
 
-Consulta el archivo [LICENSE](../LICENSE) para ver todos los detalles.
+Consulta el archivo [LICENSE](../LICENSE.md) para ver todos los detalles.

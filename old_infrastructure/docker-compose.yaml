@@ -1,0 +1,128 @@
+services:
+  # # PostgreSQL Database
+  # postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: aipacto
+  #     POSTGRES_PASSWORD: localpassword
+  #     POSTGRES_DB: aipacto_local
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U aipacto"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Aipacto Server
+  server:
+    build:
+      context: ../..
+      dockerfile: packages/infrastructure/docker/server.Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://aipacto:localpassword@postgres:5432/aipacto_local
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: local-jwt-secret-change-in-production
+      SESSION_SECRET: local-session-secret-change-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../../apps/server/src:/app/src
+    command: yarn dev
+
+  # Aipacto Web
+  web:
+    build:
+      context: ../..
+      dockerfile: packages/infrastructure/docker/web.Dockerfile
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+  # Caddy (reverse proxy)
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "443:443"
+      - "8080:80"
+      - "2019:2019"
+    volumes:
+      - ./docker/Caddyfile.local:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - server
+
+  # Nomad (single node for local development)
+  nomad:
+    image: hashicorp/nomad:1.9.2
+    ports:
+      - "4646:4646"
+      - "4647:4647"
+      - "4648:4648"
+    environment:
+      NOMAD_LOCAL_CONFIG: |
+        data_dir = "/nomad/data"
+        bind_addr = "0.0.0.0"
+        
+        server {
+          enabled = true
+          bootstrap_expect = 1
+        }
+        
+        client {
+          enabled = true
+          servers = ["127.0.0.1:4647"]
+        }
+        
+        plugin "docker" {
+          config {
+            volumes {
+              enabled = true
+            }
+          }
+        }
+    volumes:
+      - nomad_data:/nomad/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: agent -dev
+
+  # Consul (single node for local development)
+  consul:
+    image: hashicorp/consul:1.20.1
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+      CONSUL_CLIENT_INTERFACE: eth0
+    volumes:
+      - consul_data:/consul/data
+    command: agent -dev -ui -client=0.0.0.0
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:
+  nomad_data:
+  consul_data:
+
+networks:
+  default:
+    name: aipacto-local
+    driver: bridge

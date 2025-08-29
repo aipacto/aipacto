@@ -1,0 +1,50 @@
+{
+    admin :2019
+    email admin@aipacto.com
+}
+
+:2019 {
+    respond /health "OK" 200
+}
+
+staging.aipacto.com {
+    # Frontend (SSR)
+    handle /* {
+        reverse_proxy aipacto-web.service.consul:3000 {
+            lb_policy round_robin
+            health_uri /
+            health_interval 10s
+        }
+    }
+    
+    # API
+    handle /api/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            lb_policy round_robin
+            health_uri /health
+            health_interval 10s
+        }
+    }
+    
+    # WebSocket
+    handle /ws/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            header_up Upgrade websocket
+            header_up Connection Upgrade
+        }
+    }
+    
+    # Staging headers
+    header {
+        X-Robots-Tag "noindex, nofollow"
+        X-Environment "staging"
+    }
+    
+    encode gzip
+    
+    log {
+        output stdout
+        format console
+        level INFO
+    }
+}

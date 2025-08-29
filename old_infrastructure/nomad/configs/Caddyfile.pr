@@ -1,0 +1,54 @@
+{
+    admin :2019
+    email admin@aipacto.com
+}
+
+:2019 {
+    respond /health "OK" 200
+}
+
+:80 {
+    # Frontend (SSR)
+    handle /* {
+        reverse_proxy aipacto-web.service.consul:3000 {
+            health_uri /
+            health_interval 10s
+        }
+    }
+    
+    # API
+    handle /api/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            health_uri /health
+            health_interval 10s
+        }
+    }
+    
+    # WebSocket
+    handle /ws/* {
+        reverse_proxy aipacto-server.service.consul:3000 {
+            header_up Upgrade websocket
+            header_up Connection Upgrade
+        }
+    }
+    
+    # PR environment headers
+    header {
+        X-Robots-Tag "noindex, nofollow"
+        X-Environment "pr"
+        X-Frame-Options "SAMEORIGIN"
+    }
+    
+    # Basic auth for PR environments (optional)
+    # basicauth /* {
+    #     pr_user $2a$14$Zkx19XLiW6VYouLHR5NmfOFU0z2GTNmpkT/5qqR7hx4IjWJPDhjvG
+    # }
+    
+    encode gzip
+    
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+}
