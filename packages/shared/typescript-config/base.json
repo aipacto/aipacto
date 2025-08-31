@@ -56,7 +56,8 @@
 			],
 			"@aipacto/workspace-infra-storage": [
 				"../../workspace/infrastructure/storage/src"
-			]
+			],
+			"@aipacto/harvesting-cluster": ["../../harvesting/cluster/src"]
 		},
 		"types": ["node"]
 	},
