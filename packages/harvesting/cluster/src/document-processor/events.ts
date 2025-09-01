@@ -3,7 +3,8 @@ import { Schema } from 'effect'
 export class DocumentProcessingStarted extends Schema.TaggedClass<DocumentProcessingStarted>()(
 	'DocumentProcessingStarted',
 	{
-		url: Schema.URL,
+		documentId: Schema.String,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 	},
 ) {}
@@ -11,7 +12,8 @@ export class DocumentProcessingStarted extends Schema.TaggedClass<DocumentProces
 export class DocumentProcessingCompleted extends Schema.TaggedClass<DocumentProcessingCompleted>()(
 	'DocumentProcessingCompleted',
 	{
-		url: Schema.URL,
+		documentId: Schema.String,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 	},
 ) {}
@@ -19,33 +21,29 @@ export class DocumentProcessingCompleted extends Schema.TaggedClass<DocumentProc
 export class DocumentProcessingFailed extends Schema.TaggedClass<DocumentProcessingFailed>()(
 	'DocumentProcessingFailed',
 	{
-		url: Schema.URL,
+		documentId: Schema.String,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
-	},
-) {}
-
-export class DocumentDownloaded extends Schema.TaggedClass<DocumentDownloaded>()(
-	'DocumentDownloaded',
-	{
-		url: Schema.URL,
-		timestamp: Schema.Date,
-	},
-) {}
-
-export class DocumentStored extends Schema.TaggedClass<DocumentStored>()(
-	'DocumentStored',
-	{
-		url: Schema.URL,
-		timestamp: Schema.Date,
-		storageId: Schema.String,
+		error: Schema.String,
 	},
 ) {}
 
 export class EmbeddingsCreated extends Schema.TaggedClass<EmbeddingsCreated>()(
 	'EmbeddingsCreated',
 	{
-		url: Schema.URL,
+		documentId: Schema.String,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
+	},
+) {}
+
+export class DocumentMetadataExtracted extends Schema.TaggedClass<DocumentMetadataExtracted>()(
+	'DocumentMetadataExtracted',
+	{
+		documentId: Schema.String,
+		executionId: Schema.String,
+		timestamp: Schema.Date,
+		metadata: Schema.Unknown, // TODO: Define proper metadata schema
 	},
 ) {}
 
@@ -53,8 +51,7 @@ export const DocumentProcessingEvent = Schema.Union(
 	DocumentProcessingStarted,
 	DocumentProcessingCompleted,
 	DocumentProcessingFailed,
-	DocumentDownloaded,
-	DocumentStored,
 	EmbeddingsCreated,
+	DocumentMetadataExtracted,
 )
 export type DocumentProcessingEvent = typeof DocumentProcessingEvent.Type

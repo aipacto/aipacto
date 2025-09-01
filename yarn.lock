@@ -262,6 +262,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@aipacto/harvesting-cluster@workspace:packages/harvesting/cluster":
+  version: 0.0.0-use.local
+  resolution: "@aipacto/harvesting-cluster@workspace:packages/harvesting/cluster"
+  dependencies:
+    "@effect/cluster": "npm:^0.48.2"
+    "@effect/platform": "npm:^0.90.6"
+    "@effect/platform-node": "npm:^0.96.0"
+    "@effect/rpc": "npm:^0.69.1"
+    "@effect/sql": "npm:^0.44.2"
+    "@effect/sql-pg": "npm:^0.45.1"
+    "@effect/workflow": "npm:^0.9.2"
+    playwright: "npm:^1.55.0"
+    tsx: "npm:^4.19.2"
+  peerDependencies:
+    effect: ^3.17.9
+  languageName: unknown
+  linkType: soft
+
 "@aipacto/harvesting-domain@workspace:*, @aipacto/harvesting-domain@workspace:packages/harvesting/domain":
   version: 0.0.0-use.local
   resolution: "@aipacto/harvesting-domain@workspace:packages/harvesting/domain"
@@ -3146,6 +3164,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@effect/cluster@npm:^0.48.2":
+  version: 0.48.2
+  resolution: "@effect/cluster@npm:0.48.2"
+  peerDependencies:
+    "@effect/platform": ^0.90.5
+    "@effect/rpc": ^0.69.1
+    "@effect/sql": ^0.44.2
+    "@effect/workflow": ^0.9.2
+    effect: ^3.17.8
+  checksum: 10/4c9cec9ee1ccfc3b70c71556f543f049baa37b6736d71bdc15b722105deffdf8408f27cf00223af43c4d8c09b5b09541b7175735b4b489336116487362896418
+  languageName: node
+  linkType: hard
+
 "@effect/experimental@npm:^0.54.3":
   version: 0.54.3
   resolution: "@effect/experimental@npm:0.54.3"
@@ -3182,6 +3213,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@effect/platform-node-shared@npm:^0.49.0":
+  version: 0.49.0
+  resolution: "@effect/platform-node-shared@npm:0.49.0"
+  dependencies:
+    "@parcel/watcher": "npm:^2.5.1"
+    multipasta: "npm:^0.2.7"
+    ws: "npm:^8.18.2"
+  peerDependencies:
+    "@effect/cluster": ^0.48.0
+    "@effect/platform": ^0.90.2
+    "@effect/rpc": ^0.69.0
+    "@effect/sql": ^0.44.1
+    effect: ^3.17.7
+  checksum: 10/792ff6276b8dac1c3d2dd8e7c995f5cff1f5e70bea3ba3a94ce14bd10e5abc900eb664da3bf15f9e054f30705bdbb1e1989af632edcdcf2762c06657dbaa390c
+  languageName: node
+  linkType: hard
+
 "@effect/platform-node@npm:^0.94.0":
   version: 0.94.0
   resolution: "@effect/platform-node@npm:0.94.0"
@@ -3200,6 +3248,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@effect/platform-node@npm:^0.96.0":
+  version: 0.96.0
+  resolution: "@effect/platform-node@npm:0.96.0"
+  dependencies:
+    "@effect/platform-node-shared": "npm:^0.49.0"
+    mime: "npm:^3.0.0"
+    undici: "npm:^7.10.0"
+    ws: "npm:^8.18.2"
+  peerDependencies:
+    "@effect/cluster": ^0.48.0
+    "@effect/platform": ^0.90.2
+    "@effect/rpc": ^0.69.0
+    "@effect/sql": ^0.44.1
+    effect: ^3.17.7
+  checksum: 10/a24a3f621c422dcf9744b8278f8617ebc0827c1fd31e95f74e9194d01314a179d401cab5f4151b27dcb8b5b65799804076b21dd2da4538a7cbc61166124759b0
+  languageName: node
+  linkType: hard
+
 "@effect/platform@npm:^0.90.0":
   version: 0.90.0
   resolution: "@effect/platform@npm:0.90.0"
@@ -3214,6 +3280,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@effect/platform@npm:^0.90.6":
+  version: 0.90.6
+  resolution: "@effect/platform@npm:0.90.6"
+  dependencies:
+    find-my-way-ts: "npm:^0.1.6"
+    msgpackr: "npm:^1.11.4"
+    multipasta: "npm:^0.2.7"
+  peerDependencies:
+    effect: ^3.17.8
+  checksum: 10/b96a41ce642f6b9d72c21a10844f487eec9859e61868107906a87fa16106486a94ca620425845edd6475cc6778366b9b1c22a4faad5873d5cbca650698357920
+  languageName: node
+  linkType: hard
+
 "@effect/rpc@npm:^0.68.2":
   version: 0.68.2
   resolution: "@effect/rpc@npm:0.68.2"
@@ -3221,6 +3300,16 @@ __metadata:
     "@effect/platform": ^0.90.0
     effect: ^3.17.5
   checksum: 10/7e9d2515b3236eab6c6d6d2145f4c04f7f7d74ea979d31fc37332a998cae0c4e65dd714b8f0841523bd862d21baee08ecd9d83951f1b4d643e6e948da34d0e4e
+  languageName: node
+  linkType: hard
+
+"@effect/rpc@npm:^0.69.1":
+  version: 0.69.1
+  resolution: "@effect/rpc@npm:0.69.1"
+  peerDependencies:
+    "@effect/platform": ^0.90.5
+    effect: ^3.17.8
+  checksum: 10/4c598968e3035af6b18833a5c55446a1d13f29bb3e54b4002c8fc6a8e69972159e12508e3fe9c216832ec92864139aff55bf50877e9a273e57dc50feb85dfa20
   languageName: node
   linkType: hard
 
@@ -3252,6 +3341,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@effect/sql-pg@npm:^0.45.1":
+  version: 0.45.1
+  resolution: "@effect/sql-pg@npm:0.45.1"
+  dependencies:
+    postgres: "npm:^3.4.4"
+  peerDependencies:
+    "@effect/experimental": ^0.54.6
+    "@effect/platform": ^0.90.4
+    "@effect/sql": ^0.44.2
+    effect: ^3.17.7
+  checksum: 10/9759fc1286484503938d00021e796836386fbbb5fe491828191ee74246ecd0d4a728772f18765c614fe76887db17df822fac90768ba9b55726731953113f4b51
+  languageName: node
+  linkType: hard
+
 "@effect/sql@npm:^0.44.0":
   version: 0.44.0
   resolution: "@effect/sql@npm:0.44.0"
@@ -3263,6 +3366,30 @@ __metadata:
     "@effect/platform": ^0.90.0
     effect: ^3.17.0
   checksum: 10/6712050815269921a9e890b856aa0bff757689e54c3d317c2005c0eaa48c78d434139f18ce8742552cdb487114746f06fef86a571b62164e6feae5e38dd2bfec
+  languageName: node
+  linkType: hard
+
+"@effect/sql@npm:^0.44.2":
+  version: 0.44.2
+  resolution: "@effect/sql@npm:0.44.2"
+  dependencies:
+    uuid: "npm:^11.0.3"
+  peerDependencies:
+    "@effect/experimental": ^0.54.6
+    "@effect/platform": ^0.90.4
+    effect: ^3.17.7
+  checksum: 10/d76b9bc7db18ec388abf2b170a612586dfce004ddc814d5d89604829aa4362055f06378a0eed77ed15e92d2f58877ea26308e31fdd7680b96bccc7c336ad12ad
+  languageName: node
+  linkType: hard
+
+"@effect/workflow@npm:^0.9.2":
+  version: 0.9.2
+  resolution: "@effect/workflow@npm:0.9.2"
+  peerDependencies:
+    "@effect/platform": ^0.90.5
+    "@effect/rpc": ^0.69.1
+    effect: ^3.17.8
+  checksum: 10/1bee695005fb631acf87b4aab9d490c2692055d49d90d3ba470dea86c079e0c84420b884586bc4c0cc6d812acf877acd50d9e922ad51313d45f87149a57a4e79
   languageName: node
   linkType: hard
 
@@ -23790,12 +23917,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fsevents@npm:2.3.2":
+  version: 2.3.2
+  resolution: "fsevents@npm:2.3.2"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10/6b5b6f5692372446ff81cf9501c76e3e0459a4852b3b5f1fc72c103198c125a6b8c72f5f166bdd76ffb2fca261e7f6ee5565daf80dca6e571e55bcc589cc1256
+  conditions: os=darwin
+  languageName: node
+  linkType: hard
+
 "fsevents@npm:^2.3.2, fsevents@npm:~2.3.2, fsevents@npm:~2.3.3":
   version: 2.3.3
   resolution: "fsevents@npm:2.3.3"
   dependencies:
     node-gyp: "npm:latest"
   checksum: 10/4c1ade961ded57cdbfbb5cac5106ec17bc8bccd62e16343c569a0ceeca83b9dfef87550b4dc5cbb89642da412b20c5071f304c8c464b80415446e8e155a038c0
+  conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>":
+  version: 2.3.2
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  dependencies:
+    node-gyp: "npm:latest"
   conditions: os=darwin
   languageName: node
   linkType: hard
@@ -30234,6 +30380,30 @@ __metadata:
   dependencies:
     find-up: "npm:^3.0.0"
   checksum: 10/5bac346b7c7c903613c057ae3ab722f320716199d753f4a7d053d38f2b5955460f3e6ab73b4762c62fd3e947f58e04f1343e92089e7bb6091c90877406fcd8c8
+  languageName: node
+  linkType: hard
+
+"playwright-core@npm:1.55.0":
+  version: 1.55.0
+  resolution: "playwright-core@npm:1.55.0"
+  bin:
+    playwright-core: cli.js
+  checksum: 10/843376a8e2c1100d3f0625b2c85a69dc4418a0b268bdc7da6cf28252f6dc50c299c734f090a67c7f36cfa9140dacf5b95e817664e69642bcbaf06eea4d216c35
+  languageName: node
+  linkType: hard
+
+"playwright@npm:^1.55.0":
+  version: 1.55.0
+  resolution: "playwright@npm:1.55.0"
+  dependencies:
+    fsevents: "npm:2.3.2"
+    playwright-core: "npm:1.55.0"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    playwright: cli.js
+  checksum: 10/df02529693923b9b671822dac8a2ac8a8471c9142a05e14a24f8d0038a7dcf705712363991a070fc927466bbbe70e485145cf7a77882613822f56960afc4b892
   languageName: node
   linkType: hard
 

@@ -62,8 +62,8 @@ export const DefaultPublisher = Layer.effect(
 				// TODO: Better error handling
 				Effect.catchAllCause(Effect.logError),
 			),
-		DocumentDiscovered: event =>
-			DocumentProcessing.execute({ url: event.url }).pipe(
+		DocumentDownloaded: event =>
+			DocumentProcessing.execute({ documentId: event.documentId }).pipe(
 				// TODO: Better error handling
 				Effect.catchAllCause(Effect.logError),
 			),

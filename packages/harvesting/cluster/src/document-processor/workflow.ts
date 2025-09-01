@@ -4,15 +4,19 @@ import { PrimaryKey, Schema } from 'effect'
 export class DocumentProcessingJob extends Schema.Class<DocumentProcessingJob>(
 	'DocumentProcessingJob',
 )({
-	url: Schema.URL,
+	documentId: Schema.String,
 }) {
 	[PrimaryKey.symbol]() {
-		return this.url.href
+		return this.documentId
 	}
 }
+
+// TODO: Better error handling
+export const DocumentProcessingError = Schema.Union()
 
 export const DocumentProcessing = Workflow.make({
 	name: 'DocumentProcessing',
 	payload: DocumentProcessingJob,
+	error: DocumentProcessingError,
 	idempotencyKey: PrimaryKey.value,
 })

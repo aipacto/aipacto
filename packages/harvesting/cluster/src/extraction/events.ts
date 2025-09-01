@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 export class ExtractionStarted extends Schema.TaggedClass<ExtractionStarted>()(
 	'ExtractionStarted',
 	{
-		url: Schema.URL,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 	},
 ) {}
@@ -11,7 +11,7 @@ export class ExtractionStarted extends Schema.TaggedClass<ExtractionStarted>()(
 export class ExtractionCompleted extends Schema.TaggedClass<ExtractionCompleted>()(
 	'ExtractionCompleted',
 	{
-		url: Schema.URL,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 	},
 ) {}
@@ -19,7 +19,7 @@ export class ExtractionCompleted extends Schema.TaggedClass<ExtractionCompleted>
 export class ExtractionFailed extends Schema.TaggedClass<ExtractionFailed>()(
 	'ExtractionFailed',
 	{
-		url: Schema.URL,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 		error: Schema.String,
 	},
@@ -28,16 +28,18 @@ export class ExtractionFailed extends Schema.TaggedClass<ExtractionFailed>()(
 export class HtmlMetadataExtracted extends Schema.TaggedClass<HtmlMetadataExtracted>()(
 	'HtmlMetadataExtracted',
 	{
-		url: Schema.URL,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
+		url: Schema.URL,
 		metadata: Schema.Unknown, // TODO: Define proper metadata schema
 	},
 ) {}
 
-export class DocumentDiscovered extends Schema.TaggedClass<DocumentDiscovered>()(
-	'DocumentDiscovered',
+export class DocumentDownloaded extends Schema.TaggedClass<DocumentDownloaded>()(
+	'DocumentDownloaded',
 	{
-		url: Schema.URL,
+		documentId: Schema.String,
+		executionId: Schema.String,
 		timestamp: Schema.Date,
 	},
 ) {}
@@ -47,6 +49,6 @@ export const ExtractionEvent = Schema.Union(
 	ExtractionCompleted,
 	ExtractionFailed,
 	HtmlMetadataExtracted,
-	DocumentDiscovered,
+	DocumentDownloaded,
 )
 export type ExtractionEvent = typeof ExtractionEvent.Type
