@@ -1,7 +1,7 @@
 import { ClusterCron } from '@effect/cluster'
 import { Config, Cron, Effect, Layer, Stream } from 'effect'
 
-import { DiscoveryJobs } from '@/discovery/services'
+import { DiscoveryJobs } from '@/discovery/services/index.js'
 import { Discovery } from '@/discovery/workflow'
 
 export const DiscoveryCronConfig = Config.all({

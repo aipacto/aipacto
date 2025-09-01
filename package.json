@@ -56,7 +56,7 @@
 		"@secretlint/secretlint-rule-no-dotenv": "^9.3.2",
 		"@secretlint/secretlint-rule-preset-recommend": "^9.2.0",
 		"@types/node": "^24.0.15",
-		"effect": "^3.17.5",
+		"effect": "^3.17.9",
 		"lefthook": "^1.11.12",
 		"react": "19.1.0",
 		"react-native": "0.76.9",

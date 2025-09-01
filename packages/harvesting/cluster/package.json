@@ -15,10 +15,11 @@
 		"build": "tsdown ./src/index.ts --dts --sourcemap --platform neutral",
 		"check-types": "tsc --noEmit",
 		"watch": "tsc --watch --preserveWatchOutput",
-		"start": "tsx ./src/main.ts"
+		"start": "npx tsx ./src/main.ts"
 	},
 	"dependencies": {
 		"@effect/cluster": "^0.48.2",
+		"@effect/experimental": "^0.54.6",
 		"@effect/platform": "^0.90.6",
 		"@effect/platform-node": "^0.96.0",
 		"@effect/rpc": "^0.69.1",
@@ -29,8 +30,5 @@
 	},
 	"peerDependencies": {
 		"effect": "^3.17.9"
-	},
-	"devDependencies": {
-		"tsx": "^4.19.2"
 	}
 }

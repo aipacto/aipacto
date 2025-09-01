@@ -2,7 +2,7 @@
 
 import { Cause, Context, Effect, PrimaryKey, Record } from 'effect'
 
-import type { HarvestingEvent } from './events'
+import type { HarvestingEvent } from '@/shared/events.js'
 
 const getTimestamp = Effect.clockWith(clock => clock.currentTimeMillis).pipe(
 	Effect.map(timestamp => new Date(timestamp)),

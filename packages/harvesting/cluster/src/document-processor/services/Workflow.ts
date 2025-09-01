@@ -1,9 +1,5 @@
 import { Effect } from 'effect'
 
-import {
-	DocumentProcessing,
-	type DocumentProcessingJob,
-} from '@/document-processor/workflow'
 import { Publisher } from '@/shared/publisher'
 import {
 	DocumentMetadataExtracted,
@@ -11,6 +7,7 @@ import {
 	DocumentProcessingFailed,
 	DocumentProcessingStarted,
 } from '../events'
+import { DocumentProcessing, type DocumentProcessingJob } from '../workflow'
 import { ProcessDocument } from './ProcessDocument'
 
 export const runDocumentProcessingWorkflow = Effect.fn(

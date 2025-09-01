@@ -2,6 +2,7 @@
 .env
 .env.*
 .env.*.example
+.envrc
 !.env.example
 
 # compiled output

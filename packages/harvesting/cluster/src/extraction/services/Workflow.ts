@@ -9,8 +9,8 @@ import {
 	ExtractionFailed,
 	ExtractionStarted,
 	HtmlMetadataExtracted,
-} from '../events'
-import { ExtractHtmlMetadata } from './ExtractHtmlMetadata'
+} from '../events.js'
+import { ExtractHtmlMetadata } from './ExtractHtmlMetadata.js'
 
 export const runExtractionWorkflow = Effect.fn('ExtractionWorkflow')(
 	function* (job: ExtractionJob, executionId: string) {

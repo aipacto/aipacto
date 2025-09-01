@@ -1,9 +1,9 @@
 import { Effect, FiberRef, Layer, LogLevel } from 'effect'
 
-import { DocumentProcessing } from '../../document-processor'
-import { Extraction } from '../../extraction/workflow'
-import type { HarvestingEvent } from '../events'
-import { Publisher } from '../publisher'
+import { DocumentProcessing } from '@/document-processor/workflow.js'
+import { Extraction } from '@/extraction/workflow.js'
+import type { HarvestingEvent } from '@/shared/events.js'
+import { Publisher } from '@/shared/publisher.js'
 
 type Handlers<R> = {
 	[K in HarvestingEvent['_tag']]: (

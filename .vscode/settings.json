@@ -39,5 +39,8 @@
 	},
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"yaml.customTags": ["!env scalar"]
+	"yaml.customTags": ["!env scalar"],
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	}
 }
