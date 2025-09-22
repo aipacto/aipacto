@@ -1,0 +1,36 @@
+image:
+  repository: docker.io/REPLACE_NS/web
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "192Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+service:
+  port: 3000
+
+httproute:
+  enabled: false # Disabled by default in the base chart
+  host: ""
+  path: /
+  urlRewrite: false
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+networkPolicy:
+  enabled: false # enable after verifying traffic flows

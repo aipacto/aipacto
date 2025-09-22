@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: prod-quotas
+  namespace: prod
+spec:
+  hard:
+    requests.cpu: "8" # Total requested CPU across namespace
+    limits.cpu: "16" # Total CPU limits across namespace
+    requests.memory: "16Gi" # Total requested RAM across namespace
+    limits.memory: "32Gi" # Total RAM limits across namespace
+    pods: "50" # Cap number of Pods

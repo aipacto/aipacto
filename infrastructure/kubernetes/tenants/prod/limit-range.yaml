@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: prod-defaults
+  namespace: prod
+spec:
+  limits:
+    - type: Container
+      # If a container is created WITHOUT `spec.resources.requests` defined,
+      # these values will be automatically injected.
+      defaultRequest:
+        cpu: "100m"
+        memory: "256Mi"
+
+      # If a container is created WITHOUT `spec.resources.limits` defined,
+      # these values will be automatically injected.
+      default:
+        cpu: "500m"
+        memory: "512Mi"

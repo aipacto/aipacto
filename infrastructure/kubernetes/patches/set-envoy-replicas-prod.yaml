@@ -1,0 +1,16 @@
+# This patch increases the replica count for the Envoy Gateway controller in production.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: envoy-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: envoy-gateway
+    spec:
+      containers: []

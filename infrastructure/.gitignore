@@ -1,5 +1,50 @@
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+!terraform.tfstate.example
+*.tfplan
+*.tfplan.*
+.terraformrc
+terraform.rc
+
+# Terraform variable files (if they contain secrets)
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Kubernetes
 kubeconfig
 kubeconfig.bak
 
+# Kubernetes
+# Helm charts (downloaded dependencies)
+# Ignore specific downloaded chart dependencies
+**/platform/base/external-secrets/charts/
+**/*.tgz/
+
+# Kustomize
+# Generated files
+**/kustomization.yaml.bak
+
 # External secrets
 infisical-universal-auth.yaml
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+*.bak

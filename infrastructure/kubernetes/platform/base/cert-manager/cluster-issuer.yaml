@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns-cloudflare # Referenced by Gateway (annotation) or Certificate. Cluster-wide.
+spec:
+  acme:
+    email: developer@aipacto.com # ACME account email for Let's Encrypt
+    server: https://acme-v02.api.letsencrypt.org/directory # Production LE endpoint (not staging)
+    privateKeySecretRef:
+      name: letsencrypt-dns-cloudflare-account-key # Stores ACME account private key
+    solvers:
+      - selector:
+          dnsZones:
+            - aipacto.com # Limit solver to this zone
+        dns01:
+          cloudflare:
+            apiTokenSecretRef: # Cloudflare API Token (scoped, not global key)
+              name: cloudflare-api-token # Secret created by ExternalSecret below
+              key: api-token # Data key inside that Secret

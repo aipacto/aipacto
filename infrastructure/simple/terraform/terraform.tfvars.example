@@ -1,0 +1,23 @@
+project = "aipacto"
+environment = "prod"
+domain = "aipacto.com"
+
+# Cloudflare
+cloudflare_zone_id   = "<CLOUDFLARE_ZONE_ID>"
+cloudflare_api_token = "<CLOUDFLARE_API_TOKEN>"
+
+# Hetzner
+hcloud_token    = "<HCLOUD_TOKEN>"
+server_type     = "cx22"
+location        = "fsn1"
+image           = "ubuntu-24.04"
+ssh_public_keys = ["<HCLOUD_SSH_KEY_NAME>"]
+ssh_public_key_content = "ssh-ed25519 VVVasdasASdas... your-key-comment"
+
+# Docker Hub
+docker_namespace = "developeraipacto"
+
+# Tailscale
+tailscale_authkey = "tskey-auth-..."
+tailscale_tags    = "tag:prod"
+

@@ -1,6 +1,6 @@
+import type { GroupId, UserId } from '@aipacto/workspace-domain'
 import { Context, Effect, Layer } from 'effect'
 
-import type { GroupId, UserId } from '@aipacto/workspace-domain'
 import { OpenFGAClient } from './openfga_client'
 
 const make = Effect.gen(function* () {

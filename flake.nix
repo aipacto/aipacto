@@ -12,7 +12,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        devShells.default = pkgs.mkShell {
+          devShells.default = pkgs.mkShell {
          buildInputs = [
             pkgs.nodejs_24
             pkgs.typescript
@@ -20,6 +20,7 @@
             pkgs.git
             pkgs.gh
             pkgs.starship # shell beautifier
+            pkgs.zsh # ensure zsh is available for nix develop -c zsh
           ];
 
 

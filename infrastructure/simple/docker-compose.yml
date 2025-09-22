@@ -1,0 +1,64 @@
+services:
+  caddy:
+    image: ${CADDY_IMAGE:-caddy:latest}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    networks:
+      - appnet
+    pull_policy: always
+    profiles: ["prod"]
+
+  web:
+    image: ${DOCKER_NAMESPACE}/web:${TAG:-latest}
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - appnet
+    pull_policy: always
+    profiles: ["prod"]
+
+  server:
+    image: ${DOCKER_NAMESPACE}/server:${TAG:-latest}
+    environment:
+      - NODE_ENV=production
+      - AUTH_DB_PATH=/data/auth.db
+      - ALLOWED_ORIGINS=https://${DOMAIN}
+    volumes:
+      - server_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - appnet
+    pull_policy: always
+    profiles: ["prod"]
+
+networks:
+  appnet:
+
+volumes:
+  caddy_data:
+  caddy_config:
+  server_data:
+
+

@@ -1,0 +1,9 @@
+gateway:
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    annotations:
+      load-balancer.hetzner.cloud/name: envoy-public
+      load-balancer.hetzner.cloud/location: fsn1
+      load-balancer.hetzner.cloud/use-private-ip: "true"
+      load-balancer.hetzner.cloud/firewall-name: "aipacto-prod-lb-firewall" # Must exist in Hetzner

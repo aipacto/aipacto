@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all-ingress
+  namespace: prod
+spec:
+  # The empty podSelector ({}) means this policy applies to ALL pods
+  # in the 'prod' namespace.
+  podSelector: {}
+
+  # This policy only governs incoming (ingress) traffic.
+  policyTypes:
+    - Ingress
+
+  # The empty 'ingress' list means NO ingress traffic is allowed.
+  # If you had an 'ingress' block here, it would specify what is allowed.
+  # An empty list is equivalent to a deny-all rule.
+  ingress: []
