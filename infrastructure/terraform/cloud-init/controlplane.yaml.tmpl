@@ -1,0 +1,173 @@
+#cloud-config
+
+# Ensure required groups exist before user creation
+groups:
+  - docker
+
+# Create dedicated user for Tailscale SSH access
+users:
+  - name: tsadmin
+    groups: [sudo, docker]
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    lock_passwd: true  # No password login, only SSH/Tailscale
+
+# Configure kernel networking for Kubernetes
+write_files:
+  - path: /etc/sysctl.d/99-k8s.conf
+    permissions: "0644"
+    content: |
+      net.ipv4.ip_forward = 1
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+  - path: /etc/modules-load.d/k8s.conf
+    permissions: "0644"
+    content: |
+      br_netfilter
+      overlay
+
+# System setup and package installation
+runcmd:
+  # Apply sysctl immediately
+  - sysctl --system || true
+  
+  # Load required kernel modules now (also persisted by /etc/modules-load.d)
+  - modprobe br_netfilter || true
+  - modprobe overlay || true
+
+  # Disable swap (kubelet requirement)
+  - swapoff -a || true
+  - sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab || true
+  
+  # Fix root password expiry for emergency access
+  - passwd -d root || true
+  - chage -M 99999 root || true
+  
+  # Update packages with error handling
+  - |
+    echo "Updating package lists..."
+    apt-get update || {
+      echo "Warning: apt-get update failed, continuing anyway"
+      # Try to fix common apt issues
+      apt-get clean
+      apt-get update --fix-missing || true
+    }
+  
+  # Install essential packages with retry
+  - |
+    set -e
+    for i in {1..3}; do
+      apt-get install -y curl wget ca-certificates && break
+      echo "Retry $i/3 for essential packages"
+      sleep 5
+    done
+
+  # Install and configure Tailscale VPN
+  - |
+    echo "Installing Tailscale..."
+    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+    curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list
+    apt-get update || true
+    apt-get install -y tailscale || {
+      echo "Failed to install Tailscale via apt, trying direct download..."
+      # Fallback to direct binary download if apt fails
+      curl -fsSL https://tailscale.com/install.sh | sh
+    }
+    systemctl enable --now tailscaled
+		tailscale up \
+			--auth-key "${tailscale_authkey}" \
+			--ssh \
+			--hostname "${hostname}" \
+			--advertise-tags="${tailscale_tags}" \
+			--force-reauth \
+			|| {
+			echo "Tailscale up failed, will retry..."
+			sleep 10
+			tailscale up \
+				--auth-key "${tailscale_authkey}" \
+				--ssh \
+				--hostname "${hostname}" \
+				--advertise-tags="${tailscale_tags}" \
+				--force-reauth
+		}
+  
+  # Get Tailscale IP for TLS certificate SAN
+  - |
+    echo "Getting Tailscale IP..."
+    TS_IP=""
+    for i in {1..10}; do
+      TS_IP=$(tailscale ip -4 2>/dev/null | head -n1)
+      if [ -n "$TS_IP" ]; then
+        echo "Tailscale IP: $TS_IP"
+        break
+      fi
+      echo "Waiting for Tailscale IP (attempt $i/10)..."
+      sleep 5
+    done
+    if [ -z "$TS_IP" ]; then
+      echo "Warning: Could not get Tailscale IP, using default"
+      TS_IP="127.0.0.1"
+    fi
+    echo "export TS_IP=$TS_IP" >> /etc/environment
+
+  # Install k3s control plane with retry logic
+  - |
+		echo "Detecting private network interface..."
+		PRIVATE_IFACE=$(ip route get ${private_ip} 2>/dev/null | grep -Po '(?<=dev )\S+' | head -1)
+		if [ -z "$PRIVATE_IFACE" ]; then
+		  PRIVATE_IFACE=$(ip -o -4 addr show | grep -F "10.10." | awk '{print $2}' | head -1)
+		fi
+		if [ -z "$PRIVATE_IFACE" ]; then
+		  PRIVATE_IFACE="ens10"
+		fi
+		echo "Selected network interface: $PRIVATE_IFACE"
+
+		echo "Installing k3s control plane..."
+		INSTALL_K3S_VERSION="v1.33.4+k3s1"
+		for i in {1..3}; do
+			curl -sfL https://get.k3s.io | \
+				INSTALL_K3S_VERSION="$INSTALL_K3S_VERSION" \
+				K3S_TOKEN="${k3s_token}" \
+				INSTALL_K3S_EXEC="server \
+					--cluster-init \
+					--disable traefik \
+					--disable servicelb \
+					--disable-cloud-controller \
+					--node-ip ${private_ip} \
+					--advertise-address ${private_ip} \
+					--tls-san ${private_ip} \
+					--tls-san $TS_IP \
+					--tls-san 127.0.0.1 \
+					--flannel-iface=$PRIVATE_IFACE \
+					--flannel-backend=vxlan \
+					--kube-apiserver-arg anonymous-auth=false \
+					--kube-apiserver-arg audit-log-maxage=30 \
+					--kube-apiserver-arg audit-log-maxbackup=10 \
+					--kube-apiserver-arg audit-log-maxsize=100 \
+					--secrets-encryption \
+					--write-kubeconfig-mode 0644" \
+				sh - && break
+			echo "k3s installation attempt $i/3 failed, retrying..."
+			sleep 10
+		done
+
+  # Create kubectl symlinks for easier access
+  - |
+    if [ -f /usr/local/bin/k3s ]; then
+      ln -sf /usr/local/bin/k3s /usr/local/bin/kubectl
+      ln -sf /usr/local/bin/k3s /usr/bin/kubectl
+      echo "k3s installation completed successfully"
+    else
+      echo "ERROR: k3s installation failed after all retries!"
+    fi
+
+  # Verify k3s installation and cluster health
+  - |
+    sleep 10
+    if systemctl is-active --quiet k3s; then
+      echo "k3s service is running"
+      k3s kubectl get nodes || true
+    else
+      echo "ERROR: k3s service is not running!"
+      systemctl status k3s --no-pager || true
+    fi

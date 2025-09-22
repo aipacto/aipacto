@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # This points to the Kustomization file that will deploy all platform services.
+  - platform/overlays/prod
+  # This points to the Kustomization file that will deploy all your applications.
+  - apps/overlays/prod

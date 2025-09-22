@@ -1,0 +1,37 @@
+{{- if .Values.httproute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+spec:
+  # This section attaches the route to the main Gateway we defined in the platform.
+  parentRefs:
+    - name: public-gateway      # Name of the Gateway resource in envoy-gateway ns
+      namespace: envoy-gateway # Namespace where the Gateway lives
+  hostnames:
+    - {{ .Values.httproute.host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.httproute.path | quote }}
+      
+      # This block handles URL rewriting (path stripping).
+      # The 'web' chart doesn't need it, but the 'server' chart does.
+      # The same template works for both.
+      {{- if .Values.httproute.urlRewrite }}
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacement: /
+      {{- end }}
+
+      # This section points traffic to this chart's Service.
+      backendRefs:
+        - name: {{ .Chart.Name }}
+          port: {{ .Values.service.port }}
+{{- end }}

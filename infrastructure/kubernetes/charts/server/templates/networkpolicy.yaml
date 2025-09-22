@@ -1,0 +1,33 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  # A better name would be 'allow-ingress-from-gateway' but this works fine.
+  name: {{ .Chart.Name }}-deny-by-default 
+spec:
+  # This policy applies to pods with the label 'app.kubernetes.io/name: server' (or 'web').
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+  policyTypes: ["Ingress"]
+  
+  # Define the "allow" rules
+  ingress:
+    - from:
+        # RULE 1: The source pod must be in the 'envoy-gateway' namespace.
+        # We select the namespace by its unique, immutable name label.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway
+          
+          # RULE 2: The source pod must have the label identifying it as a proxy
+          # for our specific public gateway. This is very precise and secure.
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-name: public-gateway
+      
+      # RULE 3: The traffic must be destined for our application's service port.
+      ports:
+        - protocol: TCP
+          port: {{ .Values.service.port }}
+{{- end }}

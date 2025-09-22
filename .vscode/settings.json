@@ -20,25 +20,31 @@
 		"**/dist": true,
 		"**/yarn.lock": true
 	},
-	"terminal.integrated.defaultProfile.linux": "nix-shell",
-	"terminal.integrated.defaultProfile.osx": "nix-shell",
-	"terminal.integrated.defaultProfile.windows": "nix-shell",
+	"terminal.integrated.defaultProfile.linux": "Nix (auto)",
+	"terminal.integrated.defaultProfile.osx": "Nix (auto)",
 	"terminal.integrated.profiles.linux": {
-		"nix-shell": {
-			"path": "nix",
-			"args": ["develop"]
+		"Nix (auto)": {
+			"path": "bash",
+			"args": [
+				"-lc",
+				"if command -v nix >/dev/null 2>&1 && [ -f flake.nix ]; then nix develop -c \"${SHELL:-bash}\"; else exec \"${SHELL:-bash}\"; fi"
+			]
 		}
 	},
 	"terminal.integrated.profiles.osx": {
-		"nix-shell": {
-			"path": "nix",
-			"args": ["develop"]
-		}
-	},
-	"terminal.integrated.profiles.windows": {
-		"nix-shell": {
-			"path": "nix",
-			"args": ["develop"]
+		"Nix (auto bash)": {
+			"path": "bash",
+			"args": [
+				"-lc",
+				"if command -v nix >/dev/null 2>&1 && [ -f flake.nix ]; then nix develop -c \"${SHELL:-bash}\"; else exec \"${SHELL:-bash}\"; fi"
+			]
+		},
+		"Nix (auto zsh)": {
+			"path": "zsh",
+			"args": [
+				"-lc",
+				"if command -v nix >/dev/null 2>&1 && [ -f flake.nix ]; then nix develop -c \"${SHELL:-zsh}\"; else exec \"${SHELL:-zsh}\"; fi"
+			]
 		}
 	},
 	"typescript.enablePromptUseWorkspaceTsdk": true,

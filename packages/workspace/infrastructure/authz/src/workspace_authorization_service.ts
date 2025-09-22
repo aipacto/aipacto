@@ -1,6 +1,6 @@
+import type { UserId } from '@aipacto/workspace-domain'
 import { Context, Effect, Layer } from 'effect'
 
-import type { UserId } from '@aipacto/workspace-domain'
 import { AuthorizationCheckError } from './errors'
 import { OpenFGAClient } from './openfga_client'
 import type { PermissionAction, PermissionLevel, ResourceType } from './types'

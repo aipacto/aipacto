@@ -1,0 +1,20 @@
+# Production values for the 'web' application
+replicaCount: 2
+
+image:
+  tag: prod-v0.0.1
+
+httproute:
+  enabled: true
+  host: aipacto.com
+  path: /
+  urlRewrite: false
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+
+pdb:
+  enabled: true
+  minAvailable: 1

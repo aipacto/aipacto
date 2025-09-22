@@ -1,6 +1,6 @@
+import { Entity } from '@aipacto/shared-domain'
 import { Schema as S } from 'effect'
 
-import { Entity } from '@aipacto/shared-domain'
 import {
 	DocumentId,
 	FileId,

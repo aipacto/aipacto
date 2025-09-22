@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public-gateway
+  namespace: envoy-gateway
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns-cloudflare # Tells shim/Cert-Manager which issuer to use (if no explicit Certificate)
+spec:
+  gatewayClassName: envoy-gatewayclass # Matches GatewayClass below
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All # Accept routes from any namespace
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: aipacto-com-wildcard-tls # Secret created by Certificate (below)
+      allowedRoutes:
+        namespaces:
+          from: All
+      # (intentionally no hostname here)  # Allow apex and subdomains; routes set hosts

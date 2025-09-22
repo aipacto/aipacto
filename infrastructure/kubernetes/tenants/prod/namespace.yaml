@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    # This is the most important label. It tells Kubernetes to BLOCK any pods
+    # that do not meet the 'baseline' security profile. This is a great starting
+    # point for production workloads. Your current app charts already meet this standard.
+    pod-security.kubernetes.io/enforce: "baseline"
+    pod-security.kubernetes.io/enforce-version: "latest"
+
+    # (Optional but Recommended) These labels provide warnings for pods that
+    # would violate the policy, without blocking them. It's useful for testing
+    # new workloads or preparing to move to a stricter standard like 'restricted'.
+    pod-security.kubernetes.io/warn: "restricted"
+    pod-security.kubernetes.io/warn-version: "latest"
+
+    # (Optional but Recommended) This creates audit log entries for any violations,
+    # which is excellent for security monitoring.
+    pod-security.kubernetes.io/audit: "restricted"
+    pod-security.kubernetes.io/audit-version: "latest"

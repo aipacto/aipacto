@@ -1,15 +1,11 @@
-import { Context, type Effect } from 'effect'
-
 import type {
+	DocumentId,
 	EntityDocument,
 	EntityFile,
 	EntityFolder,
 	EntityGroup,
 	EntityOrganization,
 	EntityWorkspace,
-} from '@aipacto/workspace-domain'
-import type {
-	DocumentId,
 	FileId,
 	FolderContentsOutput,
 	FolderId,
@@ -18,6 +14,7 @@ import type {
 	UserId,
 	WorkspaceId,
 } from '@aipacto/workspace-domain'
+import { Context, type Effect } from 'effect'
 
 /**
  * Repository for workspace operations

@@ -1,8 +1,8 @@
+import { logWorkspaceInfraAuthz } from '@aipacto/shared-utils-logging'
 import { CredentialsMethod, OpenFgaClient as SDKClient } from '@openfga/sdk'
 import type { FgaObject } from '@openfga/sdk/dist/apiModel'
 import { Config, Context, Effect, Layer } from 'effect'
 
-import { logWorkspaceInfraAuthz } from '@aipacto/shared-utils-logging'
 import { OpenFGAError } from './errors'
 
 const make = Effect.gen(function* () {

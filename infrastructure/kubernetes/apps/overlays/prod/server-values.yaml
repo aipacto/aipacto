@@ -1,0 +1,20 @@
+# Production values for the 'server' application
+replicaCount: 2
+
+image:
+  tag: prod-v4.5.6
+
+httproute:
+  enabled: true
+  host: aipacto.com
+  path: /api
+  urlRewrite: true # Enables path stripping via URLRewrite filter
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+
+pdb:
+  enabled: true
+  minAvailable: 1

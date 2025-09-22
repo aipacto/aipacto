@@ -39,7 +39,16 @@ Thank you for your interest in contributing to Aipacto! We're building an AI-dri
    nix develop
    ```
 
-   This will drop you into a shell with the correct Node.js, Yarn, TypeScript, and all required tools.
+   This drops you into a shell with the correct Node.js, Yarn, TypeScript, and required tools.
+
+   Optional: direnv auto-enter
+   - This repo includes an `.envrc` with `use flake` for seamless entry.
+   - If you use direnv (+ nix-direnv), run `direnv allow` once in the repo, then simply `cd` into the folder to auto-enter the dev shell.
+   - Works on macOS, Linux, and WSL.
+
+   Prefer zsh inside nix?
+   - Run `nix develop -c zsh` to start the dev shell with zsh.
+   - In VS Code, the workspace terminal already uses your default shell inside nix (zsh if your `SHELL` is zsh).
 
 3. **Install dependencies:**
 

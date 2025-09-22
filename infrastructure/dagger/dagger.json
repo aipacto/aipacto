@@ -1,7 +1,7 @@
 {
-  "name": "kubernetes",
-  "engineVersion": "v0.18.17",
-  "sdk": {
-    "source": "typescript"
-  }
+	"name": "kubernetes",
+	"engineVersion": "v0.18.17",
+	"sdk": {
+		"source": "typescript"
+	}
 }

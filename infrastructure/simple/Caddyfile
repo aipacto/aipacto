@@ -1,0 +1,20 @@
+{
+	email admin@aipacto.com
+	debug
+}
+
+${DOMAIN} {
+	encode gzip
+	log {
+		output stdout
+		format console
+		level INFO
+	}
+	@api path /api*
+	handle @api {
+		reverse_proxy server:3000
+	}
+	handle {
+		reverse_proxy web:3000
+	}
+}
