@@ -1,0 +1,12 @@
+:2015
+
+# If later using Compose with a service named "server", forward /api there.
+handle_path /api/* {
+  reverse_proxy server:3000
+}
+
+root * /var/www
+encode gzip
+file_server
+
+

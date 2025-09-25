@@ -42,10 +42,12 @@ export async function routesAuth(fastify: FastifyInstance) {
 
 				// Forward response to client
 				reply.status(response.status)
-				response.headers.forEach((value, key) => reply.header(key, value))
+				response.headers.forEach((value, key) => {
+					reply.header(key, value)
+				})
 				reply.send(response.body ? await response.text() : null)
 			} catch (error) {
-				fastify.log.error('Authentication Error:', error)
+				fastify.log.error('Authentication Error:')
 				reply.status(500).send({
 					error: 'Internal authentication error',
 					code: 'AUTH_FAILURE',

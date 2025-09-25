@@ -11,7 +11,6 @@ import Fastify from 'fastify'
 // import { routesThreads } from './routes/threads'
 import { routesAuth } from './routes/auth'
 import { routesDocuments } from './routes/documents'
-import { routesDocuments as routesOldDocuments } from './routes/old_documents'
 
 async function main() {
 	try {
@@ -25,16 +24,21 @@ async function main() {
 	}
 
 	const serverOptions = {
-		logger: {
-			level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
-			transport: {
-				target: 'pino-pretty',
-				options: {
-					colorize: true,
-					translateTime: 'SYS:standard',
-				},
-			},
-		},
+		logger:
+			process.env.NODE_ENV === 'development'
+				? {
+						level: 'debug',
+						transport: {
+							target: 'pino-pretty',
+							options: {
+								colorize: true,
+								translateTime: 'SYS:standard',
+							},
+						},
+					}
+				: {
+						level: 'warn',
+					},
 		trustProxy: true,
 	}
 
@@ -78,7 +82,7 @@ async function main() {
 		strictPreflight: true,
 	})
 
-	server.setErrorHandler((err, request, reply) => {
+	server.setErrorHandler((err, _request, reply) => {
 		logAppServer.error('Server error:', err)
 
 		if (!reply.sent) {
@@ -102,7 +106,6 @@ async function main() {
 	await server.register(
 		async apiServer => {
 			// await routesAgents(apiServer)
-			await routesOldDocuments(apiServer)
 			await routesDocuments(apiServer)
 			// await routesThreads(apiServer)
 		},

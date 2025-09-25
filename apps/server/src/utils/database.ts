@@ -1,5 +1,7 @@
 import { type Client, createClient } from '@libsql/client'
+import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { Config, Data, Effect, Redacted } from 'effect'
+import { Kysely } from 'kysely'
 
 export class ErrorDbConnectionFailed extends Data.TaggedError(
 	'ErrorDbConnectionFailed',
@@ -34,25 +36,58 @@ export class Database extends Effect.Service<Database>()('Database', {
 			})
 		}
 
-		// Create tables if they don't exist
-		yield* Effect.tryPromise(() =>
-			client.execute(`
-          CREATE TABLE IF NOT EXISTS documents (
-            id TEXT PRIMARY KEY,
-            snapshot BLOB NOT NULL
-          );
-          CREATE TABLE IF NOT EXISTS document_history (
-            doc_id TEXT,
-            version_id TEXT,
-            version JSON NOT NULL,
-            timestamp INTEGER NOT NULL,
-            author TEXT NOT NULL,
-            message TEXT,
-            PRIMARY KEY (doc_id, version_id),
-            FOREIGN KEY (doc_id) REFERENCES documents(id) ON DELETE CASCADE
-          );
-        `),
+		// Initialize Kysely with LibSQL dialect
+		type KyselyDatabase = {
+			documents: {
+				id: string
+				snapshot: Uint8Array
+			}
+			document_history: {
+				doc_id: string
+				version_id: string
+				version: string // JSON serialized VersionVector
+				timestamp: number
+				author: string
+				message: string | null
+			}
+		}
+
+		// Prefer passing connection options to avoid type mismatches between different
+		// @libsql/client instances pulled by the dialect and the app.
+		const dialect = new LibsqlDialect(
+			process.env.NODE_ENV === 'production'
+				? {
+						url,
+						authToken: Redacted.value(yield* Config.redacted('DATABASE_TOKEN')),
+					}
+				: { url },
 		)
+		const kysely = new Kysely<KyselyDatabase>({ dialect })
+
+		// Create tables if they don't exist via Kysely schema builder
+		yield* Effect.tryPromise(async () => {
+			await kysely.schema
+				.createTable('documents')
+				.ifNotExists()
+				.addColumn('id', 'text', col => col.primaryKey().notNull())
+				.addColumn('snapshot', 'blob', col => col.notNull())
+				.execute()
+
+			await kysely.schema
+				.createTable('document_history')
+				.ifNotExists()
+				.addColumn('doc_id', 'text', col => col.notNull())
+				.addColumn('version_id', 'text', col => col.notNull())
+				.addColumn('version', 'text', col => col.notNull())
+				.addColumn('timestamp', 'integer', col => col.notNull())
+				.addColumn('author', 'text', col => col.notNull())
+				.addColumn('message', 'text')
+				.addPrimaryKeyConstraint('document_history_pk', [
+					'doc_id',
+					'version_id',
+				])
+				.execute()
+		})
 
 		const execute = (sql: string, params: any[] = []) =>
 			Effect.tryPromise({
@@ -77,6 +112,7 @@ export class Database extends Effect.Service<Database>()('Database', {
 			execute,
 			batch,
 			client,
+			kysely,
 		} as const
 	}),
 }) {}

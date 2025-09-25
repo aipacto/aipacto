@@ -103,13 +103,14 @@ const buttonVariants = cva(
 )
 
 const Spinner = ({ size = 'default' }: { size?: 'small' | 'default' }) => (
-	<div
+	<span
+		aria-live='polite'
 		className={`animate-spin rounded-full border-2 border-current border-t-transparent ${
 			size === 'small' ? 'h-4 w-4' : 'h-5 w-5'
 		}`}
-		role='status'
-		aria-label='Loading'
-	/>
+	>
+		<span className='sr-only'>Loading</span>
+	</span>
 )
 
 export function CoButtonText({

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { LoroDoc } from 'loro-crdt'
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 
 import { CoButtonText, CoTextField } from '~components/ui'
 import { getWebSocketUrl, useAuth } from '~hooks'
@@ -17,13 +17,16 @@ function TestPage() {
 	const [ws, setWs] = useState<WebSocket | null>(null)
 	const [wsMessages, setWsMessages] = useState<string[]>([])
 	const [localDoc] = useState(new LoroDoc()) // Local Loro for testing updates/cursors
-	const [cursor] = useState<string>('') // For selection test
+	const [_cursor] = useState<string>('') // For selection test
 	const [testText, setTestText] = useState(
 		'Hello World! This is test text for selection.',
 	)
 	const [selectionStart, setSelectionStart] = useState(0)
 	const [selectionEnd, setSelectionEnd] = useState(5)
 	const { authClient } = useAuth()
+
+	const docIdFieldId = useId()
+	const textareaId = useId()
 
 	useEffect(() => {
 		return () => {
@@ -85,7 +88,7 @@ function TestPage() {
 		return () => {
 			clearTimeout(timeoutId)
 		}
-	}, [docId]) // Trigger when docId changes
+	}, [docId, ws]) // Trigger when docId changes
 
 	const handleConnectWS = () => {
 		if (!docId) return
@@ -386,7 +389,7 @@ Frontiers: ${JSON.stringify(frontiers, null, 2)}`)
 						Test Local Loro
 					</CoButtonText>
 					<CoTextField
-						id='docId'
+						id={docIdFieldId}
 						value={docId}
 						onChange={e => setDocId(e.target.value)}
 						label='Document ID'
@@ -416,7 +419,7 @@ Frontiers: ${JSON.stringify(frontiers, null, 2)}`)
 				<div className='mb-4'>
 					<div className='mb-2'>
 						<textarea
-							id='test-textarea'
+							id={textareaId}
 							value={testText}
 							onChange={handleTextInputChange}
 							onSelect={handleSelectionChange}

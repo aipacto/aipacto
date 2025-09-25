@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { useAuth } from '~hooks'
 
@@ -8,6 +8,9 @@ export function LoginForm() {
 	const [password, setPassword] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
+
+	const emailId = useId()
+	const passwordId = useId()
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -23,10 +26,8 @@ export function LoginForm() {
 			if (error) {
 				setError(error.message ?? 'Unknown error')
 			} else if (data) {
-				// Redirect or update UI
-				console.log('Signed in successfully:', data)
 			}
-		} catch (err) {
+		} catch (_err) {
 			setError('An unexpected error occurred')
 		} finally {
 			setIsLoading(false)
@@ -48,8 +49,6 @@ export function LoginForm() {
 			if (error) {
 				setError(error.message ?? 'Unknown error')
 			} else if (data) {
-				// Redirect or update UI
-				console.log('Signed up successfully:', data)
 			}
 		} catch (err) {
 			setError('An unexpected error occurred')
@@ -71,14 +70,14 @@ export function LoginForm() {
 			<form onSubmit={handleSignIn} className='space-y-4'>
 				<div>
 					<label
-						htmlFor='email'
+						htmlFor={emailId}
 						className='block text-sm font-medium text-gray-700'
 					>
 						Email
 					</label>
 					<input
 						type='email'
-						id='email'
+						id={emailId}
 						value={email}
 						onChange={e => setEmail(e.target.value)}
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -88,14 +87,14 @@ export function LoginForm() {
 
 				<div>
 					<label
-						htmlFor='password'
+						htmlFor={passwordId}
 						className='block text-sm font-medium text-gray-700'
 					>
 						Password
 					</label>
 					<input
 						type='password'
-						id='password'
+						id={passwordId}
 						value={password}
 						onChange={e => setPassword(e.target.value)}
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'

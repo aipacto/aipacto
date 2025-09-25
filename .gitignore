@@ -80,3 +80,6 @@ repomix_*.md
 *.log
 logs/
 *.out
+
+# Kraftcloud
+.unikraft

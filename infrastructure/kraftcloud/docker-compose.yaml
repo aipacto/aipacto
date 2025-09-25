@@ -1,0 +1,27 @@
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - 443:3000
+    depends_on:
+      - server
+    environment:
+      - NODE_ENV=production
+      - VITE_SERVER_URL=${VITE_SERVER_URL}
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - SERVER_HOST=0.0.0.0
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_TOKEN=${DATABASE_TOKEN}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+    # No public ports; Caddy reverse-proxies via service name "server"
