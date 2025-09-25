@@ -1,0 +1,29 @@
+# Build web assets from the monorepo
+FROM node:24-alpine AS build
+
+# Disable the problematic parallel IPv4/IPv6 connection attempts
+ENV NODE_OPTIONS=--no-network-family-autoselection
+
+WORKDIR /repo
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable
+
+COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
+COPY ./.yarn ./.yarn
+COPY ./turbo.json ./
+COPY ./apps ./apps
+COPY ./packages ./packages
+
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
+
+RUN DO_NOT_TRACK=1 TURBO_TELEMETRY_DISABLED=1 yarn turbo run build --filter=@aipacto/apps-web
+
+# For Tanstack SSR server
+FROM node:24-alpine
+ENV NODE_OPTIONS=--no-network-family-autoselection
+WORKDIR /app
+COPY --from=build /repo/apps/web/.output /app/.output
+ENV NODE_ENV=production
+ENV PORT=3000
+CMD ["node", ".output/server/index.mjs"]

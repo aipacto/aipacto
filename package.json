@@ -53,6 +53,7 @@
 		"@biomejs/biome": "^2.1.2",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
+		"@drizzle-team/brocli": "^0.11.0",
 		"@secretlint/secretlint-rule-no-dotenv": "^9.3.2",
 		"@secretlint/secretlint-rule-preset-recommend": "^9.2.0",
 		"@types/node": "^24.0.15",

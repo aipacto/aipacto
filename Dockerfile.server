@@ -1,0 +1,45 @@
+# Build server from the monorepo
+FROM node:24-alpine AS build
+
+# Disable the problematic parallel IPv4/IPv6 connection attempts
+ENV NODE_OPTIONS=--no-network-family-autoselection
+
+WORKDIR /repo
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable
+COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
+COPY ./.yarn ./.yarn
+COPY ./turbo.json ./
+COPY ./apps ./apps
+COPY ./packages ./packages
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
+RUN DO_NOT_TRACK=1 TURBO_TELEMETRY_DISABLED=1 yarn turbo run build --filter=@aipacto/apps-server
+
+# Slim production dependencies stage
+FROM node:24-alpine AS deps
+WORKDIR /app
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable
+COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
+COPY ./.yarn ./.yarn
+COPY ./apps ./apps
+COPY ./packages ./packages
+
+# Focus only on server workspace for production deps
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn workspaces focus @aipacto/apps-server --production
+
+# Rootfs for the Node unikernel
+FROM scratch
+# Helps some runtimes/tools detect distro
+COPY --from=build /etc/os-release /etc/os-release
+# App code (only built dist)
+COPY --from=build /repo/apps/server/dist /usr/src/app/dist
+# Slim production node_modules
+COPY --from=deps /app/node_modules /usr/src/app/node_modules
+# Only copy built artifacts from dependent workspaces (assuming they have dist/)
+# Adjust based on your packages; e.g., for @aipacto/shared-domain
+COPY --from=build /repo/packages/shared/domain/dist /usr/src/packages/shared/domain/dist
+# Repeat for other direct dependencies as needed
+# Environment variables
+ENV NODE_ENV=production
+ENV PORT=3000

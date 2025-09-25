@@ -2,7 +2,6 @@ import { resolve } from 'node:path'
 // import { getWorkspaceAliases } from '@aipacto/shared-tsconfig/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { univerPlugin } from '@univerjs/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import topLevelAwait from 'vite-plugin-top-level-await'
@@ -45,7 +44,6 @@ export default defineConfig(({ mode }) => ({
 			customViteReactPlugin: true,
 		}),
 		react(),
-		univerPlugin(),
 		tailwindcss(),
 		wasm(),
 		topLevelAwait(),

@@ -4,6 +4,7 @@
 @import "./themes.css";
 @import "./editor.css";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 custom variant */
 @custom-variant dark (&:is(.dark *));
 
 /* Global tokens available to all themes */

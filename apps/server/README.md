@@ -21,7 +21,7 @@ This server has been updated to use Better Auth for authentication instead of Cl
 2. **Set up environment variables**:
 
    ```bash
-   cp env.example .env
+   cp .env.example .env
    ```
 
    Edit `.env` and set:

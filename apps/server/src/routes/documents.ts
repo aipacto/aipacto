@@ -1,6 +1,5 @@
 import { Effect, Option } from 'effect'
-import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { LoroDoc } from 'loro-crdt'
+import type { FastifyInstance } from 'fastify'
 
 import { LoroDocumentService } from '../docs/loro'
 import { authenticateRequest } from '../utils/auth_helper'
@@ -53,14 +52,14 @@ export async function routesDocuments(server: FastifyInstance) {
 						return { documentId, success: true }
 					}).pipe(
 						Effect.catchAll(error => {
-							request.log.error('Create error:', error)
+							request.log.error({ error }, 'Create error')
 							return Effect.succeed({ success: false, error: error.message })
 						}),
 					),
 				)
 				return reply.send(result)
 			} catch (error) {
-				request.log.error(error)
+				request.log.error({ error }, 'Failed to create document')
 				return reply.status(500).send({ error: 'Failed to create document' })
 			}
 		},
@@ -80,7 +79,7 @@ export async function routesDocuments(server: FastifyInstance) {
 						return { success: true, document: docOpt.value.toJSON().document }
 					}).pipe(
 						Effect.catchAll(error => {
-							request.log.error('Get error:', error)
+							request.log.error({ error }, 'Get error')
 							return Effect.succeed({
 								success: false,
 								error: JSON.stringify(error),
@@ -90,7 +89,7 @@ export async function routesDocuments(server: FastifyInstance) {
 				)
 				return reply.send(result)
 			} catch (error) {
-				request.log.error(error)
+				request.log.error({ error }, 'Failed to get document')
 				return reply.status(500).send({ error: 'Failed to get document' })
 			}
 		},
@@ -111,14 +110,14 @@ export async function routesDocuments(server: FastifyInstance) {
 							return { success: true }
 						}).pipe(
 							Effect.catchAll(error => {
-								request.log.error('Update error:', error)
+								request.log.error({ error }, 'Update error')
 								return Effect.succeed({ success: false, error: error.message })
 							}),
 						),
 					)
 					return reply.send(result)
 				} catch (error) {
-					request.log.error(error)
+					request.log.error({ error }, 'Failed to update metadata')
 					return reply.status(500).send({ error: 'Failed to update metadata' })
 				}
 			},
@@ -137,14 +136,14 @@ export async function routesDocuments(server: FastifyInstance) {
 						return { success: true }
 					}).pipe(
 						Effect.catchAll(error => {
-							request.log.error('Delete error:', error)
+							request.log.error({ error }, 'Delete error')
 							return Effect.succeed({ success: false, error: error.message })
 						}),
 					),
 				)
 				return reply.send(result)
 			} catch (error) {
-				request.log.error(error)
+				request.log.error({ error }, 'Failed to delete document')
 				return reply.status(500).send({ error: 'Failed to delete document' })
 			}
 		},
@@ -168,14 +167,14 @@ export async function routesDocuments(server: FastifyInstance) {
 						return docs
 					}).pipe(
 						Effect.catchAll(error => {
-							request.log.error('List error:', error)
+							request.log.error({ error }, 'List error')
 							return Effect.succeed([])
 						}),
 					),
 				)
 				return reply.send({ documents })
 			} catch (error) {
-				request.log.error(error)
+				request.log.error({ error }, 'Failed to list documents')
 				return reply.status(500).send({ error: 'Failed to list documents' })
 			}
 		},
@@ -196,7 +195,7 @@ export async function routesDocuments(server: FastifyInstance) {
 					return yield* docService.getDocument(docId)
 				}).pipe(
 					Effect.catchAll(error => {
-						request.log.error('WS get doc error:', error)
+						request.log.error({ error }, 'WS get doc error')
 						return Effect.succeed(Option.none())
 					}),
 				),
@@ -243,13 +242,13 @@ export async function routesDocuments(server: FastifyInstance) {
 								)
 							}).pipe(
 								Effect.catchAll(error => {
-									request.log.error('WS apply update error:', error)
+									request.log.error({ error }, 'WS apply update error')
 									return Effect.void
 								}),
 							),
 						)
 					} catch (error) {
-						request.log.error('Failed to process message:', error)
+						request.log.error({ error }, 'Failed to process message')
 					}
 				}
 			})
