@@ -10,4 +10,5 @@ labels:
   cloud.unikraft.v1.instances/scale_to_zero.cooldown_time_ms: 1000
 
 rootfs: ./Dockerfile.web
+
 cmd: ["/usr/bin/node", "/app/.output/server/index.mjs"]

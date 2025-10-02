@@ -50,24 +50,47 @@ This directory contains the Unikraft Cloud deployment configuration for Aipacto.
    # Edit .env with your configuration
    ```
 
-### Deploy
+### Test Locally with Docker
+
+Before deploying to Unikraft Cloud, test the server locally:
+
+```bash
+# From the monorepo root
+
+# Build the test Docker image
+docker build -f Dockerfile.server.test -t aipacto-server:test .
+
+# Run the server locally (foreground)
+docker run --rm -p 3000:3000 aipacto-server:test
+
+# Or run in background
+docker run -d --name aipacto-server-test -p 3000:3000 aipacto-server:test
+
+# Test the health endpoint
+curl http://localhost:3000/api/health
+
+# Stop the running container
+docker stop aipacto-server-test
+docker rm aipacto-server-test
+```
+
+### Deploy to Unikraft Cloud
 
 After the refactor, Dockerfiles live at the monorepo root and we deploy from the repo root while referencing each service's Kraftfile.
 
 ```bash
 # From the monorepo root
 
-# Deploy Web (public)
+# Deploy Web
 kraft cloud deploy \
   --kraftfile infrastructure/kraftcloud/web/Kraftfile \
   -p 443:3000 \
-  -M 1G \
   .
 
-# Deploy Server (internal)
+# Deploy Server
 kraft cloud deploy \
   --kraftfile infrastructure/kraftcloud/server/Kraftfile \
-  -M 1G \
+  -M 2G \
   .
 ```
 
@@ -125,7 +148,19 @@ Configure your services via `.env` file:
 
 ## Troubleshooting
 
-### Logs
+### Docker Testing
+
+If the Docker test fails with module resolution errors:
+
+```bash
+# Check if workspace packages are copied correctly
+docker run --rm aipacto-server:test ls -la /usr/src/app/node_modules/@aipacto/
+
+# Inspect the container's file structure
+docker run --rm -it aipacto-server:test /bin/sh
+```
+
+### Unikraft Cloud Logs
 
 View instance logs (replace <instance-name> with the name shown after deploy):
 
