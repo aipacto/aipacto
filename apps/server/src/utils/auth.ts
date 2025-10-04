@@ -1,18 +1,27 @@
-import { LibsqlDialect } from '@libsql/kysely-libsql'
+import { createClient } from '@libsql/client'
 import { betterAuth } from 'better-auth'
 import { bearer } from 'better-auth/plugins'
+import { LibSQLDialect } from 'kysely-turso/libsql'
 
-// Use Kysely LibSQL dialect for Better Auth (dev: file db, prod: Turso)
-// Build dialect config without undefined fields (TS exactOptionalPropertyTypes)
-const authDbUrl = process.env.DATABASE_URL || 'file:./app.db'
-const dialectConfig: { url: string; authToken?: string } = { url: authDbUrl }
-if (process.env.NODE_ENV === 'production' && process.env.DATABASE_TOKEN) {
-	dialectConfig.authToken = process.env.DATABASE_TOKEN
-}
+
+// Validate environment variables first
+if (process.env.DATABASE_AUTH_URL === undefined) 
+	throw new Error('DATABASE_AUTH_URL is not set')
+
+if (process.env.DATABASE_AUTH_SECRET === undefined)
+	throw new Error('DATABASE_AUTH_SECRET is not set')
+
+// Now we can safely create the config with guaranteed non-undefined values
+const dialectConfig = {
+	url: process.env.DATABASE_AUTH_URL,
+	authToken: process.env.DATABASE_AUTH_SECRET,
+} as const
 
 export const auth = betterAuth({
 	database: {
-		dialect: new LibsqlDialect(dialectConfig),
+		dialect: new LibSQLDialect({
+			client: createClient(dialectConfig),
+		}),
 		type: 'sqlite',
 	},
 	plugins: [bearer()],

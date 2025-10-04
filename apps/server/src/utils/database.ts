@@ -1,7 +1,7 @@
 import { type Client, createClient } from '@libsql/client'
-import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { Config, Data, Effect, Redacted } from 'effect'
 import { Kysely } from 'kysely'
+import { LibSQLDialect } from 'kysely-turso/libsql'
 
 export class ErrorDbConnectionFailed extends Data.TaggedError(
 	'ErrorDbConnectionFailed',
@@ -52,16 +52,18 @@ export class Database extends Effect.Service<Database>()('Database', {
 			}
 		}
 
-		// Prefer passing connection options to avoid type mismatches between different
-		// @libsql/client instances pulled by the dialect and the app.
-		const dialect = new LibsqlDialect(
-			process.env.NODE_ENV === 'production'
-				? {
-						url,
-						authToken: Redacted.value(yield* Config.redacted('DATABASE_TOKEN')),
-					}
-				: { url },
-		)
+		const dialect = new LibSQLDialect({
+			client: createClient(
+				process.env.NODE_ENV === 'production'
+					? {
+							url,
+							authToken: Redacted.value(
+								yield* Config.redacted('DATABASE_TOKEN'),
+							),
+						}
+					: { url },
+			),
+		})
 		const kysely = new Kysely<KyselyDatabase>({ dialect })
 
 		// Create tables if they don't exist via Kysely schema builder
