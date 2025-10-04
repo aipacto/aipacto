@@ -1,4 +1,3 @@
-import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type * as React from 'react'
 
@@ -84,21 +83,22 @@ const cardActionsVariants = cva([
 	'border-t border-[var(--outline-variant)]',
 ])
 
+interface CardProps extends React.ComponentPropsWithoutRef<'div'> {
+	variant?: VariantProps<typeof cardVariants>['variant']
+	size?: VariantProps<typeof cardVariants>['size']
+	interactive?: boolean
+	ref?: React.Ref<HTMLDivElement>
+}
+
 export function CoCard({
 	children,
 	className,
 	variant,
 	size,
 	interactive,
-	asChild = false,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'div'> &
-	VariantProps<typeof cardVariants> & {
-		children?: React.ReactNode
-		asChild?: boolean
-	}) {
-	const Comp = asChild ? Slot : 'div'
-
+}: CardProps) {
 	const combinedClassName = [
 		cardVariants({ variant, size, interactive }),
 		className,
@@ -107,99 +107,108 @@ export function CoCard({
 		.join(' ')
 
 	return (
-		<Comp
-			data-slot='card'
+		<div
+			ref={forwardedRef}
 			className={combinedClassName}
 			role={interactive ? 'button' : undefined}
 			tabIndex={interactive ? 0 : undefined}
 			{...props}
 		>
 			{children}
-		</Comp>
+		</div>
 	)
 }
+
+CoCard.displayName = 'CoCard'
 
 export function CoCardHeader({
 	children,
 	className,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'div'> & {
-	children?: React.ReactNode
-}) {
+}: React.ComponentPropsWithoutRef<'div'> & { ref?: React.Ref<HTMLDivElement> }) {
 	const combinedClassName = [cardHeaderVariants(), className]
 		.filter(Boolean)
 		.join(' ')
 
 	return (
-		<div data-slot='card-header' className={combinedClassName} {...props}>
+		<div ref={forwardedRef} className={combinedClassName} {...props}>
 			{children}
 		</div>
 	)
 }
 
+CoCardHeader.displayName = 'CoCardHeader'
+
 export function CoCardTitle({
 	children,
 	className,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'h3'> & {
-	children?: React.ReactNode
-}) {
+}: React.ComponentPropsWithoutRef<'h3'> & { ref?: React.Ref<HTMLHeadingElement> }) {
 	const combinedClassName = [cardTitleVariants(), className]
 		.filter(Boolean)
 		.join(' ')
 
 	return (
-		<h3 data-slot='card-title' className={combinedClassName} {...props}>
+		<h3 ref={forwardedRef} className={combinedClassName} {...props}>
 			{children}
 		</h3>
 	)
 }
 
+CoCardTitle.displayName = 'CoCardTitle'
+
 export function CoCardSubtitle({
 	children,
 	className,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'p'> & {
-	children?: React.ReactNode
-}) {
+}: React.ComponentPropsWithoutRef<'p'> & { ref?: React.Ref<HTMLParagraphElement> }) {
 	const combinedClassName = [cardSubtitleVariants(), className]
 		.filter(Boolean)
 		.join(' ')
 
 	return (
-		<p data-slot='card-subtitle' className={combinedClassName} {...props}>
+		<p ref={forwardedRef} className={combinedClassName} {...props}>
 			{children}
 		</p>
 	)
 }
 
+CoCardSubtitle.displayName = 'CoCardSubtitle'
+
 export function CoCardContent({
 	children,
 	className,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'div'> & {
-	children?: React.ReactNode
-}) {
+}: React.ComponentPropsWithoutRef<'div'> & { ref?: React.Ref<HTMLDivElement> }) {
 	const combinedClassName = [cardContentVariants(), className]
 		.filter(Boolean)
 		.join(' ')
 
 	return (
-		<div data-slot='card-content' className={combinedClassName} {...props}>
+		<div ref={forwardedRef} className={combinedClassName} {...props}>
 			{children}
 		</div>
 	)
+}
+
+CoCardContent.displayName = 'CoCardContent'
+
+interface CardActionsProps extends React.ComponentPropsWithoutRef<'div'> {
+	align?: 'start' | 'center' | 'end'
+	ref?: React.Ref<HTMLDivElement>
 }
 
 export function CoCardActions({
 	children,
 	className,
 	align = 'start',
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'div'> & {
-	children?: React.ReactNode
-	align?: 'start' | 'center' | 'end'
-}) {
+}: CardActionsProps) {
 	const alignmentClasses = {
 		start: 'justify-start',
 		center: 'justify-center',
@@ -215,8 +224,10 @@ export function CoCardActions({
 		.join(' ')
 
 	return (
-		<div data-slot='card-actions' className={combinedClassName} {...props}>
+		<div ref={forwardedRef} className={combinedClassName} {...props}>
 			{children}
 		</div>
 	)
 }
+
+CoCardActions.displayName = 'CoCardActions'

@@ -1,4 +1,3 @@
-import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { LucideIcon } from 'lucide-react'
 import type * as React from 'react'
@@ -105,13 +104,23 @@ const buttonVariants = cva(
 const Spinner = ({ size = 'default' }: { size?: 'small' | 'default' }) => (
 	<span
 		aria-live='polite'
-		className={`animate-spin rounded-full border-2 border-current border-t-transparent ${
-			size === 'small' ? 'h-4 w-4' : 'h-5 w-5'
-		}`}
+		className={`animate-spin rounded-full border-2 border-current border-t-transparent ${size === 'small' ? 'h-4 w-4' : 'h-5 w-5'
+			}`}
 	>
 		<span className='sr-only'>Loading</span>
 	</span>
 )
+
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
+	variant?: VariantProps<typeof buttonVariants>['variant']
+	size?: VariantProps<typeof buttonVariants>['size']
+	fullWidth?: boolean
+	align?: 'start' | 'center' | 'end'
+	isLoading?: boolean
+	leadingIcon?: LucideIcon
+	trailingIcon?: LucideIcon
+	ref?: React.Ref<HTMLButtonElement>
+}
 
 export function CoButtonText({
 	children,
@@ -122,32 +131,21 @@ export function CoButtonText({
 	fullWidth,
 	align,
 	isLoading = false,
-	leadingIcon,
-	trailingIcon,
-	asChild = false,
+	leadingIcon: LeadingIcon,
+	trailingIcon: TrailingIcon,
+	ref: forwardedRef,
 	...props
-}: React.ComponentProps<'button'> &
-	VariantProps<typeof buttonVariants> & {
-		children?: React.ReactNode
-		leadingIcon?: LucideIcon
-		trailingIcon?: LucideIcon
-		isLoading?: boolean
-		asChild?: boolean
-	}) {
-	const Comp = asChild ? Slot : 'button'
-
+}: ButtonProps) {
 	const isDisabled = disabled || isLoading
 
 	// Helper function to render Lucide icons with proper sizing
-	const renderIcon = (IconComponent: LucideIcon | undefined) => {
-		if (!IconComponent) return null
-
-		const iconSize =
-			size === 'sm' ? 'w-3 h-3' : size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'
-		const iconClasses = `shrink-0 ${iconSize}`
-
-		return <IconComponent className={iconClasses} />
+	const getIconSize = () => {
+		if (size === 'sm') return 'w-3 h-3'
+		if (size === 'lg') return 'w-5 h-5'
+		return 'w-4 h-4'
 	}
+
+	const iconSize = getIconSize()
 
 	// Combine CVA classes with any additional className
 	const combinedClassName = [
@@ -158,8 +156,8 @@ export function CoButtonText({
 		.join(' ')
 
 	return (
-		<Comp
-			data-slot='button'
+		<button
+			ref={forwardedRef}
 			className={combinedClassName}
 			disabled={isDisabled}
 			{...props}
@@ -170,15 +168,21 @@ export function CoButtonText({
 			) : (
 				<>
 					{/* Leading icon */}
-					{renderIcon(leadingIcon)}
+					{LeadingIcon && (
+						<LeadingIcon className={`shrink-0 ${iconSize}`} />
+					)}
 
 					{/* Button text */}
 					{children && <span>{children}</span>}
 
 					{/* Trailing icon */}
-					{renderIcon(trailingIcon)}
+					{TrailingIcon && (
+						<TrailingIcon className={`shrink-0 ${iconSize}`} />
+					)}
 				</>
 			)}
-		</Comp>
+		</button>
 	)
 }
+
+CoButtonText.displayName = 'CoButtonText'
