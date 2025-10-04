@@ -1,3 +1,4 @@
+import type { QueryClient } from '@tanstack/react-query'
 import {
 	createRootRouteWithContext,
 	HeadContent,
@@ -9,8 +10,8 @@ import type { ReactNode } from 'react'
 
 import { NotFound } from '~components'
 import { AuthProvider } from '~hooks'
+
 import '../styles/global.css'
-import type { QueryClient } from '@tanstack/react-query'
 
 type RouterContext = { queryClient: QueryClient }
 
