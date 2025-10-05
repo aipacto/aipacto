@@ -17,7 +17,7 @@ RUN DO_NOT_TRACK=1 TURBO_TELEMETRY_DISABLED=1 yarn turbo run build --filter=@aip
 
 # Slim production dependencies stage
 FROM node:24-alpine AS deps
-WORKDIR /usr/src
+WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable
 COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
@@ -28,14 +28,16 @@ COPY ./packages ./packages
 # Focus only on server workspace for production deps
 RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn workspaces focus @aipacto/apps-server --production
 
-# Rootfs for the Node unikernel
-FROM scratch
-# Helps some runtimes/tools detect distro
-COPY --from=build /etc/os-release /etc/os-release
-# App code (only built dist)
-COPY --from=build /repo/apps/server/dist /usr/src/app/dist
-# Slim production node_modules into app dir so Node resolves correctly
-COPY --from=deps /usr/src/node_modules /usr/src/app/node_modules
+# Test-friendly production stage (uses Node.js instead of scratch)
+FROM node:24-alpine
+WORKDIR /usr/src/app
+
+# Copy app code (only built dist)
+COPY --from=build /repo/apps/server/dist ./dist
+
+# Slim production node_modules
+COPY --from=deps /app/node_modules ./node_modules
+
 # Copy full package directories for workspace deps (needed for package.json / ESM exports)
 COPY --from=build /repo/packages/shared/domain /usr/src/packages/shared/domain
 # Copy shared utils packages that the server depends on
@@ -46,16 +48,20 @@ COPY --from=build /repo/packages/agents/domain /usr/src/packages/agents/domain
 COPY --from=build /repo/packages/agents/infrastructure/langchain /usr/src/packages/agents/infrastructure/langchain
 
 # Also place workspace packages directly under app's node_modules for runtime resolution
-COPY --from=build /repo/packages/shared/domain /usr/src/app/node_modules/@aipacto/shared-domain
-COPY --from=build /repo/packages/shared/utils/env /usr/src/app/node_modules/@aipacto/shared-utils-env
-COPY --from=build /repo/packages/shared/utils/logging /usr/src/app/node_modules/@aipacto/shared-utils-logging
-COPY --from=build /repo/packages/agents/domain /usr/src/app/node_modules/@aipacto/agents-domain
-COPY --from=build /repo/packages/agents/infrastructure/langchain /usr/src/app/node_modules/@aipacto/agents-infra-langchain
+COPY --from=build /repo/packages/shared/domain ./node_modules/@aipacto/shared-domain
+COPY --from=build /repo/packages/shared/utils/env ./node_modules/@aipacto/shared-utils-env
+COPY --from=build /repo/packages/shared/utils/logging ./node_modules/@aipacto/shared-utils-logging
+COPY --from=build /repo/packages/agents/domain ./node_modules/@aipacto/agents-domain
+COPY --from=build /repo/packages/agents/infrastructure/langchain ./node_modules/@aipacto/agents-infra-langchain
 
-# node_modules now resolves workspace symlinks to /usr/src/packages/*
-
-# Node will resolve workspace symlinks in /app/node_modules -> /app/packages
-# Repeat for other direct dependencies as needed
 # Environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV SERVER_HOST=0.0.0.0
+ENV DATABASE_URL=file:./test.db
+ENV ALLOWED_ORIGINS=https://aipacto.com
+ENV BETTER_AUTH_SECRET=test-secret-key-for-local-testing-only
+ENV BETTER_AUTH_URL=https://aipacto.com
+
+# Command to run the server
+CMD ["node", "dist/index.js"]
