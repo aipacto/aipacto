@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import { Context, Data, Effect, Layer } from 'effect'
 
 export class ErrorDotenv extends Data.TaggedError('ErrorDotenv')<{
-	error: globalThis.Error
+	message: string
 }> {}
 
 const make = {
@@ -11,7 +11,10 @@ const make = {
 			const output = yield* Effect.sync(() => config({ path }))
 			if (output.parsed === undefined || output.error !== undefined) {
 				return yield* new ErrorDotenv({
-					error: output.error ?? new Error("Env variables couldn't be loaded"),
+					message:
+						output.error instanceof Error
+							? output.error.message
+							: "Env variables couldn't be loaded",
 				})
 			}
 

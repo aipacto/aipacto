@@ -12,7 +12,7 @@ export async function routesAuth(fastify: FastifyInstance) {
 
 	fastify.route({
 		method: ['GET', 'POST'],
-		url: '/api/auth/*',
+		url: '/auth/*',
 		async handler(request: FastifyRequest, reply: FastifyReply) {
 			try {
 				// Construct request URL

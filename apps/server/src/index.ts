@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import { Env } from '@aipacto/shared-utils-env'
 import { logAppServer } from '@aipacto/shared-utils-logging'
 import cors from '@fastify/cors'
@@ -12,6 +11,52 @@ import Fastify from 'fastify'
 import { routesAuth } from './routes/auth'
 import { routesDocuments } from './routes/documents'
 
+type ServerConfig = {
+	readonly environment: string
+	readonly host: string
+	readonly port: number
+	readonly allowedOrigins: ReadonlySet<string>
+}
+
+function resolveServerConfig(): ServerConfig {
+	const environment = process.env.NODE_ENV ?? 'development'
+	const host = process.env.SERVER_HOST
+
+	if (!host) {
+		throw new Error('SERVER_HOST env variable is required')
+	}
+
+	const portValue = process.env.SERVER_PORT ?? process.env.PORT
+	const portLabel =
+		process.env.SERVER_PORT !== undefined ? 'SERVER_PORT' : 'PORT'
+
+	if (!portValue) {
+		throw new Error(
+			'SERVER_PORT env variable is required (or PORT supplied by hosting)',
+		)
+	}
+
+	const port = Number.parseInt(portValue, 10)
+
+	if (!Number.isFinite(port) || port <= 0) {
+		throw new Error(
+			`${portLabel} env variable must be a positive integer, received "${portValue}"`,
+		)
+	}
+
+	const allowedOriginsEntries =
+		process.env.ALLOWED_ORIGINS?.split(',')
+			.map(origin => origin.trim())
+			.filter(origin => origin.length > 0) ?? []
+
+	return {
+		environment,
+		host,
+		port,
+		allowedOrigins: new Set(allowedOriginsEntries),
+	}
+}
+
 async function main() {
 	try {
 		await Effect.runPromise(Env.load.pipe(Effect.provide(Env.Live)))
@@ -23,9 +68,22 @@ async function main() {
 		process.exit(1)
 	}
 
+	let config: ServerConfig
+
+	try {
+		config = resolveServerConfig()
+	} catch (error) {
+		if (error instanceof Error) {
+			logAppServer.error('Invalid server configuration', error.message)
+		} else {
+			logAppServer.error('Invalid server configuration', String(error))
+		}
+		process.exit(1)
+	}
+
 	const serverOptions = {
 		logger:
-			process.env.NODE_ENV === 'development'
+			config.environment === 'development'
 				? {
 						level: 'debug',
 						transport: {
@@ -60,23 +118,29 @@ async function main() {
 	server.register(cors, {
 		origin: (origin, callback) => {
 			// Allow all origins in development
-			if (process.env.NODE_ENV === 'development') {
+			if (config.environment === 'development') {
 				callback(null, true)
 				return
 			}
 
-			// In production, check against allowed origins
-			const allowedOrigins =
-				process.env.ALLOWED_ORIGINS?.split(',').map(s => s.trim()) || []
-			if (!origin || allowedOrigins.includes(origin)) {
+			const hasWildcardOrigin = config.allowedOrigins.has('*')
+
+			if (!origin) {
 				callback(null, true)
-			} else {
-				callback(new Error('CORS origin not allowed'), false)
+				return
 			}
+
+			if (hasWildcardOrigin || config.allowedOrigins.has(origin)) {
+				callback(null, true)
+				return
+			}
+
+			callback(new Error('CORS origin not allowed'), false)
 		},
 		credentials: true,
 		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-		allowedHeaders: ['Content-Type', 'Authorization'],
+		allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Set-Cookie'],
+		exposedHeaders: ['Set-Cookie', 'set-auth-token'],
 		maxAge: 86400, // 24 hours
 		preflight: true,
 		strictPreflight: true,
@@ -92,35 +156,28 @@ async function main() {
 
 	// Health check route (no authentication required)
 	logAppServer.info('Registering health check route')
-	server.get('/api/health', async () => {
-		return { message: 'OK' }
-	})
+	const healthHandler = async () => ({ message: 'OK' })
+	server.get('/health', healthHandler)
 
 	// Authentication routes (no authentication required)
 	logAppServer.info('Registering authentication routes')
 	await routesAuth(server)
 
-	logAppServer.info('Registering API routes under /api prefix...')
+	logAppServer.info('Registering application routes')
 
-	// Register all API routes under /api prefix
-	await server.register(
-		async apiServer => {
-			// await routesAgents(apiServer)
-			await routesDocuments(apiServer)
-			// await routesThreads(apiServer)
-		},
-		{ prefix: '/api' },
-	)
+	// await routesAgents(server)
+	await routesDocuments(server)
+	// await routesThreads(server)
 
 	try {
-		const port = 3000
 		await server.listen({
-			host: process.env.SERVER_HOST || '0.0.0.0',
-			port,
+			host: config.host,
+			port: config.port,
 		})
 
-		server.log.info(`Server listening at http://localhost:${port}`)
-		server.log.info(`API available at http://localhost:${port}/api`)
+		server.log.info(
+			`Server listening (environment=${config.environment}) at ${config.host}:${config.port}`,
+		)
 	} catch (error) {
 		if (error instanceof Error) {
 			logAppServer.error(error.toString())
