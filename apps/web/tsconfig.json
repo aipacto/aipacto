@@ -9,6 +9,7 @@
 			"~lib": ["./src/lib/index.ts"],
 			"~hooks": ["./src/hooks/index.ts"],
 			"~server": ["./src/server/index.ts"],
+			"~server/functions": ["./src/server/functions/index.ts"],
 			"@/*": ["./src/*"]
 		},
 		"rootDir": "src",
@@ -17,6 +18,9 @@
 	},
 	"include": ["src/**/*.ts", "src/**/*.tsx", "vite-env.d.ts"],
 	"references": [
+		{
+			"path": "../../packages/shared/domain"
+		},
 		{
 			"path": "../../packages/shared/ui/localization"
 		}

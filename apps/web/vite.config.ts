@@ -39,6 +39,10 @@ export default defineConfig(({ mode }) => ({
 				find: '~server',
 				replacement: resolve(__dirname, 'src/server'),
 			},
+			{
+				find: '~server/functions',
+				replacement: resolve(__dirname, 'src/server/functions'),
+			},
 		],
 	},
 	plugins: [

@@ -1,6 +1,8 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { LoginForm } from '~components'
+import { CoLanguageSelector } from '~components/ui'
 import { getServerAuthState } from '~server'
 
 // apps/web/src/routes/login.tsx
@@ -37,11 +39,23 @@ export const Route = createFileRoute('/login')({
 function LoginPage() {
 	const { redirect: validatedRedirect } = Route.useSearch()
 	const navigate = useNavigate()
+	const { t } = useTranslation()
 	const handleLoginSuccess = () =>
 		navigate({ to: validatedRedirect ?? '/docs', replace: true })
 	return (
-		<div className='flex items-center justify-center min-h-screen p-4'>
-			<LoginForm onLoginSuccess={handleLoginSuccess} />
+		<div className='flex flex-col min-h-screen p-4'>
+			{/* Main content centered */}
+			<div className='flex-1 flex items-center justify-center'>
+				<LoginForm onLoginSuccess={handleLoginSuccess} />
+			</div>
+
+			{/* Language selector at bottom-end */}
+			<div className='flex items-center justify-end gap-[var(--spacing-sm)] p-[var(--spacing-md)]'>
+				<span className='text-[var(--font-size-body-s)] text-[var(--on-surface-variant)]'>
+					{t('pages.login.txt.language')}
+				</span>
+				<CoLanguageSelector />
+			</div>
 		</div>
 	)
 }

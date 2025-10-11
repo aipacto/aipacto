@@ -1,3 +1,5 @@
+import type { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
+import { createI18nInstance } from '@aipacto/shared-ui-localization'
 import type { QueryClient } from '@tanstack/react-query'
 import {
 	ClientOnly,
@@ -8,18 +10,27 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import type { ReactNode } from 'react'
+import { I18nextProvider } from 'react-i18next'
 
 import { NotFound } from '~components'
 import { AuthProvider } from '~hooks'
+import { detectServerLanguage } from '~server/functions'
 
 import '../styles/global.css'
 
 export interface RouterContext {
 	queryClient: QueryClient
+	language: ListSupportedLanguagesCodes
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
+	beforeLoad: async () => {
+		// Detect language on server
+		const language = await detectServerLanguage()
+
+		return { language }
+	},
 	head: () => ({
 		meta: [
 			{
@@ -159,18 +170,31 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
+	const { language } = Route.useRouteContext()
+
+	// Create i18n instance with detected language
+	const i18n = createI18nInstance({ language })
+
 	return (
 		<RootDocument>
-			<AuthProvider>
-				<Outlet />
-			</AuthProvider>
+			<I18nextProvider i18n={i18n}>
+				<AuthProvider>
+					<Outlet />
+				</AuthProvider>
+			</I18nextProvider>
 		</RootDocument>
 	)
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+	const { language } = Route.useRouteContext()
+
+	// Determine text direction based on language
+	const isRTL = ['ar', 'he', 'fa', 'ur'].includes(language)
+	const dir = isRTL ? 'rtl' : 'ltr'
+
 	return (
-		<html lang='en'>
+		<html lang={language} dir={dir}>
 			<head>
 				<HeadContent />
 			</head>
