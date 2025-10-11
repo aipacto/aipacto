@@ -18,13 +18,9 @@
 	},
 	"dependencies": {
 		"temporal-polyfill": "^0.3.0",
-		"uuid": "^10.0.0"
+		"uuid": "^13.0.0"
 	},
 	"peerDependencies": {
 		"effect": "^3.17.5"
-	},
-	"devDependencies": {
-		"@types/uuid": "^10.0.0",
-		"tsdown": "^0.12.7"
 	}
 }

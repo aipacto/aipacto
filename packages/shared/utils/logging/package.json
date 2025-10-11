@@ -22,8 +22,5 @@
 	},
 	"peerDependencies": {
 		"effect": "^3.17.5"
-	},
-	"devDependencies": {
-		"tsdown": "^0.12.7"
 	}
 }

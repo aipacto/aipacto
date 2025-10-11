@@ -8,7 +8,7 @@ Thank you for your interest in contributing to Aipacto! We're building an AI-dri
   - **Recommended:** [Determinate Systems Nix Installer](https://zero-to-nix.com/start/install/) (single command, works on Linux/macOS/WSL)
   - **Alternative:** [Official NixOS installer](https://nixos.org/download.html)
 
-  Nix ensures everyone uses the exact same versions of Node.js, Yarn, TypeScript, and other tools. No more "works on my machine" issues!
+  Nix ensures everyone uses the exact same versions of Node.js, pnpm, TypeScript, and other tools. No more "works on my machine" issues!
 
 - **Watchman** (for file watching and hot reloading)
   - **Linux:** Install using [Homebrew](https://brew.sh/):
@@ -39,7 +39,7 @@ Thank you for your interest in contributing to Aipacto! We're building an AI-dri
    nix develop
    ```
 
-   This drops you into a shell with the correct Node.js, Yarn, TypeScript, and required tools.
+   This drops you into a shell with the correct Node.js, pnpm, TypeScript, and required tools.
 
    Optional: direnv auto-enter
    - This repo includes an `.envrc` with `use flake` for seamless entry.
@@ -53,7 +53,7 @@ Thank you for your interest in contributing to Aipacto! We're building an AI-dri
 3. **Install dependencies:**
 
    ```bash
-   yarn install
+   pnpm install
    ```
 
 4. **Run the applications:**
@@ -61,23 +61,23 @@ Thank you for your interest in contributing to Aipacto! We're building an AI-dri
    Start the backend server (handles AI agents and tender data processing):
 
    ```bash
-   yarn workspace @aipacto/apps-server dev
+   pnpm --filter @aipacto/apps-server dev
    ```
 
    Start the tender writer web application:
 
    ```bash
-   yarn workspace @aipacto/apps-expo start
+   pnpm --filter @aipacto/apps-expo start
    ```
 
 > **Note:** All commands below assume you are inside the Nix dev shell (`nix develop`).
 
 ## Monorepo Structure & Workspaces
 
-Aipacto uses a monorepo managed with Yarn workspaces, organized around our tender writer application and municipal AI system. Each package/app has its own scripts. To run scripts for a specific package, use:
+Aipacto uses a monorepo managed with pnpm workspaces, organized around our tender writer application and municipal AI system. Each package/app has its own scripts. To run scripts for a specific package, use:
 
 ```sh
-yarn workspace <package> <script>
+pnpm --filter <package> <script>
 ```
 
 **Key Workspaces:**
@@ -85,19 +85,19 @@ yarn workspace <package> <script>
 - **Tender Writer Application**: Cross-platform interface for creating procurement documents
 
   ```sh
-  yarn workspace @aipacto/apps-expo start
+  pnpm --filter @aipacto/apps-expo start
   ```
 
 - **Municipal AI Server**: Backend handling Spanish tender data crawling and AI processing
 
   ```sh
-  yarn workspace @aipacto/apps-server dev
+  pnpm --filter @aipacto/apps-server dev
   ```
 
 - **Shared Procurement Components**: UI components optimized for municipal workflows
 
   ```sh
-  yarn workspace @aipacto/shared-ui-core build
+  pnpm --filter @aipacto/shared-ui-core build
   ```
 
 ## Contributing & PR Workflow
@@ -120,9 +120,9 @@ yarn workspace <package> <script>
 
 - **On feature branches:**
   - **Before every commit** the following quick checks run automatically:
-    - Lint (`yarn lint`)
-    - Dependency consistency (`yarn check-deps`)
-    - Secret scan of staged files (`yarn secretlint`)
+    - Lint (`pnpm lint`)
+    - Dependency consistency (`pnpm check-deps`)
+    - Secret scan of staged files (`pnpm secretlint`)
   - **Before every push** additional enforcement runs:
     - Blocks direct pushes to `main` branch
     - Blocks merge commits to `main` branch (only rebase/squash allowed)
@@ -134,9 +134,9 @@ yarn workspace <package> <script>
 When you commit staged files, several automated checks will run (see `lefthook.yml`):
 
 - **Block Main Commits**: Prevents direct commits to `main` branch
-- **Linting**: Code style and formatting (`yarn lint`)
-- **Dependency Version Consistency**: Ensures all packages use compatible versions (`yarn check-deps`)
-- **Secret Scanning**: Prevents committing secrets (`yarn secretlint` on staged files)
+- **Linting**: Code style and formatting (`pnpm lint`)
+- **Dependency Version Consistency**: Ensures all packages use compatible versions (`pnpm check-deps`)
+- **Secret Scanning**: Prevents committing secrets (`pnpm secretlint` on staged files)
 
 If any check fails, your commit will be blocked. **You must fix all errors before committing.**
 
@@ -160,11 +160,11 @@ Additional checks run before pushing:
 
 ## CI & Quality
 
-- **Build:** `yarn build`
-- **Lint:** `yarn lint`
-- **Type Check:** `yarn check-types`
-- **Secrets:** `yarn check-secrets`
-- **Dependencies versioning:** `yarn check-deps`
+- **Build:** `pnpm build`
+- **Lint:** `pnpm lint`
+- **Type Check:** `pnpm check-types`
+- **Secrets:** `pnpm check-secrets`
+- **Dependencies versioning:** `pnpm check-deps`
 
 ## Domain Knowledge
 

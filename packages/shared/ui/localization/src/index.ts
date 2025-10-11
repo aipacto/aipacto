@@ -1,18 +1,9 @@
-import type { i18n as I18nInstance } from 'i18next'
-
-import { initI18n } from './i18n'
-
-// Exports
 export { useTranslation } from 'react-i18next'
 
+export { changeLanguage, createI18nInstance, type I18nConfig } from './i18n'
 export {
-	changeLanguage,
-	default as i18n,
-	detectLanguage,
-	initI18n,
-} from './i18n'
+	detectBrowserLanguage,
+	getPreferredLanguage,
+	parseAcceptLanguage,
+} from './language_utils'
 export { languages } from './languages'
-
-export async function initLocalization(): Promise<I18nInstance> {
-	return initI18n()
-}

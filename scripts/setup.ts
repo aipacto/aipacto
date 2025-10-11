@@ -24,7 +24,7 @@ const setupOptions = {
 
 const checkPrerequisites = async () => {
 	const nodeVersion = process.version.slice(1)
-	const { stdout: yarnVersion } = await $`yarn --version`
+	const { stdout: pnpmVersion } = await $`pnpm --version`
 
 	const checkVersion = (current: string, required: string) => {
 		const [curMajor] = current.split('.')
@@ -36,8 +36,8 @@ const checkPrerequisites = async () => {
 		throw new Error('Node.js 22 or higher is required')
 	}
 
-	if (!checkVersion(yarnVersion, '4.6.0')) {
-		throw new Error('Yarn 4.6.0 or higher is required')
+	if (!checkVersion(pnpmVersion, '9.0.0')) {
+		throw new Error('pnpm 9.0.0 or higher is required')
 	}
 }
 

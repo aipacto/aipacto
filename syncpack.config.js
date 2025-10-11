@@ -20,7 +20,7 @@ export default {
 		},
 		{
 			label: 'React',
-			dependencies: ['@types/react*', 'react', 'react-dom', 'react-native'],
+			dependencies: ['@types/react*', 'react', 'react-dom'],
 			policy: 'sameRange',
 			// isIgnored: true,
 		},
@@ -59,7 +59,6 @@ export default {
 		'module',
 		'import',
 		'exports',
-		'react-native',
 		'workspaces',
 		'scripts',
 		'dependencies',

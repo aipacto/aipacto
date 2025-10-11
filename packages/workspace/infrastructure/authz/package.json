@@ -24,6 +24,6 @@
 	"devDependencies": {
 		"@aipacto/shared-utils-logging": "workspace:*",
 		"@aipacto/workspace-domain": "workspace:*",
-		"tsdown": "^0.12.7"
+		"tsdown": "^0.15.6"
 	}
 }

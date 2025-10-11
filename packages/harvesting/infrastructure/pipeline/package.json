@@ -23,10 +23,5 @@
 		"@aipacto/harvesting-domain": "workspace:*",
 		"@aipacto/shared-domain": "workspace:*",
 		"effect": "^3.17.5"
-	},
-	"devDependencies": {
-		"@aipacto/harvesting-domain": "workspace:*",
-		"@aipacto/shared-domain": "workspace:*",
-		"tsdown": "^0.12.7"
 	}
 }

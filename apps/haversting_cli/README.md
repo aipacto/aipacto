@@ -25,10 +25,10 @@ FIRECRAWL_API_KEY=your-api-key-here
 
 ```bash
 # Install dependencies
-yarn install
+pnpm install
 
 # Run the CLI
-yarn cli
+pnpm cli
 ```
 
 ## 📖 Usage
@@ -38,7 +38,7 @@ yarn cli
 The easiest way to use the CLI is in interactive mode:
 
 ```bash
-yarn cli
+pnpm cli
 ```
 
 This will present you with a beautiful interactive interface where you can choose your operation and configure options step by step.
@@ -49,13 +49,13 @@ For automation and scripting, you can use direct commands:
 
 ```bash
 # Crawl a website
-yarn cli --crawl --url city-council.cat
+pnpm cli --crawl --url city-council.cat
 
 # Scrape a specific page
-yarn cli --scrape --url https://www.city-council.cat/news
+pnpm cli --scrape --url https://www.city-council.cat/news
 
 # Get help
-yarn cli --help
+pnpm cli --help
 ```
 
 ## 🕷️ Crawling
@@ -92,14 +92,14 @@ Crawl results are saved as JSON files with this structure:
 
 ```bash
 # Interactive crawl
-yarn cli
+pnpm cli
 # Choose "Crawl Website"
 # Enter URL: city-council.cat
 # Optional: Add search filter like "actualitat"
 # Optional: Set max URLs limit
 
 # Direct crawl
-yarn cli --crawl --url city-council.cat
+pnpm cli --crawl --url city-council.cat
 ```
 
 ## 📄 Scraping
@@ -125,13 +125,13 @@ For each scrape operation, multiple files are created:
 
 ```bash
 # Interactive scrape
-yarn cli
+pnpm cli
 # Choose "Scrape Content"
 # Enter URL: https://www.city-council.cat/news
 # Select output formats
 
 # Direct scrape
-yarn cli --scrape --url https://www.city-council.cat/news
+pnpm cli --scrape --url https://www.city-council.cat/news
 ```
 
 ## 📁 Output Structure
@@ -189,9 +189,9 @@ NODE_ENV=development     # Enable debug output
 
 | Option | Short | Description | Example |
 |--------|-------|-------------|---------|
-| `--help` | `-h` | Show help information | `yarn cli -h` |
-| `--crawl` | `-c` | Crawl mode | `yarn cli -c -u city-council.cat` |
-| `--scrape` | `-s` | Scrape mode | `yarn cli -s -u https://example.com` |
+| `--help` | `-h` | Show help information | `pnpm cli -h` |
+| `--crawl` | `-c` | Crawl mode | `pnpm cli -c -u city-council.cat` |
+| `--scrape` | `-s` | Scrape mode | `pnpm cli -s -u https://example.com` |
 | `--url` | `-u` | Target URL | `-u city-council.cat` |
 | `--output` | `-o` | Output directory | `-o ./results` |
 
@@ -201,10 +201,10 @@ NODE_ENV=development     # Enable debug output
 
 ```bash
 # Crawl main city website
-yarn cli --crawl --url city-council.cat
+pnpm cli --crawl --url city-council.cat
 
 # Crawl news section with filter
-yarn cli
+pnpm cli
 # Interactive: Choose crawl, enter "city-council.cat/news", filter by "noticies"
 ```
 
@@ -212,10 +212,10 @@ yarn cli
 
 ```bash
 # Extract news article
-yarn cli --scrape --url https://www.city-council.cat/news/detail/1234
+pnpm cli --scrape --url https://www.city-council.cat/news/detail/1234
 
 # Interactive mode for complex scraping
-yarn cli
+pnpm cli
 # Choose scrape, configure formats and options
 ```
 

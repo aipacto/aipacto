@@ -4,13 +4,13 @@
 			"loading": "Loading..."
 		}
 	},
-	"languages": {
-		"automatic": "Automatic",
-		"english": "English",
-		"spanish": "Spanish",
-		"catalan": "Catalan"
-	},
 	"components": {
+		"co_language_selector": {
+			"automatic": "Automatic",
+			"english": "English",
+			"spanish": "Spanish",
+			"catalan": "Catalan"
+		},
 		"co_auth_verification": {
 			"txt": {
 				"otc_in_email": "Please enter the verification code sent to {{email}}",
@@ -48,6 +48,7 @@
 				"create_account": "Create Account"
 			},
 			"txt": {
+				"language": "Language",
 				"no_account": "Don't have an account?"
 			},
 			"err": {
