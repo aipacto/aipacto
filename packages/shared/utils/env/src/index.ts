@@ -22,11 +22,16 @@ const make = Effect.map(
 
 			log.debug('Loading environment variables')
 
-			// Try environment-specific file first
+			// Try environment-specific file first, then default, then skip if both missing
 			yield* dotenv.config({ path: envPath }).pipe(
-				Effect.catchTag('ErrorDotenv', error => {
-					return dotenv.config({ path: defaultPath })
-				}),
+				Effect.catchTag('ErrorDotenv', () =>
+					dotenv.config({ path: defaultPath }).pipe(
+						Effect.catchTag('ErrorDotenv', () => {
+							log.debug('No .env files found, using process.env')
+							return Effect.void
+						}),
+					),
+				),
 			)
 		}),
 	}),

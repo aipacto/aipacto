@@ -20,8 +20,15 @@ interface UpdateMetadataBody {
 
 export async function routesDocuments(server: FastifyInstance) {
 	server.addHook('preHandler', async (request, reply) => {
+		// Check if the request URL starts with /v1/docs
+		if (!request.url.startsWith('/v1/docs')) {
+			return
+		}
+
 		const isAuthenticated = await authenticateRequest(request, reply)
-		if (!isAuthenticated) return
+		if (!isAuthenticated) {
+			return reply
+		}
 	})
 
 	// Create new document
