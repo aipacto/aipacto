@@ -104,8 +104,9 @@ const buttonVariants = cva(
 const Spinner = ({ size = 'default' }: { size?: 'small' | 'default' }) => (
 	<span
 		aria-live='polite'
-		className={`animate-spin rounded-full border-2 border-current border-t-transparent ${size === 'small' ? 'h-4 w-4' : 'h-5 w-5'
-			}`}
+		className={`animate-spin rounded-full border-2 border-current border-t-transparent ${
+			size === 'small' ? 'h-4 w-4' : 'h-5 w-5'
+		}`}
 	>
 		<span className='sr-only'>Loading</span>
 	</span>
@@ -168,17 +169,13 @@ export function CoButtonText({
 			) : (
 				<>
 					{/* Leading icon */}
-					{LeadingIcon && (
-						<LeadingIcon className={`shrink-0 ${iconSize}`} />
-					)}
+					{LeadingIcon && <LeadingIcon className={`shrink-0 ${iconSize}`} />}
 
 					{/* Button text */}
 					{children && <span>{children}</span>}
 
 					{/* Trailing icon */}
-					{TrailingIcon && (
-						<TrailingIcon className={`shrink-0 ${iconSize}`} />
-					)}
+					{TrailingIcon && <TrailingIcon className={`shrink-0 ${iconSize}`} />}
 				</>
 			)}
 		</button>

@@ -16,7 +16,7 @@
          buildInputs = [
             pkgs.nodejs_24
             pkgs.typescript
-            pkgs.yarn-berry
+            pkgs.pnpm
             pkgs.git
             pkgs.gh
             pkgs.starship # shell beautifier
@@ -28,7 +28,7 @@
             echo "🚀 Aipacto Monorepo"
             echo "Node.js $(node --version)"
             echo "TypeScript $(tsc --version)"
-            echo "Yarn $(yarn --version)"
+            echo "pnpm $(pnpm --version)"
             echo ""
 
             # Initialize Starship prompt for this Bash shell

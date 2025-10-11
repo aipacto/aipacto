@@ -11,8 +11,6 @@ export const Route = createFileRoute('/_authenticated')({
 	loader: async ({ location }) => {
 		const state = await getServerAuthState()
 
-		// biome-ignore lint/suspicious/noConsole: <explanation>
-		console.log('state', state)
 		if (!state?.session?.token) {
 			throw redirect({
 				to: '/login',

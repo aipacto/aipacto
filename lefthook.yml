@@ -10,17 +10,17 @@ pre-commit:
     check-deps:
       run: |
         echo "📦 Running dependency version consistency checks..."
-        yarn check-deps
+        pnpm check-deps
       stage_fixed: true
     secretlint:
       run: |
         echo "🔑 Running Secretlint (staged files)..."
-        yarn secretlint "{staged_files}"
+        pnpm secretlint "{staged_files}"
       stage_fixed: false
     lint:
       run: |
         echo "✨ Running lint checks..."
-        yarn lint
+        pnpm lint
       stage_fixed: true
 
 # Prevent merge commits on main

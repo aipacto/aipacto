@@ -84,7 +84,6 @@
 			"!./**/.output",
 			"!./**/.tamagui",
 			"!./**/.tanstack",
-			"!./**/.yarn",
 			"!./**/dist",
 			"!./**/node_modules",
 			"!flake.lock",

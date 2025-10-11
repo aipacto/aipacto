@@ -3,7 +3,8 @@ import { Input } from '@base-ui-components/react/input'
 import type * as React from 'react'
 import { forwardRef } from 'react'
 
-interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className'> {
+interface TextFieldProps
+	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className'> {
 	label?: string
 	errorMessage?: string
 	supportingText?: string
@@ -34,7 +35,7 @@ export const CoTextField = forwardRef<HTMLInputElement, TextFieldProps>(
 			>
 				{label && (
 					<Field.Label
-						className={(state) => {
+						className={state => {
 							const isInvalid = state.valid === false || !!errorMessage
 
 							return [
@@ -57,7 +58,7 @@ export const CoTextField = forwardRef<HTMLInputElement, TextFieldProps>(
 					id={id}
 					ref={ref}
 					required={required}
-					className={(state) => {
+					className={state => {
 						const isInvalid = state.valid === false || !!errorMessage
 						const isFocused = state.focused && !isInvalid
 

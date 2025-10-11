@@ -58,7 +58,7 @@
 		"@aipacto/shared-domain": "workspace:*",
 		"@aipacto/shared-ui-localization": "workspace:*",
 		"tamagui": "^1.132.7",
-		"tsdown": "^0.12.7"
+		"tsdown": "^0.15.6"
 	},
 	"peerDependenciesMeta": {
 		"react-native": {

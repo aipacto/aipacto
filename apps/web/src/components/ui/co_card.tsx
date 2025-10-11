@@ -126,7 +126,9 @@ export function CoCardHeader({
 	className,
 	ref: forwardedRef,
 	...props
-}: React.ComponentPropsWithoutRef<'div'> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+	ref?: React.Ref<HTMLDivElement>
+}) {
 	const combinedClassName = [cardHeaderVariants(), className]
 		.filter(Boolean)
 		.join(' ')
@@ -145,7 +147,9 @@ export function CoCardTitle({
 	className,
 	ref: forwardedRef,
 	...props
-}: React.ComponentPropsWithoutRef<'h3'> & { ref?: React.Ref<HTMLHeadingElement> }) {
+}: React.ComponentPropsWithoutRef<'h3'> & {
+	ref?: React.Ref<HTMLHeadingElement>
+}) {
 	const combinedClassName = [cardTitleVariants(), className]
 		.filter(Boolean)
 		.join(' ')
@@ -164,7 +168,9 @@ export function CoCardSubtitle({
 	className,
 	ref: forwardedRef,
 	...props
-}: React.ComponentPropsWithoutRef<'p'> & { ref?: React.Ref<HTMLParagraphElement> }) {
+}: React.ComponentPropsWithoutRef<'p'> & {
+	ref?: React.Ref<HTMLParagraphElement>
+}) {
 	const combinedClassName = [cardSubtitleVariants(), className]
 		.filter(Boolean)
 		.join(' ')
@@ -183,7 +189,9 @@ export function CoCardContent({
 	className,
 	ref: forwardedRef,
 	...props
-}: React.ComponentPropsWithoutRef<'div'> & { ref?: React.Ref<HTMLDivElement> }) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+	ref?: React.Ref<HTMLDivElement>
+}) {
 	const combinedClassName = [cardContentVariants(), className]
 		.filter(Boolean)
 		.join(' ')

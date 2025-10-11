@@ -6,7 +6,72 @@ import {
 } from '@aipacto/shared-domain'
 import { logSharedUiLocalization } from '@aipacto/shared-utils-logging'
 
-const isWeb = typeof window !== 'undefined' && typeof document !== 'undefined'
+/**
+ * Detects browser language on the client side
+ */
+export const detectBrowserLanguage =
+	(): keyof typeof ListSupportedLanguagesCodes => {
+		let deviceLanguage = 'en'
+
+		try {
+			if (typeof navigator !== 'undefined' && navigator.language) {
+				const webLang = navigator.language.split('-')[0]?.toLowerCase()
+				if (webLang) {
+					deviceLanguage = webLang
+				}
+			}
+		} catch (error) {
+			logSharedUiLocalization.error('Error detecting browser language:', error)
+			return ListSupportedLanguagesCodes.eng
+		}
+
+		if (isValidDeviceLanguageCode(deviceLanguage)) {
+			const mappedLanguage =
+				ListSupportedLanguagesMapperIso1to3[
+					deviceLanguage as LanguageDeviceLanguageCode
+				]
+			if (mappedLanguage) {
+				return mappedLanguage as keyof typeof ListSupportedLanguagesCodes
+			}
+		}
+
+		return ListSupportedLanguagesCodes.eng
+	}
+
+/**
+ * Parses Accept-Language header for server-side language detection
+ */
+export const parseAcceptLanguage = (
+	acceptLanguage: string | null,
+): keyof typeof ListSupportedLanguagesCodes => {
+	if (!acceptLanguage) {
+		return ListSupportedLanguagesCodes.eng
+	}
+
+	// Parse Accept-Language: "en-US,en;q=0.9,es;q=0.8"
+	const languages = acceptLanguage
+		.split(',')
+		.map(lang => {
+			const [tag, quality = 'q=1'] = lang.trim().split(';')
+			return {
+				tag: tag?.split('-')[0]?.toLowerCase() || 'en',
+				quality: parseFloat(quality.split('=')[1] || '1'),
+			}
+		})
+		.sort((a, b) => b.quality - a.quality)
+
+	for (const { tag } of languages) {
+		if (tag && isValidDeviceLanguageCode(tag)) {
+			const mapped =
+				ListSupportedLanguagesMapperIso1to3[tag as LanguageDeviceLanguageCode]
+			if (mapped) {
+				return mapped as keyof typeof ListSupportedLanguagesCodes
+			}
+		}
+	}
+
+	return ListSupportedLanguagesCodes.eng
+}
 
 /**
  * Gets the user's preferred language from metadata or device
@@ -21,7 +86,7 @@ export const getPreferredLanguage = (
 		return 'auto'
 	}
 
-	// First check language in metadata directly (for JWT token case)
+	// Check direct language property
 	const directLanguage = userMetadata.language as string | undefined
 	if (directLanguage === 'auto') {
 		return 'auto'
@@ -33,7 +98,7 @@ export const getPreferredLanguage = (
 		return directLanguage as keyof typeof ListSupportedLanguagesCodes
 	}
 
-	// Then check in publicMetadata (backend updates)
+	// Check publicMetadata
 	const publicMetadata = userMetadata.public_metadata as
 		| Record<string, unknown>
 		| undefined
@@ -48,7 +113,7 @@ export const getPreferredLanguage = (
 		return publicLanguage as keyof typeof ListSupportedLanguagesCodes
 	}
 
-	// Finally check in unsafeMetadata (frontend updates)
+	// Check unsafeMetadata
 	const unsafeMetadata = userMetadata.unsafe_metadata as
 		| Record<string, unknown>
 		| undefined
@@ -63,53 +128,5 @@ export const getPreferredLanguage = (
 		return unsafeLanguage as keyof typeof ListSupportedLanguagesCodes
 	}
 
-	// Fallback to auto
 	return 'auto'
 }
-
-/**
- * Detects the device language and returns a supported 3-letter code
- * Works in both web and native environments
- * @returns A supported language code
- */
-export const detectDeviceLanguage =
-	(): keyof typeof ListSupportedLanguagesCodes => {
-		let deviceLanguage = 'en'
-
-		try {
-			if (isWeb) {
-				if (typeof navigator !== 'undefined' && navigator.language) {
-					const webLang = navigator.language.split('-')[0]?.toLowerCase()
-					if (webLang) {
-						deviceLanguage = webLang
-					}
-				}
-			} else {
-				// Dynamic import for native only
-				const Localization = require('expo-localization')
-				const locales = Localization.getLocales()
-				const primaryLocale = locales[0]
-				if (primaryLocale?.languageCode) {
-					deviceLanguage = primaryLocale.languageCode.toLowerCase()
-				}
-			}
-		} catch (error) {
-			logSharedUiLocalization.error('Error detecting device language:', error)
-			// Fallback
-			return ListSupportedLanguagesCodes.eng
-		}
-
-		// Convert to our supported format if valid
-		if (isValidDeviceLanguageCode(deviceLanguage)) {
-			const mappedLanguage =
-				ListSupportedLanguagesMapperIso1to3[
-					deviceLanguage as LanguageDeviceLanguageCode
-				]
-			if (mappedLanguage) {
-				return mappedLanguage as keyof typeof ListSupportedLanguagesCodes
-			}
-		}
-
-		// Default
-		return ListSupportedLanguagesCodes.eng
-	}
