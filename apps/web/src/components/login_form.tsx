@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useAuth } from '~hooks'
 
@@ -7,6 +8,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onLoginSuccess }: LoginFormProps) {
+	const { t } = useTranslation()
 	const { authClient } = useAuth()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
@@ -62,11 +64,13 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 	}
 
 	return (
-		<div className='max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md'>
-			<h2 className='text-2xl font-bold mb-6 text-center'>Sign In / Sign Up</h2>
+		<div className='max-w-md mx-auto mt-8 p-6 bg-[var(--surface-container-low)] rounded-[var(--radius-lg)] shadow-[var(--layout-shadow-elevation)]'>
+			<h2 className='text-[var(--font-size-heading-l)] font-medium mb-6 text-center text-[var(--on-surface)]'>
+				{t('pages.login.title')}
+			</h2>
 
 			{error && (
-				<div className='mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded'>
+				<div className='mb-4 p-3 bg-[var(--error-container)] border border-[var(--error)] text-[var(--on-error-container)] rounded-[var(--radius-md)]'>
 					{error}
 				</div>
 			)}
@@ -75,16 +79,16 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 				<div>
 					<label
 						htmlFor={emailId}
-						className='block text-sm font-medium text-gray-700'
+						className='block text-[var(--font-size-label-l)] font-medium text-[var(--on-surface)]'
 					>
-						Email
+						{t('pages.login.plh.email')}
 					</label>
 					<input
 						type='email'
 						id={emailId}
 						value={email}
 						onChange={e => setEmail(e.target.value)}
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+						className='mt-1 block w-full px-3 py-2 border border-[var(--outline)] rounded-[var(--radius-md)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] bg-[var(--surface-container)] text-[var(--on-surface)]'
 						required
 					/>
 				</div>
@@ -92,7 +96,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 				<div>
 					<label
 						htmlFor={passwordId}
-						className='block text-sm font-medium text-gray-700'
+						className='block text-[var(--font-size-label-l)] font-medium text-[var(--on-surface)]'
 					>
 						Password
 					</label>
@@ -101,7 +105,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 						id={passwordId}
 						value={password}
 						onChange={e => setPassword(e.target.value)}
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+						className='mt-1 block w-full px-3 py-2 border border-[var(--outline)] rounded-[var(--radius-md)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] bg-[var(--surface-container)] text-[var(--on-surface)]'
 						required
 					/>
 				</div>
@@ -110,18 +114,20 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 					<button
 						type='submit'
 						disabled={isLoading}
-						className='flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50'
+						className='flex-1 bg-[var(--primary)] text-[var(--on-primary)] py-2 px-4 rounded-[var(--radius-md)] hover:bg-[var(--primary-container)] hover:text-[var(--on-primary-container)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 disabled:opacity-50'
 					>
-						{isLoading ? 'Signing In...' : 'Sign In'}
+						{isLoading ? t('misc.txt.loading') : t('pages.login.btn.access')}
 					</button>
 
 					<button
 						type='button'
 						onClick={handleSignUp}
 						disabled={isLoading}
-						className='flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50'
+						className='flex-1 bg-[var(--secondary)] text-[var(--on-secondary)] py-2 px-4 rounded-[var(--radius-md)] hover:bg-[var(--secondary-container)] hover:text-[var(--on-secondary-container)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] focus:ring-offset-2 disabled:opacity-50'
 					>
-						{isLoading ? 'Signing Up...' : 'Sign Up'}
+						{isLoading
+							? t('misc.txt.loading')
+							: t('pages.login.btn.create_account')}
 					</button>
 				</div>
 			</form>

@@ -13,6 +13,8 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@aipacto/shared-domain": "workspace:*",
+		"@aipacto/shared-ui-localization": "workspace:*",
 		"@base-ui-components/react": "^1.0.0-beta.4",
 		"@floating-ui/react": "^0.27.15",
 		"@tanstack/react-query": "^5.90.2",
@@ -43,7 +45,9 @@
 		"tw-animate-css": "^1.3.5"
 	},
 	"devDependencies": {
+		"@aipacto/shared-domain": "workspace:*",
 		"@aipacto/shared-tsconfig": "workspace:*",
+		"@aipacto/shared-ui-localization": "workspace:*",
 		"@tailwindcss/vite": "^4.1.11",
 		"@tanstack/react-query-devtools": "^5.90.2",
 		"@tanstack/react-router-devtools": "^1.132.47",

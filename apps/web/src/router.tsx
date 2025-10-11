@@ -1,3 +1,4 @@
+import { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
 import { QueryClient } from '@tanstack/react-query'
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
@@ -19,7 +20,7 @@ export function getRouter() {
 
 	const router = createRouter({
 		routeTree,
-		context: { queryClient },
+		context: { queryClient, language: ListSupportedLanguagesCodes.eng },
 		scrollRestoration: true,
 		defaultErrorComponent: DefaultCatchBoundary,
 		defaultNotFoundComponent: () => <NotFound />,
