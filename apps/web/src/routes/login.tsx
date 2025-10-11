@@ -1,42 +1,47 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 
 import { LoginForm } from '~components'
-import { getSession, useSession } from '~hooks'
+import { getServerAuthState } from '~server'
+
+// apps/web/src/routes/login.tsx
+const safeRedirect = (value?: string) => {
+	if (!value || typeof value !== 'string') return undefined
+	try {
+		const decoded = decodeURIComponent(value)
+		// allow absolute URLs by extracting the path, else expect an absolute in-app path
+		if (/^https?:\/\//i.test(decoded)) {
+			const u = new URL(decoded)
+			return u.pathname + (u.search || '') + (u.hash || '')
+		}
+		return decoded.startsWith('/') ? decoded : undefined
+	} catch {
+		return undefined
+	}
+}
 
 export const Route = createFileRoute('/login')({
 	validateSearch: (search: Record<string, unknown>) => ({
-		redirect: search.redirect as string | undefined,
+		redirect: safeRedirect(search.redirect as string | undefined),
 	}),
 	component: LoginPage,
-	beforeLoad: async () => {
+	beforeLoad: async ({ search }) => {
 		try {
-			const session = await getSession()
-			if (session?.data?.session?.token) {
-				throw redirect({ to: '/docs' })
+			const session = await getServerAuthState()
+			if (session?.session?.token) {
+				throw redirect({ to: search.redirect ?? '/docs', replace: true })
 			}
-		} catch {
-			// If session check fails, continue to login page
-		}
+		} catch {}
 	},
 })
 
 function LoginPage() {
-	const search = Route.useSearch()
-	const session = useSession()
-	const router = useRouter()
-
-	// If user is already logged in, redirect to the original destination
-	useEffect(() => {
-		if (session.data?.session?.token) {
-			const redirectTo = search.redirect || '/'
-			router.navigate({ to: redirectTo, replace: true })
-		}
-	}, [session.data, search.redirect, router])
-
+	const { redirect: validatedRedirect } = Route.useSearch()
+	const navigate = useNavigate()
+	const handleLoginSuccess = () =>
+		navigate({ to: validatedRedirect ?? '/docs', replace: true })
 	return (
 		<div className='flex items-center justify-center min-h-screen p-4'>
-			<LoginForm />
+			<LoginForm onLoginSuccess={handleLoginSuccess} />
 		</div>
 	)
 }

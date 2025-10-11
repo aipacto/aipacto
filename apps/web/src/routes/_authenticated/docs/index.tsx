@@ -10,8 +10,17 @@ import {
 	useInteractions,
 	useRole,
 } from '@floating-ui/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import {
+	queryOptions,
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from '@tanstack/react-query'
+import {
+	ClientOnly,
+	createFileRoute,
+	useNavigate,
+} from '@tanstack/react-router'
 import { cva } from 'class-variance-authority'
 import {
 	ChevronDown,
@@ -26,87 +35,11 @@ import {
 import { useCallback, useMemo, useState } from 'react'
 
 import { CoButtonText, CoTextField } from '~components/ui'
-import { useSession } from '~hooks'
-
-const API_BASE_URL = import.meta.env.VITE_SERVER_URL
-
-interface FolderObj {
-	folders: Record<string, FolderObj>
-	documents: Document[]
-}
-
-// Parse documents into folder structure
-function parseDocumentsToTree(documents: Document[]): TreeNode[] {
-	const root: FolderObj = { folders: {}, documents: [] }
-
-	documents.forEach(doc => {
-		// Normalize path: remove leading/trailing slashes, handle empty paths
-		let normalizedPath = doc.path || ''
-		normalizedPath = normalizedPath.replace(/^\/+|\/+$/g, '') // Remove leading/trailing slashes
-
-		// Split path and filter out empty parts
-		const pathParts = normalizedPath
-			.split('/')
-			.filter(part => part.trim() !== '')
-			.map(part => part.trim()) // Clean up whitespace
-
-		let current: FolderObj = root
-
-		// Create folder structure
-		pathParts.forEach(part => {
-			if (!current.folders[part]) {
-				current.folders[part] = { folders: {}, documents: [] }
-			}
-			current = current.folders[part]
-		})
-
-		// Add document to the final folder
-		current.documents.push(doc)
-	})
-
-	function buildTree(folderObj: FolderObj, basePath = ''): TreeNode[] {
-		const nodes: TreeNode[] = []
-
-		// Add folders
-		Object.keys(folderObj.folders).forEach(key => {
-			const subFolderObj = folderObj.folders[key]
-			if (!subFolderObj) return
-			const folderPath = basePath ? `${basePath}/${key}` : key
-			const folder: FolderNode = {
-				name: key,
-				path: folderPath,
-				type: 'folder',
-				children: buildTree(subFolderObj, folderPath),
-				expanded: true, // Default to expanded
-			}
-			nodes.push(folder)
-		})
-
-		// Add documents
-		folderObj.documents.forEach((doc: Document) => {
-			const docNode: DocumentNode = {
-				name: doc.title,
-				path: basePath,
-				type: 'document',
-				document: doc,
-			}
-			nodes.push(docNode)
-		})
-
-		return nodes.sort((a, b) => {
-			// Folders first, then documents
-			if (a.type === 'folder' && b.type === 'document') return -1
-			if (a.type === 'document' && b.type === 'folder') return 1
-			return a.name.localeCompare(b.name)
-		})
-	}
-
-	return buildTree(root, '')
-}
-
-export const Route = createFileRoute('/_authenticated/docs/')({
-	component: DocsListPage,
-})
+import {
+	createDocument as createDocumentServerFn,
+	deleteDocument as deleteDocumentServerFn,
+	getDocuments,
+} from '~server'
 
 interface Document {
 	id: string
@@ -122,6 +55,11 @@ interface CreateDocumentForm {
 	title: string
 	description: string
 	path: string
+}
+
+interface FolderObj {
+	folders: Record<string, FolderObj>
+	documents: Document[]
 }
 
 interface FolderNode {
@@ -141,6 +79,84 @@ interface DocumentNode {
 
 type TreeNode = FolderNode | DocumentNode
 
+// Query options for documents
+const documentsQuery = queryOptions({
+	queryKey: ['documents'],
+	queryFn: () => getDocuments(),
+	staleTime: 1000 * 60 * 5, // 5 minutes
+})
+
+// Parse documents into folder structure
+function parseDocumentsToTree(documents: Document[]): TreeNode[] {
+	const root: FolderObj = { folders: {}, documents: [] }
+	documents.forEach(doc => {
+		// Normalize path: remove leading/trailing slashes, handle empty paths
+		let normalizedPath = doc.path || ''
+		normalizedPath = normalizedPath.replace(/^\/+|\/+$/g, '') // Remove leading/trailing slashes
+		// Split path and filter out empty parts
+		const pathParts = normalizedPath
+			.split('/')
+			.filter(part => part.trim() !== '')
+			.map(part => part.trim()) // Clean up whitespace
+		let current: FolderObj = root
+		// Create folder structure
+		pathParts.forEach(part => {
+			if (!current.folders[part]) {
+				current.folders[part] = { folders: {}, documents: [] }
+			}
+			current = current.folders[part]
+		})
+		// Add document to the final folder
+		current.documents.push(doc)
+	})
+
+	function buildTree(folderObj: FolderObj, basePath = ''): TreeNode[] {
+		const nodes: TreeNode[] = []
+		// Add folders
+		Object.keys(folderObj.folders).forEach(key => {
+			const subFolderObj = folderObj.folders[key]
+			if (!subFolderObj) return
+			const folderPath = basePath ? `${basePath}/${key}` : key
+			const folder: FolderNode = {
+				name: key,
+				path: folderPath,
+				type: 'folder',
+				children: buildTree(subFolderObj, folderPath),
+				expanded: true, // Default to expanded
+			}
+			nodes.push(folder)
+		})
+		// Add documents
+		folderObj.documents.forEach((doc: Document) => {
+			const docNode: DocumentNode = {
+				name: doc.title,
+				path: basePath,
+				type: 'document',
+				document: doc,
+			}
+			nodes.push(docNode)
+		})
+		return nodes.sort((a, b) => {
+			// Folders first, then documents
+			if (a.type === 'folder' && b.type === 'document') return -1
+			if (a.type === 'document' && b.type === 'folder') return 1
+			return a.name.localeCompare(b.name)
+		})
+	}
+
+	return buildTree(root, '')
+}
+
+export const Route = createFileRoute('/_authenticated/docs/')({
+	// Use loader to prefetch data for SSR
+	loader: ({ context: { queryClient } }) => {
+		return queryClient.ensureQueryData(documentsQuery)
+	},
+	component: DocsListPage,
+	// Optional: Configure SSR behavior
+	ssr: true, // Full SSR (default)
+})
+
 // Tree item styles
 const treeItemVariants = cva([
 	'group relative',
@@ -154,36 +170,12 @@ const treeItemVariants = cva([
 	'py-[var(--spacing-xs)]',
 ])
 
-// Fetch documents hook
-function useDocuments() {
-	return useQuery({
-		queryKey: ['documents'],
-		queryFn: async () => {
-			const response = await fetch(`${API_BASE_URL}/api/v1/docs`, {
-				credentials: 'include',
-			})
-			if (!response.ok) throw new Error('Failed to fetch documents')
-			const data = await response.json()
-			return data.documents as Document[]
-		},
-	})
-}
-
 // Create document mutation
 function useCreateDocument() {
 	const queryClient = useQueryClient()
 	const navigate = useNavigate()
 	return useMutation({
-		mutationFn: async (data: CreateDocumentForm) => {
-			const response = await fetch(`${API_BASE_URL}/api/v1/docs`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(data),
-				credentials: 'include',
-			})
-			if (!response.ok) throw new Error('Failed to create document')
-			return response.json()
-		},
+		mutationFn: (data: CreateDocumentForm) => createDocumentServerFn({ data }),
 		onSuccess: data => {
 			queryClient.invalidateQueries({ queryKey: ['documents'] })
 			if (data.documentId) {
@@ -197,22 +189,41 @@ function useCreateDocument() {
 function useDeleteDocument() {
 	const queryClient = useQueryClient()
 	return useMutation({
-		mutationFn: async (docId: string) => {
-			const response = await fetch(`${API_BASE_URL}/api/v1/docs/${docId}`, {
-				method: 'DELETE',
-				credentials: 'include',
-			})
-			if (!response.ok) throw new Error('Failed to delete document')
-			return response.json()
-		},
+		mutationFn: (docId: string) => deleteDocumentServerFn({ data: docId }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['documents'] })
 		},
 	})
 }
 
-// Floating menu component
+// Floating menu component (now wrapped in ClientOnly internally)
 function DocumentMenu({
+	document,
+	onDelete,
+	anchorEl,
+	isOpen,
+	onClose,
+}: {
+	document: Document
+	onDelete: (id: string) => void
+	anchorEl: HTMLElement | null
+	isOpen: boolean
+	onClose: () => void
+}) {
+	return (
+		<ClientOnly fallback={null}>
+			<DocumentMenuContent
+				document={document}
+				onDelete={onDelete}
+				anchorEl={anchorEl}
+				isOpen={isOpen}
+				onClose={onClose}
+			/>
+		</ClientOnly>
+	)
+}
+
+function DocumentMenuContent({
 	document,
 	onDelete,
 	anchorEl,
@@ -231,13 +242,11 @@ function DocumentMenu({
 		middleware: [offset(4), flip(), shift()],
 		whileElementsMounted: autoUpdate,
 	})
-
 	const dismiss = useDismiss(context)
 	const role = useRole(context)
 	const { getFloatingProps } = useInteractions([dismiss, role])
 
 	if (!isOpen || !anchorEl) return null
-
 	refs.setReference(anchorEl)
 
 	return (
@@ -374,7 +383,6 @@ function DocumentTree({
 
 	const treeData = useMemo(() => {
 		const tree = parseDocumentsToTree(documents)
-
 		// Function to recursively update expanded state
 		function updateExpandedState(nodes: TreeNode[]): TreeNode[] {
 			return nodes.map(node => {
@@ -389,7 +397,6 @@ function DocumentTree({
 				return node
 			})
 		}
-
 		return updateExpandedState(tree)
 	}, [documents, collapsedFolders])
 
@@ -428,6 +435,22 @@ function CreateDocumentDialog({
 	onClose: () => void
 	onCreate: (data: CreateDocumentForm) => void
 }) {
+	if (!isOpen) return null
+
+	return (
+		<ClientOnly fallback={null}>
+			<CreateDocumentDialogContent onClose={onClose} onCreate={onCreate} />
+		</ClientOnly>
+	)
+}
+
+function CreateDocumentDialogContent({
+	onClose,
+	onCreate,
+}: {
+	onClose: () => void
+	onCreate: (data: CreateDocumentForm) => void
+}) {
 	const [formData, setFormData] = useState<CreateDocumentForm>({
 		title: '',
 		description: '',
@@ -435,7 +458,7 @@ function CreateDocumentDialog({
 	})
 
 	const { refs, floatingStyles, context } = useFloating({
-		open: isOpen,
+		open: true, // Always open here since we check isOpen outside
 		onOpenChange: onClose,
 		middleware: [offset(8), flip(), shift()],
 		whileElementsMounted: autoUpdate,
@@ -446,8 +469,6 @@ function CreateDocumentDialog({
 	const { getFloatingProps } = useInteractions([dismiss, role])
 
 	const headingId = useId()
-
-	if (!isOpen) return null
 
 	return (
 		<>
@@ -522,11 +543,12 @@ function CreateDocumentDialog({
 }
 
 function DocsListPage() {
-	const session = useSession()
 	const [searchQuery, setSearchQuery] = useState('')
 	const [showCreateDialog, setShowCreateDialog] = useState(false)
 
-	const { data: documents = [], isLoading, error } = useDocuments()
+	// Use useSuspenseQuery for better SSR performance
+	const { data: documents = [] } = useSuspenseQuery(documentsQuery)
+
 	const createMutation = useCreateDocument()
 	const deleteMutation = useDeleteDocument()
 
@@ -548,24 +570,6 @@ function DocsListPage() {
 				doc.path.toLowerCase().includes(query),
 		)
 	}, [documents, searchQuery])
-
-	if (session.isPending || isLoading) {
-		return (
-			<div className='flex items-center justify-center min-h-screen'>
-				<div className='text-lg'>Loading documents...</div>
-			</div>
-		)
-	}
-
-	if (error) {
-		return (
-			<div className='flex items-center justify-center min-h-screen'>
-				<div className='text-lg text-[var(--error)]'>
-					Failed to load documents
-				</div>
-			</div>
-		)
-	}
 
 	return (
 		<div className='h-screen flex flex-col bg-[var(--background)]'>

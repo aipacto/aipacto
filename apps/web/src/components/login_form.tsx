@@ -2,13 +2,16 @@ import { useId, useState } from 'react'
 
 import { useAuth } from '~hooks'
 
-export function LoginForm() {
+interface LoginFormProps {
+	onLoginSuccess?: () => void
+}
+
+export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 	const { authClient } = useAuth()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
-
 	const emailId = useId()
 	const passwordId = useId()
 
@@ -16,16 +19,17 @@ export function LoginForm() {
 		e.preventDefault()
 		setIsLoading(true)
 		setError('')
-
 		try {
-			const { data, error } = await authClient.signIn.email({
+			const { error } = await authClient.signIn.email({
 				email,
 				password,
 			})
-
 			if (error) {
 				setError(error.message ?? 'Unknown error')
-			} else if (data) {
+			} else {
+				// Ensure client cache is synced with fresh session cookies
+				await authClient.getSession().catch(() => undefined)
+				onLoginSuccess?.()
 			}
 		} catch (_err) {
 			setError('An unexpected error occurred')
@@ -38,19 +42,19 @@ export function LoginForm() {
 		e.preventDefault()
 		setIsLoading(true)
 		setError('')
-
 		try {
-			const { data, error } = await authClient.signUp.email({
+			const { error } = await authClient.signUp.email({
 				email,
 				password,
 				name: email.split('@')[0] || '', // Use email prefix as name
 			})
-
 			if (error) {
 				setError(error.message ?? 'Unknown error')
-			} else if (data) {
+			} else {
+				await authClient.getSession().catch(() => undefined)
+				onLoginSuccess?.()
 			}
-		} catch (err) {
+		} catch (_err) {
 			setError('An unexpected error occurred')
 		} finally {
 			setIsLoading(false)

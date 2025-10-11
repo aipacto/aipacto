@@ -1,5 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 import {
+	ClientOnly,
 	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
@@ -13,7 +14,9 @@ import { AuthProvider } from '~hooks'
 
 import '../styles/global.css'
 
-type RouterContext = { queryClient: QueryClient }
+export interface RouterContext {
+	queryClient: QueryClient
+}
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
@@ -180,7 +183,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
 					{children}
 				</div>
 				<Scripts />
-				<TanStackRouterDevtools position='bottom-right' />
+				<ClientOnly fallback={null}>
+					{import.meta.env.DEV ? (
+						<TanStackRouterDevtools position='bottom-right' />
+					) : null}
+				</ClientOnly>
 			</body>
 		</html>
 	)
