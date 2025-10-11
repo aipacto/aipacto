@@ -11,7 +11,11 @@ import {
 	useInteractions,
 	useRole,
 } from '@floating-ui/react'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import {
+	ClientOnly,
+	createFileRoute,
+	useNavigate,
+} from '@tanstack/react-router'
 import { Mark as TiptapMark } from '@tiptap/core'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
@@ -29,8 +33,18 @@ import { getWebSocketUrl, useSession } from '~hooks'
 
 const API_BASE_URL = import.meta.env.VITE_SERVER_URL
 
+const DocEditorPageFallback = () => (
+	<div className='flex h-screen items-center justify-center bg-[var(--surface)] text-[var(--on-surface-variant)]'>
+		Loading editor...
+	</div>
+)
+
 export const Route = createFileRoute('/_authenticated/docs/$docId')({
-	component: DocEditorPage,
+	component: () => (
+		<ClientOnly fallback={<DocEditorPageFallback />}>
+			<DocEditorPage />
+		</ClientOnly>
+	),
 })
 
 // Custom Suggestion Extension for AI suggestions
@@ -601,7 +615,7 @@ function DocEditorPage() {
 	const [showAIPanel, setShowAIPanel] = useState(false)
 	const [showMetadataPanel, setShowMetadataPanel] = useState(false)
 	const [suggestions, setSuggestions] = useState<SuggestionType[]>([])
-	const [comments, setComments] = useState<CommentType[]>([])
+	const [_comments, _setCommentss] = useState<CommentType[]>([])
 	const [isAIProcessing, setIsAIProcessing] = useState(false)
 	const [ws, setWs] = useState<WebSocket | null>(null)
 	const [localDoc] = useState<LoroDoc>(new LoroDoc())
@@ -698,6 +712,7 @@ function DocEditorPage() {
 				isLocalUpdate.current = false
 			}
 		},
+		immediatelyRender: false,
 	})
 
 	// Load document from server
@@ -828,10 +843,13 @@ function DocEditorPage() {
 	const handleConnectWS = useCallback(() => {
 		if (!docId) return
 
-		const wsUrl = getWebSocketUrl(API_BASE_URL, `/api/v1/docs/${docId}/sync`)
+		const wsUrl = getWebSocketUrl(API_BASE_URL, `/v1/docs/${docId}/sync`)
+		console.log('Connecting to WebSocket:', wsUrl)
+
 		const socket = new WebSocket(wsUrl)
 
 		socket.onopen = () => {
+			console.log('WebSocket connected')
 			setIsConnected(true)
 
 			// Send initial document state for sync
@@ -840,6 +858,7 @@ function DocEditorPage() {
 		}
 
 		socket.onmessage = event => {
+			console.log('WebSocket message received')
 			if (event.data instanceof Blob) {
 				event.data.arrayBuffer().then(buffer => {
 					isRemoteUpdate.current = true
@@ -851,11 +870,13 @@ function DocEditorPage() {
 			}
 		}
 
-		socket.onclose = () => {
+		socket.onclose = event => {
+			console.log('WebSocket closed:', event.code, event.reason)
 			setIsConnected(false)
 		}
 
-		socket.onerror = () => {
+		socket.onerror = error => {
+			console.error('WebSocket error:', error)
 			setIsConnected(false)
 		}
 
@@ -914,7 +935,7 @@ function DocEditorPage() {
 	}
 
 	// Request AI review
-	const handleRequestAIReview = () => {
+	const _handleRequestAIReview = () => {
 		if (!editor) return
 		setIsAIProcessing(true)
 		processWithAI(editor.getHTML())
