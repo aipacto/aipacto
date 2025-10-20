@@ -2,10 +2,10 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { Either, Schema as S } from 'effect'
 
-// Use relative URL in development (proxied), absolute URL in production
-const AUTH_BASE_URL = process.env.VITE_SERVER_URL
-	? `${process.env.VITE_SERVER_URL}/auth`
-	: '/auth'
+const AUTH_ORIGIN =
+	process.env.SERVER_URL ??
+	process.env.VITE_SERVER_URL ??
+	'http://localhost:3000' // dev fallback
 
 /**
  * Session data schema
@@ -56,7 +56,12 @@ export const getServerAuthState = createServerFn({ method: 'GET' }).handler(
 		}
 
 		try {
-			const response = await fetch(`${AUTH_BASE_URL}/get-session`, {
+			// const response = await fetch(`${AUTH_BASE_URL}/get-session`, {
+			// 	method: 'GET',
+			// 	headers,
+			// 	credentials: 'include',
+			// })
+			const response = await fetch(`${AUTH_ORIGIN}/auth/get-session`, {
 				method: 'GET',
 				headers,
 				credentials: 'include',

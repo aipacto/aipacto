@@ -23,8 +23,8 @@ export function UserSession({ className = '' }: UserSessionProps) {
 		return (
 			<div className={`flex items-center justify-center p-4 ${className}`}>
 				<div className='flex items-center gap-2'>
-					<div className='w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin' />
-					<span className='text-sm text-on-surface-variant'>Loading...</span>
+					<div className='w-4 h-4 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin' />
+					<span className='text-[var(--font-size-body-m)] text-[var(--on-surface-variant)]'>Loading...</span>
 				</div>
 			</div>
 		)
@@ -41,7 +41,10 @@ export function UserSession({ className = '' }: UserSessionProps) {
 
 	return (
 		<motion.div
-			className={`user-session bg-surface-container border-t border-outline/20 ${className}`}
+			className={`user-session bg-[var(--surface-container)] border-t ${className}`}
+			style={{
+				borderColor: 'color-mix(in srgb, var(--outline) 20%, transparent)',
+			}}
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{
@@ -53,8 +56,8 @@ export function UserSession({ className = '' }: UserSessionProps) {
 			<div className='flex items-center gap-3 p-4'>
 				{/* User Avatar */}
 				<div className='flex-shrink-0'>
-					<div className='w-10 h-10 bg-primary rounded-full flex items-center justify-center'>
-						<span className='text-sm font-medium text-on-primary'>
+					<div className='w-10 h-10 bg-[var(--primary)] rounded-full flex items-center justify-center'>
+						<span className='text-[var(--font-size-body-m)] font-medium text-[var(--on-primary)]'>
 							{firstLetter}
 						</span>
 					</div>
@@ -62,11 +65,11 @@ export function UserSession({ className = '' }: UserSessionProps) {
 
 				{/* User Info */}
 				<div className='flex-1 min-w-0'>
-					<div className='text-sm font-medium text-on-surface truncate'>
+					<div className='text-[var(--font-size-body-m)] font-medium text-[var(--on-surface)] truncate'>
 						{displayName}
 					</div>
 					{email && (
-						<div className='text-xs text-on-surface-variant truncate'>
+						<div className='text-[var(--font-size-body-s)] text-[var(--on-surface-variant)] truncate'>
 							{email}
 						</div>
 					)}

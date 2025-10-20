@@ -15,8 +15,13 @@ export async function routesAuth(fastify: FastifyInstance) {
 		url: '/auth/*',
 		async handler(request: FastifyRequest, reply: FastifyReply) {
 			try {
-				// Construct request URL
-				const url = new URL(request.url, `http://${request.headers.host}`)
+				// Construct request URL with the correct external scheme
+				const proto =
+					(typeof request.headers['x-forwarded-proto'] === 'string' &&
+						request.headers['x-forwarded-proto']) ||
+					'http'
+				const host = request.headers.host ?? 'localhost'
+				const url = new URL(request.url, `${proto}://${host}`)
 
 				// Convert Fastify headers to standard Headers object
 				const headers = new Headers()
