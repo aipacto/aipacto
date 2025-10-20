@@ -15,7 +15,11 @@
 								":PACKAGE:"
 							],
 							":BLANK_LINE:",
-							["@aipacto/**", ":ALIAS:", ":PATH:"]
+							[
+								"@aipacto/**",
+								":ALIAS:",
+								":PATH:"
+							]
 						]
 					}
 				}
@@ -34,7 +38,8 @@
 				"noStaticOnlyClass": "off"
 			},
 			"correctness": {
-				"useExhaustiveDependencies": "warn"
+				"useExhaustiveDependencies": "warn",
+				"useUniqueElementIds": "warn"
 			},
 			"recommended": true,
 			"performance": {

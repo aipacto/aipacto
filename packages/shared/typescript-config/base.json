@@ -60,6 +60,9 @@
       "@aipacto/shared-ui-localization": [
         "../ui/localization/src"
       ],
+      "@aipacto/shared-ui-localization/*": [
+        "../ui/localization/src/*"
+      ],
       "@aipacto/shared-utils-env": [
         "../utils/env/src"
       ],
@@ -74,6 +77,15 @@
       ],
       "@aipacto/workspace-infra-storage": [
         "../../workspace/infrastructure/storage/src"
+      ],
+      "@inlang/recommend-sherlock": [
+        "../ui/localization/node_modules/@inlang/recommend-sherlock/src"
+      ],
+      "@inlang/sdk": [
+        "../ui/localization/node_modules/@inlang/sdk/src"
+      ],
+      "@inlang/sdk/*": [
+        "../ui/localization/node_modules/@inlang/sdk/src/*"
       ]
     },
     "types": [
