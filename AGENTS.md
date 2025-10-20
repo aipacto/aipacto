@@ -54,18 +54,27 @@ Aipacto is a web app inspired by ChatGPT, designed for city councils, their work
 ## Frontend
 
 - **UI Framework**: Tanstack Start (SSR) + React 19 + Vite.
-- **Component Library**: Base UI (`@base-ui-components/react`) for headless accessible components.
-- **Styling**: Tailwind CSS v4 with Material Design 3 token system.
+- **Component Library**: Base UI (`@base-ui-components/react`) for headless accessible components and Motion.dev + motion-plus for animations. Complex components at `apps/web/src/components/ui/index.ts`; atomic components at `apps/web/src/components/index.ts` and `apps/web/src/components/ui/index.ts`
+- **Styling**: Tailwind CSS v4 with Material Design 3 token system. To evoke the centuries-old heritage of city councils and municipalities, which often feature historical elements like shields and flags, the UX/UI incorporates subtle medieval vibes through earthy color palettes, serif typography reminiscent of ancient manuscripts, and textured elements like subtle shadows and borders.
 - **MD3 Tokens System**: All design tokens are defined as CSS variables in `apps/web/src/styles/global.css` and mapped to Tailwind utilities in `apps/web/tailwind.config.ts`:
   - **Colors** (theme-specific): MD3 color roles (primary, on-primary, surface, surface-container, outline, etc.) for light/dark themes with medium/high contrast variants in `apps/web/src/styles/themes.css`.
   - **Spacing** (fluid): `clamp()`-based tokens (none, xxs, xs, sm, md, lg, xl, xxl) that scale smoothly between viewport widths using rem units.
-  - **Typography** (fluid): MD3 type scale with viewport-responsive sizing - display-m/s, heading-l/m, title, body-l/m, label-l/m.
+  - **Typography** (fluid): MD3 type scale with viewport-responsive sizing - display-l/m/s, heading-l/m/s, title, body-l/m/s, label-l/m/s.
+  - **Fonts**: Display typography now uses Cinzel for a more stately feel, while headings and labels switch to Cardo for a classic serif tone; everything else continues with DM Sans as the shared body font.
   - **Border Radius** (fluid): Tokens (none, sm, md, lg, xl, full) with `clamp()` scaling.
   - **Z-index** (semantic): Layering tokens (negative, background, default, dropdown, sticky, fixed, modal-backdrop, offcanvas, modal, popover, tooltip).
   - **Usage**: Access via Tailwind classes (`bg-surface-container`, `text-on-primary`, `rounded-lg`, `text-body-l`, `p-md`, `gap-sm`) or CSS variables (`var(--surface)`, `var(--spacing-md)`).
 - **Fluid Design System**: All dimensional tokens (spacing, typography, border radius) use fluid scaling with `clamp(min, preferred, max)` where preferred is vw-based. Never use fixed px/rem values - always use tokens for consistent responsive behavior across all viewport sizes.
 - **Design System**: Follow Material Design 3 guidelines and naming conventions for all UI components and tokens.
-- **Localization**: Add UI text to `@aipacto/shared-ui-localization` (i18n) in `packages/shared/ui/localization/src/locales/[eng|spa|cat]/common.json`.
+- **Localization**: Uses Paraglide for i18n with automatic persistence via cookies. Add UI text to `@aipacto/shared-ui-localization` in `packages/shared/ui/localization/messages/[eng|spa|cat].json`. Language switching is handled automatically by Paraglide's `setLocale()` and `getLocale()` functions. No custom server functions needed for language persistence.
+
+### Language Switching Implementation
+
+- **Language Detection**: Paraglide automatically detects language from cookies, Accept-Language header, or falls back to base locale
+- **Language Persistence**: Uses `PARAGLIDE_LOCALE` cookie with automatic expiration and path settings
+- **Language Switching**: Use `setLocale(locale, { reload: true })` for immediate language change with page reload
+- **Current Language**: Use `getLocale()` to get the current active locale
+- **Automatic Detection**: Clear the `PARAGLIDE_LOCALE` cookie to enable automatic language detection based on browser preferences
 
 ## Requirements
 

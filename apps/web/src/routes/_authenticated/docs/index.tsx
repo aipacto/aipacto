@@ -1,3 +1,4 @@
+import { Menu } from '@base-ui-components/react/menu'
 import {
 	autoUpdate,
 	FloatingFocusManager,
@@ -19,6 +20,7 @@ import {
 import {
 	ClientOnly,
 	createFileRoute,
+	Link,
 	useNavigate,
 } from '@tanstack/react-router'
 import { cva } from 'class-variance-authority'
@@ -30,7 +32,6 @@ import {
 	MoreVertical,
 	Plus,
 	Search,
-	Trash2,
 } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 
@@ -196,78 +197,39 @@ function useDeleteDocument() {
 	})
 }
 
-// Floating menu component (now wrapped in ClientOnly internally)
-function DocumentMenu({
+function RowActionsMenu({
 	document,
 	onDelete,
-	anchorEl,
-	isOpen,
-	onClose,
 }: {
 	document: Document
 	onDelete: (id: string) => void
-	anchorEl: HTMLElement | null
-	isOpen: boolean
-	onClose: () => void
 }) {
 	return (
-		<ClientOnly fallback={null}>
-			<DocumentMenuContent
-				document={document}
-				onDelete={onDelete}
-				anchorEl={anchorEl}
-				isOpen={isOpen}
-				onClose={onClose}
-			/>
-		</ClientOnly>
-	)
-}
-
-function DocumentMenuContent({
-	document,
-	onDelete,
-	anchorEl,
-	isOpen,
-	onClose,
-}: {
-	document: Document
-	onDelete: (id: string) => void
-	anchorEl: HTMLElement | null
-	isOpen: boolean
-	onClose: () => void
-}) {
-	const { refs, floatingStyles, context } = useFloating({
-		open: isOpen,
-		onOpenChange: onClose,
-		middleware: [offset(4), flip(), shift()],
-		whileElementsMounted: autoUpdate,
-	})
-	const dismiss = useDismiss(context)
-	const role = useRole(context)
-	const { getFloatingProps } = useInteractions([dismiss, role])
-
-	if (!isOpen || !anchorEl) return null
-	refs.setReference(anchorEl)
-
-	return (
-		<div
-			ref={refs.setFloating}
-			style={floatingStyles}
-			className='z-[var(--z-index-popover)] bg-[var(--surface-container)] border border-[var(--outline-variant)] rounded-[var(--radius-md)] shadow-lg py-[var(--spacing-xs)] min-w-[160px]'
-			{...getFloatingProps()}
-		>
-			<button
-				type='button'
-				onClick={() => {
-					onDelete(document.id)
-					onClose()
-				}}
-				className='w-full flex items-center gap-[var(--spacing-sm)] px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-body-m)] text-[var(--on-surface)] hover:bg-[var(--error-container)] hover:text-[var(--on-error-container)] transition-colors'
+		<Menu.Root>
+			<Menu.Trigger
+				aria-label='More actions'
+				className='p-[var(--spacing-xs)] rounded-[var(--radius-sm)] hover:bg-[var(--surface-container)] transition-opacity opacity-0 group-hover:opacity-100'
+				onClick={e => e.stopPropagation()} // just in case
 			>
-				<Trash2 className='w-4 h-4' />
-				Delete
-			</button>
-		</div>
+				<MoreVertical className='w-4 h-4 text-[var(--on-surface-variant)]' />
+			</Menu.Trigger>
+
+			<Menu.Portal>
+				<Menu.Positioner sideOffset={4} align='start'>
+					<Menu.Popup className='z-[var(--z-index-popover)] min-w-[160px] rounded-[var(--radius-md)] border border-[var(--outline-variant)] bg-[var(--surface-container)] shadow-lg py-[var(--spacing-xs)]'>
+						<Menu.Item
+							onClick={e => {
+								e.stopPropagation()
+								onDelete(document.id)
+							}}
+							className='px-[var(--spacing-md)] py-[var(--spacing-sm)] text-[var(--font-size-body-m)] text-[var(--on-surface)] hover:bg-[var(--error-container)] hover:text-[var(--on-error-container)] rounded-[var(--radius-sm)] cursor-pointer'
+						>
+							Delete
+						</Menu.Item>
+					</Menu.Popup>
+				</Menu.Positioner>
+			</Menu.Portal>
+		</Menu.Root>
 	)
 }
 
@@ -282,35 +244,20 @@ function TreeItem({
 	onToggle: (path: string) => void
 	onDelete: (id: string) => void
 }) {
-	const navigate = useNavigate()
-	const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
-	const [showMenu, setShowMenu] = useState(false)
-
-	const handleActionsMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation()
-		setMenuAnchor(e.currentTarget)
-		setShowMenu(true)
-	}
-
-	const handleItemClick = () => {
-		if (node.type === 'folder') {
-			onToggle(node.path)
-		} else {
-			navigate({ to: '/docs/$docId', params: { docId: node.document.id } })
-		}
-	}
-
 	return (
 		<>
-			<button
-				type='button'
+			<div
 				className={treeItemVariants()}
 				style={{ paddingLeft: `${depth * 20 + 12}px` }}
-				onClick={handleItemClick}
 			>
+				{/* Left: main interactive control filling the row */}
 				{node.type === 'folder' ? (
-					<>
-						{(node as FolderNode).expanded ? (
+					<button
+						type='button'
+						className='flex flex-1 items-center gap-[var(--spacing-sm)] text-left'
+						onClick={() => onToggle(node.path)}
+					>
+						{node.expanded ? (
 							<ChevronDown className='w-4 h-4 text-[var(--on-surface-variant)]' />
 						) : (
 							<ChevronRight className='w-4 h-4 text-[var(--on-surface-variant)]' />
@@ -319,35 +266,43 @@ function TreeItem({
 						<span className='text-[var(--font-size-body-m)] text-[var(--on-surface)] font-medium'>
 							{node.name}
 						</span>
-					</>
+					</button>
 				) : (
-					<>
+					<Link
+						to='/docs/$docId'
+						params={{ docId: (node as DocumentNode).document.id }}
+						preload='intent'
+						className='flex flex-1 items-center gap-[var(--spacing-sm)] focus:outline-none'
+					>
 						<div className='w-4 h-4' />
 						<FileText className='w-5 h-5 text-[var(--primary)]' />
-						<div className='flex flex-col'>
-							<span className='text-[var(--font-size-body-m)] text-[var(--on-surface)] font-medium'>
-								{node.name}
-							</span>
-							<span className='text-[var(--font-size-label-s)] text-[var(--on-surface-variant)] line-clamp-1'>
-								{(node as DocumentNode).document.description}
-							</span>
-						</div>
-						<button
-							type='button'
-							onClick={handleActionsMenuClick}
-							className='opacity-0 group-hover:opacity-100 p-[var(--spacing-xs)] rounded-[var(--radius-sm)] hover:bg-[var(--surface-container)] transition-all touch-manipulation'
-							title='More actions'
-						>
-							<MoreVertical className='w-4 h-4 text-[var(--on-surface-variant)]' />
-						</button>
-					</>
+						<span className='text-[var(--font-size-body-m)] text-[var(--on-surface)] font-medium'>
+							{node.name}
+						</span>
+						<span className='text-[var(--font-size-label-s)] text-[var(--on-surface-variant)] line-clamp-1'>
+							{(node as DocumentNode).document.description}
+						</span>
+					</Link>
 				)}
-			</button>
-			{node.type === 'folder' && (node as FolderNode).expanded && (
+
+				{/* Right: actions menu as a sibling */}
+				{node.type === 'document' ? (
+					<RowActionsMenu
+						document={(node as DocumentNode).document}
+						onDelete={onDelete}
+					/>
+				) : null}
+			</div>
+
+			{node.type === 'folder' && node.expanded && (
 				<div>
-					{(node as FolderNode).children.map(child => (
+					{node.children.map(child => (
 						<TreeItem
-							key={child.path}
+							key={
+								child.type === 'folder'
+									? `folder:${(child as FolderNode).path}`
+									: `doc:${(child as DocumentNode).document.id}`
+							}
 							node={child}
 							depth={depth + 1}
 							onToggle={onToggle}
@@ -355,15 +310,6 @@ function TreeItem({
 						/>
 					))}
 				</div>
-			)}
-			{node.type === 'document' && showMenu && menuAnchor && (
-				<DocumentMenu
-					document={(node as DocumentNode).document}
-					onDelete={onDelete}
-					anchorEl={menuAnchor}
-					isOpen={showMenu}
-					onClose={() => setShowMenu(false)}
-				/>
 			)}
 		</>
 	)
@@ -416,7 +362,11 @@ function DocumentTree({
 		<div className='flex flex-col'>
 			{treeData.map(node => (
 				<TreeItem
-					key={node.path}
+					key={
+						node.type === 'folder'
+							? `folder:${(node as FolderNode).path}`
+							: `doc:${(node as DocumentNode).document.id}`
+					}
 					node={node}
 					onToggle={handleToggle}
 					onDelete={onDelete}
