@@ -7,6 +7,11 @@
 /* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind CSS v4 custom variant */
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+	--font-cinzel: "Cinzel", serif;
+	--font-cardo: "Cardo", serif;
+}
+
 /* Global tokens available to all themes */
 :root {
 	/* Spacing tokens */
@@ -19,6 +24,16 @@
 	--spacing-xl: clamp(1.2rem, 1.0739rem + 0.6304vw, 1.5625rem);
 	--spacing-xxl: clamp(1.44rem, 1.2615rem + 0.8924vw, 1.9531rem);
 
+	/* Gap tokens */
+	--gap-none: var(--spacing-none);
+	--gap-xxs: var(--spacing-xxs);
+	--gap-xs: var(--spacing-xs);
+	--gap-sm: var(--spacing-sm);
+	--gap-md: var(--spacing-md);
+	--gap-lg: var(--spacing-lg);
+	--gap-xl: var(--spacing-xl);
+	--gap-xxl: var(--spacing-xxl);
+
 	/* Border radius tokens */
 	--radius-none: 0;
 	--radius-sm: clamp(0.4019rem, 0.3933rem + 0.0431vw, 0.4267rem);
@@ -28,15 +43,21 @@
 	--radius-full: 999999px;
 
 	/* Font size tokens */
+	--font-size-display-l: clamp(3.0518rem, 2.5416rem + 2.5516vw, 4.7684rem);
 	--font-size-display-m: clamp(2.4883rem, 2.027rem + 2.3067vw, 3.8147rem);
 	--font-size-display-s: clamp(2.0736rem, 1.7334rem + 1.7011vw, 3.0518rem);
 	--font-size-heading-l: clamp(1.728rem, 1.4799rem + 1.2407vw, 2.4414rem);
 	--font-size-heading-m: clamp(1.44rem, 1.2615rem + 0.8924vw, 1.9531rem);
-	--font-size-title: clamp(1.2rem, 1.0739rem + 0.6304vw, 1.5625rem);
+	--font-size-heading-s: clamp(1.2rem, 1.0513rem + 0.7437vw, 1.6276rem);
+	--font-size-title-l: clamp(1.44rem, 1.2887rem + 0.7565vw, 1.875rem);
+	--font-size-title-m: clamp(1.2rem, 1.0739rem + 0.6304vw, 1.5625rem);
+	--font-size-title-s: clamp(1rem, 0.8949rem + 0.5253vw, 1.3021rem);
 	--font-size-body-l: clamp(1rem, 0.913rem + 0.4348vw, 1.25rem);
 	--font-size-body-m: clamp(0.8333rem, 0.7754rem + 0.2899vw, 1rem);
+	--font-size-body-s: clamp(0.6944rem, 0.6462rem + 0.2416vw, 0.8333rem);
 	--font-size-label-l: clamp(0.8333rem, 0.7754rem + 0.2899vw, 1rem);
 	--font-size-label-m: clamp(0.6944rem, 0.6577rem + 0.1836vw, 0.8rem);
+	--font-size-label-s: clamp(0.5787rem, 0.5481rem + 0.153vw, 0.6667rem);
 
 	/* Z-index tokens */
 	--z-index-negative: -1;
@@ -62,109 +83,43 @@
 		0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 	--layout-shadow-elevation-lg:
 		0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+	/* Font family tokens */
+	--font-family-display: "Cinzel", serif;
+	--font-family-heading: "Cardo", serif;
+	--font-family-label: "Cardo", serif;
+	--font-family-body: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto,
+		"Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
-/* Light theme (default) */
-:root,
-.light {
-	--primary: #3b6939;
-	--on-primary: #ffffff;
-	--primary-container: #bcf0b4;
-	--on-primary-container: #235024;
-	--secondary: #52634f;
-	--on-secondary: #ffffff;
-	--secondary-container: #d5e8cf;
-	--on-secondary-container: #3b4b38;
-	--tertiary: #38656a;
-	--on-tertiary: #ffffff;
-	--tertiary-container: #bcebf0;
-	--on-tertiary-container: #1f4d52;
-	--error: #ba1a1a;
-	--on-error: #ffffff;
-	--error-container: #ffdad6;
-	--on-error-container: #93000a;
-	--background: #f7fbf1;
-	--on-background: #191d17;
-	--surface: #f7fbf1;
-	--on-surface: #191d17;
-	--surface-variant: #dee5d8;
-	--on-surface-variant: #424940;
-	--outline: #72796f;
-	--outline-variant: #c2c9bd;
-	--shadow: #000000;
-	--scrim: #000000;
-	--inverse-surface: #2d322c;
-	--inverse-on-surface: #eff2e9;
-	--inverse-primary: #a1d39a;
-	--primary-fixed: #bcf0b4;
-	--on-primary-fixed: #002204;
-	--primary-fixed-dim: #a1d39a;
-	--on-primary-fixed-variant: #235024;
-	--secondary-fixed: #d5e8cf;
-	--on-secondary-fixed: #111f0f;
-	--secondary-fixed-dim: #baccb3;
-	--on-secondary-fixed-variant: #3b4b38;
-	--tertiary-fixed: #bcebf0;
-	--on-tertiary-fixed: #002023;
-	--tertiary-fixed-dim: #a0cfd4;
-	--on-tertiary-fixed-variant: #1f4d52;
-	--surface-dim: #d8dbd2;
-	--surface-bright: #f7fbf1;
-	--surface-container-lowest: #ffffff;
-	--surface-container-low: #f1f5ec;
-	--surface-container: #ecefe6;
-	--surface-container-high: #e6e9e0;
-	--surface-container-highest: #e0e4db;
+
+/* Typography font-family assignments by token */
+/* Display tokens use Cinzel */
+.text-display-hero,
+.text-display-l,
+.text-display-m,
+.text-display-s {
+	font-family: var(--font-family-display);
 }
 
-/* Dark theme */
-.dark {
-	--primary: #a1d39a;
-	--on-primary: #0a390f;
-	--primary-container: #235024;
-	--on-primary-container: #bcf0b4;
-	--secondary: #baccb3;
-	--on-secondary: #253423;
-	--secondary-container: #3b4b38;
-	--on-secondary-container: #d5e8cf;
-	--tertiary: #a0cfd4;
-	--on-tertiary: #00363b;
-	--tertiary-container: #1f4d52;
-	--on-tertiary-container: #bcebf0;
-	--error: #ffb4ab;
-	--on-error: #690005;
-	--error-container: #93000a;
-	--on-error-container: #ffdad6;
-	--background: #10140f;
-	--on-background: #e0e4db;
-	--surface: #10140f;
-	--on-surface: #e0e4db;
-	--surface-variant: #424940;
-	--on-surface-variant: #c2c9bd;
-	--outline: #8c9388;
-	--outline-variant: #424940;
-	--shadow: #000000;
-	--scrim: #000000;
-	--inverse-surface: #e0e4db;
-	--inverse-on-surface: #2d322c;
-	--inverse-primary: #3b6939;
-	--primary-fixed: #bcf0b4;
-	--on-primary-fixed: #002204;
-	--primary-fixed-dim: #a1d39a;
-	--on-primary-fixed-variant: #235024;
-	--secondary-fixed: #d5e8cf;
-	--on-secondary-fixed: #111f0f;
-	--secondary-fixed-dim: #baccb3;
-	--on-secondary-fixed-variant: #3b4b38;
-	--tertiary-fixed: #bcebf0;
-	--on-tertiary-fixed: #002023;
-	--tertiary-fixed-dim: #a0cfd4;
-	--on-tertiary-fixed-variant: #1f4d52;
-	--surface-dim: #10140f;
-	--surface-bright: #363a34;
-	--surface-container-lowest: #0b0f0a;
-	--surface-container-low: #191d17;
-	--surface-container: #1d211b;
-	--surface-container-high: #272b25;
-	--surface-container-highest: #323630;
+/* Heading tokens use Cardo */
+.text-heading-l,
+.text-heading-m,
+.text-heading-s {
+	font-family: var(--font-family-heading);
+}
+
+/* Label tokens share the label typeface */
+.text-label-l,
+.text-label-m,
+.text-label-s {
+	font-family: var(--font-family-label);
+}
+
+/* Default font for the rest */
+body {
+	font-family: var(--font-family-body);
+	font-size: var(--font-size-body-l);
+	line-height: 1.5;
 }

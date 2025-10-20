@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import animate from 'tailwindcss-animate'
+
+export default {
 	darkMode: ['class'],
 	content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
 	theme: {
@@ -71,20 +73,31 @@ module.exports = {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
 			fontFamily: {
+				// Common body/content font
 				body: ['DM Sans', 'sans-serif'],
-				content: ['Literata', 'serif'],
-				heading: ['Literata', 'serif'],
+				content: ['DM Sans', 'sans-serif'],
+				// Typography token-specific families
+				display: ['Cinzel', 'serif'],
+				heading: ['Cardo', 'serif'],
+				label: ['Cardo', 'serif'],
 			},
 			fontSize: {
+				'display-hero': 'var(--font-size-display-hero)',
+				'display-l': 'var(--font-size-display-l)',
 				'display-m': 'var(--font-size-display-m)',
 				'display-s': 'var(--font-size-display-s)',
 				'heading-l': 'var(--font-size-heading-l)',
 				'heading-m': 'var(--font-size-heading-m)',
-				title: 'var(--font-size-title)',
+				'heading-s': 'var(--font-size-heading-s)',
+				'title-l': 'var(--font-size-title-l)',
+				'title-m': 'var(--font-size-title-m)',
+				'title-s': 'var(--font-size-title-s)',
 				'body-l': 'var(--font-size-body-l)',
 				'body-m': 'var(--font-size-body-m)',
+				'body-s': 'var(--font-size-body-s)',
 				'label-l': 'var(--font-size-label-l)',
 				'label-m': 'var(--font-size-label-m)',
+				'label-s': 'var(--font-size-label-s)',
 			},
 			spacing: {
 				none: 'var(--spacing-none)',
@@ -95,6 +108,16 @@ module.exports = {
 				lg: 'var(--spacing-lg)',
 				xl: 'var(--spacing-xl)',
 				xxl: 'var(--spacing-xxl)',
+			},
+			gap: {
+				none: 'var(--gap-none)',
+				xxs: 'var(--gap-xxs)',
+				xs: 'var(--gap-xs)',
+				sm: 'var(--gap-sm)',
+				md: 'var(--gap-md)',
+				lg: 'var(--gap-lg)',
+				xl: 'var(--gap-xl)',
+				xxl: 'var(--gap-xxl)',
 			},
 			zIndex: {
 				negative: 'var(--z-index-negative)',
@@ -111,5 +134,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require('tailwindcss-animate')],
+	plugins: [animate],
 }

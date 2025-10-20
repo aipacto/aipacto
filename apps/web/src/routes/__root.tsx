@@ -1,5 +1,5 @@
-import type { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
-import { createI18nInstance } from '@aipacto/shared-ui-localization'
+import { getIsoLanguageCode } from '@aipacto/shared-ui-localization'
+import { getLocale } from '@aipacto/shared-ui-localization/paraglide/runtime'
 import type { QueryClient } from '@tanstack/react-query'
 import {
 	ClientOnly,
@@ -10,27 +10,17 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import type { ReactNode } from 'react'
-import { I18nextProvider } from 'react-i18next'
 
 import { NotFound } from '~components'
 import { AuthProvider } from '~hooks'
-import { detectServerLanguage } from '~server/functions'
-
-import '../styles/global.css'
+import appCss from '../styles/global.css?url' // For Tanstack https://tailwindcss.com/docs/installation/framework-guides/tanstack-start
 
 export interface RouterContext {
 	queryClient: QueryClient
-	language: ListSupportedLanguagesCodes
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
-	beforeLoad: async () => {
-		// Detect language on server
-		const language = await detectServerLanguage()
-
-		return { language }
-	},
 	head: () => ({
 		meta: [
 			{
@@ -135,6 +125,21 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 			},
 		],
 		links: [
+			{ rel: 'stylesheet', href: appCss },
+			// Fonts: Cinzel (display), Cardo (heading/label), DM Sans (body)
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.googleapis.com',
+			},
+			{
+				rel: 'preconnect',
+				href: 'https://fonts.gstatic.com',
+				crossOrigin: '',
+			},
+			{
+				rel: 'stylesheet',
+				href: 'https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap',
+			},
 			{
 				rel: 'icon',
 				href: '/favicon.ico',
@@ -170,31 +175,25 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
-	const { language } = Route.useRouteContext()
-
-	// Create i18n instance with detected language
-	const i18n = createI18nInstance({ language })
-
 	return (
 		<RootDocument>
-			<I18nextProvider i18n={i18n}>
-				<AuthProvider>
-					<Outlet />
-				</AuthProvider>
-			</I18nextProvider>
+			<AuthProvider>
+				<Outlet />
+			</AuthProvider>
 		</RootDocument>
 	)
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-	const { language } = Route.useRouteContext()
+	const language = getLocale()
 
-	// Determine text direction based on language
-	const isRTL = ['ar', 'he', 'fa', 'ur'].includes(language)
+	// Convert custom code to ISO for HTML attribute
+	const htmlLang = getIsoLanguageCode(language)
+	const isRTL = ['ar', 'he', 'fa', 'ur'].includes(htmlLang)
 	const dir = isRTL ? 'rtl' : 'ltr'
 
 	return (
-		<html lang={language} dir={dir}>
+		<html lang={htmlLang} dir={dir} className='light' data-theme='light'>
 			<head>
 				<HeadContent />
 			</head>

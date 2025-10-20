@@ -40,7 +40,7 @@
 }
 
 .ProseMirror h3 {
-	font-size: var(--font-size-title);
+	font-size: var(--font-size-title-l);
 	font-weight: 500;
 	margin: var(--spacing-md) 0 var(--spacing-sm);
 	color: var(--on-surface);
@@ -392,6 +392,6 @@
 	}
 
 	.ProseMirror h2 {
-		font-size: var(--font-size-title);
+		font-size: var(--font-size-title-l);
 	}
 }

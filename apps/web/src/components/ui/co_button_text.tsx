@@ -9,8 +9,6 @@ const buttonVariants = cva(
 		// Ensure button shrinks to content and respects parent alignment
 		'inline-flex items-center justify-center shrink-0',
 		'width-auto', // Explicitly prevents stretching
-		// Typography
-		'font-medium leading-[1.25] tracking-[0.1em]',
 		// Spacing and sizing
 		'gap-2 whitespace-nowrap',
 		// Interactive states
@@ -70,16 +68,16 @@ const buttonVariants = cva(
 			},
 			size: {
 				default: [
-					'px-[var(--spacing-md)] py-[var(--spacing-sm)]',
-					'text-[var(--font-size-label-l)]',
+					'px-[var(--spacing-sm)] py-[var(--spacing-xs)]',
+					'text-[var(--font-size-body-l)]',
 				],
 				sm: [
-					'px-[var(--spacing-sm)] py-[var(--spacing-xs)]',
-					'text-[var(--font-size-label-m)]',
+					'px-[var(--spacing-xs)] py-[var(--spacing-xxs)]',
+					'text-[var(--font-size-body-m)]',
 				],
 				lg: [
-					'px-[var(--spacing-lg)] py-[var(--spacing-md)]',
-					'text-[var(--font-size-label-l)]',
+					'px-[var(--spacing-md)] py-[var(--spacing-sm)]',
+					'text-[var(--font-size-body-l)]',
 				],
 			},
 

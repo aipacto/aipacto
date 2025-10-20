@@ -58,7 +58,7 @@ const cardHeaderVariants = cva([
 ])
 
 const cardTitleVariants = cva([
-	'text-[var(--font-size-title)]',
+	'text-[var(--font-size-title-m)]',
 	'font-medium',
 	'text-[var(--on-surface)]',
 	'leading-[1.2]',
