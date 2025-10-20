@@ -3,6 +3,7 @@ import { logAppServer } from '@aipacto/shared-utils-logging'
 import cors from '@fastify/cors'
 import formbodyPlugin from '@fastify/formbody'
 import webSocketPlugin from '@fastify/websocket'
+import { createRequire } from 'node:module'
 import { Effect } from 'effect'
 import Fastify from 'fastify'
 
@@ -57,6 +58,17 @@ function resolveServerConfig(): ServerConfig {
 	}
 }
 
+const moduleRequire = createRequire(import.meta.url)
+
+function isPinoPrettyAvailable(): boolean {
+	try {
+		moduleRequire.resolve('pino-pretty')
+		return true
+	} catch {
+		return false
+	}
+}
+
 async function main() {
 	try {
 		await Effect.runPromise(Env.load.pipe(Effect.provide(Env.Live)))
@@ -81,19 +93,32 @@ async function main() {
 		process.exit(1)
 	}
 
+	const prettyTransportAvailable =
+		config.environment === 'development' && isPinoPrettyAvailable()
+
+	if (config.environment === 'development' && !prettyTransportAvailable) {
+		logAppServer.warn(
+			'pino-pretty not found in runtime dependencies, falling back to JSON logging',
+		)
+	}
+
 	const serverOptions = {
 		logger:
 			config.environment === 'development'
-				? {
-						level: 'debug',
-						transport: {
-							target: 'pino-pretty',
-							options: {
-								colorize: true,
-								translateTime: 'SYS:standard',
+				? prettyTransportAvailable
+					? {
+							level: 'debug',
+							transport: {
+								target: 'pino-pretty',
+								options: {
+									colorize: true,
+									translateTime: 'SYS:standard',
+								},
 							},
-						},
-					}
+						}
+					: {
+							level: 'debug',
+						}
 				: {
 						level: 'warn',
 					},

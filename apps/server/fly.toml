@@ -1,0 +1,37 @@
+# See https://fly.io/docs/reference/configuration/ for details.
+
+app = 'aipacto-server'
+primary_region = 'cdg' # Paris, `fly platform regions`
+
+[build]
+  dockerfile = './Dockerfile'
+
+[env]
+  # Web app served at apex (and optionally www)
+  ALLOWED_ORIGINS = 'https://aipacto.com,https://www.aipacto.com,https://api.aipacto.com'
+  NODE_ENV = 'production'
+  SERVER_HOST = '0.0.0.0'
+  SERVER_PORT = '8080'
+  # Enable cross-subdomain cookies so SSR at aipacto.com can forward sessions to the API
+  BETTER_AUTH_BASE_URL = 'https://api.aipacto.com'
+  BETTER_AUTH_COOKIE_DOMAIN = '.aipacto.com'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '10s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 512

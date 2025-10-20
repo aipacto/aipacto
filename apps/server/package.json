@@ -10,9 +10,6 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@aipacto/agents-domain": "workspace:*",
-		"@aipacto/agents-infra-langchain": "workspace:*",
-		"@aipacto/shared-domain": "workspace:*",
 		"@aipacto/shared-utils-env": "workspace:*",
 		"@aipacto/shared-utils-logging": "workspace:*",
 		"@effect/cluster": "^0.46.2",
@@ -42,7 +39,6 @@
 		"langchain": "^0.3.24",
 		"loro-crdt": "^1.5.9",
 		"nodemailer": "^6.9.16",
-		"react": "19.1.0",
 		"supertokens-node": "^21.1.0"
 	},
 	"devDependencies": {

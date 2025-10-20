@@ -1,0 +1,37 @@
+# See https://fly.io/docs/reference/configuration/ for details.
+
+app = 'aipacto-web'
+primary_region = 'cdg' # Paris, `fly platform regions`
+
+[build]
+  dockerfile = './Dockerfile'
+  [build.args]
+    # Ensure the client bundle gets an absolute API base at build time
+    VITE_SERVER_URL = 'https://api.aipacto.com'
+
+[env]
+  NODE_ENV = 'production'
+  HOST = '0.0.0.0'
+  PORT = '4173'
+  # Public API base used by the browser bundle and SSR fallback
+  VITE_SERVER_URL = 'https://api.aipacto.com'
+
+[http_service]
+  internal_port = 4173
+  force_https = true
+  auto_stop_machines = 'suspend'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '10s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/'
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 512
