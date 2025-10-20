@@ -1,0 +1,41 @@
+name: aipacto
+
+services:
+  server:
+    container_name: aipacto-server
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    env_file:
+      - apps/server/.env.docker
+    ports:
+      - 8080:8080
+    volumes:
+      - ./apps/server/auth.db:/app/auth.db
+      - ./apps/server/documents.db:/app/documents.db
+
+  web:
+    container_name: aipacto-web
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: runner
+      args:
+        VITE_SERVER_URL: http://localhost:8080
+    environment:
+      - NODE_ENV=production
+      - NITRO_PORT=4173
+      - NITRO_HOST=0.0.0.0
+      - PORT=4173
+      - SERVER_URL=http://server:8080
+    env_file:
+      - apps/web/.env.docker
+    ports:
+      - 4173:4173
+    restart: unless-stopped
+    depends_on:
+      - server
+
+networks:
+  aipacto-network:
+    driver: bridge

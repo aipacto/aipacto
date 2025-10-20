@@ -6,27 +6,32 @@ ENV NODE_OPTIONS=--no-network-family-autoselection
 
 WORKDIR /repo
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable
-COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
-COPY ./.yarn ./.yarn
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+COPY ./package.json ./pnpm-lock.yaml ./.npmrc ./pnpm-workspace.yaml ./
 COPY ./turbo.json ./
+## Disable Git hooks installation in container builds
+# The root package.json defines "prepare": "lefthook install" which needs git
+# and isn't required in Docker. Neutralize it to avoid install failures.
+RUN sed -i 's/"prepare": "lefthook install"/"prepare": ""/' package.json
 COPY ./apps ./apps
 COPY ./packages ./packages
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn install --immutable
-RUN DO_NOT_TRACK=1 TURBO_TELEMETRY_DISABLED=1 yarn turbo run build --filter=@aipacto/apps-server
+RUN --mount=type=cache,target=/root/.pnpm-store CI=true pnpm install --frozen-lockfile
+RUN DO_NOT_TRACK=1 TURBO_TELEMETRY_DISABLED=1 pnpm turbo run build --filter=@aipacto/apps-server
 
 # Slim production dependencies stage
 FROM node:24-alpine AS deps
 WORKDIR /app
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable
-COPY ./package.json ./yarn.lock ./.yarnrc.yml ./
-COPY ./.yarn ./.yarn
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+COPY ./package.json ./pnpm-lock.yaml ./.npmrc ./pnpm-workspace.yaml ./
+## Disable Git hooks installation in container builds (deps stage)
+# Prevent lefthook prepare from running; git isn't available/needed here.
+RUN sed -i 's/"prepare": "lefthook install"/"prepare": ""/' package.json
 COPY ./apps ./apps
 COPY ./packages ./packages
 
 # Focus only on server workspace for production deps
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn yarn workspaces focus @aipacto/apps-server --production
+RUN --mount=type=cache,target=/root/.pnpm-store pnpm install --frozen-lockfile --filter @aipacto/apps-server --prod --ignore-scripts
 
 # Rootfs for the Node unikernel
 FROM scratch

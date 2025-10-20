@@ -1,0 +1,42 @@
+# Docker build context prunes development-only files for the server image.
+
+# VCS
+.git
+.gitignore
+
+# Node dependency folders and caches
+node_modules
+**/node_modules
+.pnp.cjs
+.pnp.loader.mjs
+.pnpm-store
+.pnpm-store/**
+.direnv
+.turbo
+.turbo/**
+
+# Build artifacts
+dist
+**/dist
+*.tsbuildinfo
+.output
+.output/**
+
+# Environment files (examples kept for reference)
+.env
+.env.*
+!.env.example
+apps/server/.env
+apps/server/.env.*
+!apps/server/.env.example
+!apps/server/.env.docker.example
+
+# Local development databases
+apps/server/auth.db
+apps/server/documents.db
+
+# Logs and editor cruft
+*.log
+.DS_Store
+.idea
+.vscode

@@ -1,0 +1,46 @@
+# Docker build context for the web app (TanStack Start + Vite)
+# Optimized for multi-stage build with fresh dependency installation
+
+# VCS
+.git
+.gitignore
+
+# Node dependency folders and caches - CRITICAL: Always ignore host node_modules
+# Docker installs fresh dependencies in container for platform compatibility
+node_modules
+**/node_modules
+.pnp.cjs
+.pnp.loader.mjs
+.pnpm-store
+.pnpm-store/**
+.direnv
+.turbo
+.turbo/**
+
+# Build artifacts, ignore previous builds
+dist
+**/dist
+.output
+.output/**
+*.tsbuildinfo
+
+# Environment files (keep examples)
+.env
+.env.*
+!.env.example
+!.env.docker.example
+apps/web/.env
+apps/web/.env.*
+!apps/web/.env.example
+!apps/web/.env.docker.example
+
+# Logs and editor metadata
+*.log
+.DS_Store
+.idea
+.vscode
+
+# Development files not needed in production
+*.md
+!README.md
+tsconfig.tsbuildinfo

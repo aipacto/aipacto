@@ -1,0 +1,66 @@
+# Root .dockerignore for multi-app monorepo builds
+# Applies to all Docker builds with context at repo root
+
+# VCS
+.git
+.gitignore
+.github
+
+# Nix development environment
+.envrc
+.direnv
+flake.nix
+flake.lock
+shell.nix
+
+# Node dependency folders and caches
+node_modules
+**/node_modules
+.pnp.cjs
+.pnp.loader.mjs
+.pnpm-store
+**/.pnpm-store
+.turbo
+**/.turbo
+
+# Build artifacts
+dist
+**/dist
+.output
+**/.output
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Environment files - CRITICAL: Exclude development .env files
+# Only .env.example and .env.docker.example should be in the image
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
+!**/.env.docker.example
+!**/.env.docker
+
+# Logs and editor metadata
+*.log
+**/*.log
+.DS_Store
+**/.DS_Store
+.idea
+.vscode
+
+# Documentation and contributing guides (not needed in runtime images)
+*.md
+!README.md
+CONTRIBUTING.md
+LICENSE
+
+# CI/CD and development tools
+.husky
+lefthook.yml
+.prettierrc*
+.eslintrc*
+biome.json
+tsconfig.json
