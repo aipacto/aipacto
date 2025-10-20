@@ -1,9 +1,4 @@
-export { useTranslation } from 'react-i18next'
+// Export utilities
+export * from './paraglide_utils'
 
-export { changeLanguage, createI18nInstance, type I18nConfig } from './i18n'
-export {
-	detectBrowserLanguage,
-	getPreferredLanguage,
-	parseAcceptLanguage,
-} from './language_utils'
-export { languages } from './languages'
+// Note: Paraglide messages and runtime are exported via package.json exports

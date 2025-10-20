@@ -1,48 +1,51 @@
 import { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
-import { changeLanguage } from '@aipacto/shared-ui-localization'
+import { DEFAULT_LANGUAGE, readLanguageFromCookieString } from '@aipacto/shared-ui-localization'
+import * as m from '@aipacto/shared-ui-localization/paraglide/messages'
+import {
+	getLocale,
+	setLocale,
+	type Locale,
+} from '@aipacto/shared-ui-localization/paraglide/runtime'
 import { Select } from '@base-ui-components/react/select'
-import { useRouter } from '@tanstack/react-router'
 import { Check, ChevronDown, Languages } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+
+const SUPPORTED_LANGUAGES = Object.values(ListSupportedLanguagesCodes)
+
+const isSupportedLanguage = (value: string | undefined): value is Locale =>
+	value !== undefined &&
+	(SUPPORTED_LANGUAGES as ReadonlyArray<string>).includes(value)
 
 export function CoLanguageSelector() {
-	const { t, i18n } = useTranslation()
-	const router = useRouter()
-	// Default to 'auto' if no specific language is set
-	const currentLanguage =
-		(i18n.language as ListSupportedLanguagesCodes) || 'auto'
+	const cookieLanguage =
+		typeof document !== 'undefined'
+			? readLanguageFromCookieString(document.cookie)
+			: undefined
+
+	const resolvedLanguage = cookieLanguage ?? getLocale() ?? DEFAULT_LANGUAGE
+	const currentLanguage: Locale =
+		isSupportedLanguage(resolvedLanguage) ? resolvedLanguage : DEFAULT_LANGUAGE
 
 	const languageOptions = [
 		{
-			value: 'auto' as const,
-			label: t('components.co_language_selector.automatic'),
-		},
-		{
 			value: ListSupportedLanguagesCodes.eng,
-			label: t('components.co_language_selector.english'),
+			label: m.common_components_co_language_selector_english(),
 		},
 		{
 			value: ListSupportedLanguagesCodes.spa,
-			label: t('components.co_language_selector.spanish'),
+			label: m.common_components_co_language_selector_spanish(),
 		},
 		{
 			value: ListSupportedLanguagesCodes.cat,
-			label: t('components.co_language_selector.catalan'),
+			label: m.common_components_co_language_selector_catalan(),
 		},
 	]
 
-	const handleLanguageChange = async (
-		value: ListSupportedLanguagesCodes | 'auto',
-	) => {
-		if (value === 'auto') {
-			// Handle automatic language detection
-			router.invalidate()
-		} else {
-			await changeLanguage(i18n, value)
-			// Optionally save to server/cookie
-			// Invalidate router to re-fetch with new language
-			router.invalidate()
-		}
+	const selectedLabel =
+		languageOptions.find(opt => opt.value === currentLanguage)?.label || ''
+
+	const handleLanguageChange = (value: ListSupportedLanguagesCodes) => {
+		// Paraglide handles persistence and page reload automatically
+		setLocale(value, { reload: true })
 	}
 
 	return (
@@ -56,7 +59,7 @@ export function CoLanguageSelector() {
 			<Select.Trigger
 				className='
 					inline-flex items-center justify-between gap-[var(--spacing-sm)]
-					ps-[var(--spacing-md)] pe-[var(--spacing-md)] py-[var(--spacing-sm)]
+					ps-[var(--spacing-sm)] pe-[var(--spacing-sm)] py-[var(--spacing-xs)]
 					bg-[var(--surface-container)] text-[var(--on-surface)]
 					border border-[var(--outline)]
 					rounded-[var(--radius-md)]
@@ -67,7 +70,7 @@ export function CoLanguageSelector() {
 				'
 			>
 				<Languages className='w-4 h-4 shrink-0' />
-				<Select.Value />
+				<Select.Value>{selectedLabel}</Select.Value>
 				<Select.Icon>
 					<ChevronDown className='w-4 h-4 shrink-0' />
 				</Select.Icon>

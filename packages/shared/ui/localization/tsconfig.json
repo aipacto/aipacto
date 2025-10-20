@@ -5,13 +5,11 @@
 		"outDir": "dist",
 		"resolveJsonModule": true
 	},
-	"include": ["src", "src/**/*.json"],
+	"include": ["src/**/*.ts", "src/paraglide/**/*.ts", "src/paraglide/**/*.js"],
+	"exclude": ["dist", "node_modules"],
 	"references": [
 		{
 			"path": "../../domain"
-		},
-		{
-			"path": "../../utils/logging"
 		}
 	]
 }

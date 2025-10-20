@@ -8,23 +8,32 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js",
-			"require": "./dist/index.js",
 			"default": "./dist/index.js"
+		},
+		"./paraglide/messages": {
+			"types": "./src/paraglide/messages.d.ts",
+			"import": "./src/paraglide/messages.js",
+			"default": "./src/paraglide/messages.js"
+		},
+		"./paraglide/runtime": {
+			"types": "./src/paraglide/runtime.d.ts",
+			"import": "./src/paraglide/runtime.js",
+			"default": "./src/paraglide/runtime.js"
 		}
 	},
 	"scripts": {
-		"build": "tsdown ./src/index.ts --dts --sourcemap --platform neutral",
+		"paraglide:compile": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide",
+		"build": "npm run paraglide:compile && tsc",
 		"check-types": "tsc --noEmit",
-		"watch": "tsc --watch --preserveWatchOutput"
-	},
-	"dependencies": {
-		"i18next": "^23.12.2",
-		"intl-pluralrules": "^2.0.1",
-		"react-i18next": "^15.0.1"
+		"watch": "tsc --watch --preserveWatchOutput",
+		"machine-translate": "inlang machine translate --project project.inlang"
 	},
 	"peerDependencies": {
 		"@aipacto/shared-domain": "workspace:*",
-		"@aipacto/shared-utils-logging": "workspace:*",
 		"react": "19.1.0"
+	},
+	"devDependencies": {
+		"@inlang/cli": "^3.0.0",
+		"@inlang/paraglide-js": "^2.4.0"
 	}
 }
