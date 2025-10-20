@@ -7,9 +7,6 @@
 	"include": ["src"],
 	"exclude": ["node_modules", "dist"],
 	"references": [
-		{ "path": "../../packages/agents/domain" },
-		{ "path": "../../packages/agents/infrastructure/langchain" },
-		{ "path": "../../packages/shared/domain" },
 		{ "path": "../../packages/shared/utils/env" },
 		{ "path": "../../packages/shared/utils/logging" }
 	]

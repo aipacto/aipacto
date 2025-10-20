@@ -1,5 +1,5 @@
+import * as m from '@aipacto/shared-ui-localization/paraglide/messages'
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 
 import { LoginForm } from '~components'
 import { CoLanguageSelector } from '~components/ui'
@@ -39,7 +39,6 @@ export const Route = createFileRoute('/login')({
 function LoginPage() {
 	const { redirect: validatedRedirect } = Route.useSearch()
 	const navigate = useNavigate()
-	const { t } = useTranslation()
 	const handleLoginSuccess = () =>
 		navigate({ to: validatedRedirect ?? '/docs', replace: true })
 	return (
@@ -52,7 +51,7 @@ function LoginPage() {
 			{/* Language selector at bottom-end */}
 			<div className='flex items-center justify-end gap-[var(--spacing-sm)] p-[var(--spacing-md)]'>
 				<span className='text-[var(--font-size-body-s)] text-[var(--on-surface-variant)]'>
-					{t('pages.login.txt.language')}
+					{m.app_pages_login_txt_language()}
 				</span>
 				<CoLanguageSelector />
 			</div>

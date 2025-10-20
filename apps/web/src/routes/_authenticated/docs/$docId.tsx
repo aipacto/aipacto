@@ -31,7 +31,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { CoButtonText, CoTextField } from '~components/ui'
 import { getWebSocketUrl, useSession } from '~hooks'
 
-const API_BASE_URL = import.meta.env.VITE_SERVER_URL
+// Resolve API base for browser code:
+// - In pnpm dev, VITE_SERVER_URL is typically unset; use relative paths so Vite proxy works.
+// - In Docker/prod, VITE_SERVER_URL is set to the API origin.
+const API_BASE = import.meta.env.VITE_SERVER_URL
+	? import.meta.env.VITE_SERVER_URL.replace(/\/$/, '')
+	: ''
 
 const DocEditorPageFallback = () => (
 	<div className='flex h-screen items-center justify-center bg-[var(--surface)] text-[var(--on-surface-variant)]'>
@@ -476,7 +481,7 @@ function AISuggestionsPanel({
 }) {
 	return (
 		<div className='flex flex-col gap-[var(--spacing-sm)] h-full'>
-			<h3 className='text-[var(--font-size-title)] font-medium text-[var(--on-surface)]'>
+			<h3 className='text-[var(--font-size-title-m)] font-medium text-[var(--on-surface)]'>
 				AI Suggestions
 			</h3>
 			<div className='flex-1 overflow-y-auto space-y-[var(--spacing-sm)]'>
@@ -718,7 +723,7 @@ function DocEditorPage() {
 	// Load document from server
 	const loadDocument = useCallback(async () => {
 		try {
-			const response = await fetch(`${API_BASE_URL}/api/v1/docs/${docId}`, {
+			const response = await fetch(`${API_BASE}/v1/docs/${docId}`, {
 				credentials: 'include',
 			})
 			if (response.ok) {
@@ -826,7 +831,7 @@ function DocEditorPage() {
 
 		// Save to server
 		try {
-			await fetch(`${API_BASE_URL}/api/v1/docs/${docId}`, {
+			await fetch(`${API_BASE}/v1/docs/${docId}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -843,7 +848,7 @@ function DocEditorPage() {
 	const handleConnectWS = useCallback(() => {
 		if (!docId) return
 
-		const wsUrl = getWebSocketUrl(API_BASE_URL, `/v1/docs/${docId}/sync`)
+		const wsUrl = getWebSocketUrl(API_BASE, `/v1/docs/${docId}/sync`)
 		console.log('Connecting to WebSocket:', wsUrl)
 
 		const socket = new WebSocket(wsUrl)
@@ -944,7 +949,7 @@ function DocEditorPage() {
 	if (session.isPending) {
 		return (
 			<div className='flex items-center justify-center min-h-screen'>
-				<div className='text-lg'>Loading...</div>
+				<div className='text-[var(--font-size-title-m)]'>Loading...</div>
 			</div>
 		)
 	}
@@ -1002,7 +1007,7 @@ function DocEditorPage() {
 								<div className='flex flex-col gap-[var(--spacing-md)]'>
 									<h3
 										id={headingId}
-										className='text-[var(--font-size-title)] font-medium text-[var(--on-surface)]'
+									className='text-[var(--font-size-title-m)] font-medium text-[var(--on-surface)]'
 									>
 										Document Settings
 									</h3>

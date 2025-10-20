@@ -23,12 +23,17 @@ export class Database extends Effect.Service<Database>()('Database', {
 		Effect.log('Starting database connection')
 
 		let client: Client
-		if (process.env.NODE_ENV === 'production') {
-			const authToken = yield* Config.redacted('DATABASE_TOKEN')
+		// Use auth token only for remote libsql (Turso); local file: URLs never need it.
+		const isRemoteLibsql = url.startsWith('libsql://')
+		if (isRemoteLibsql) {
+			const authToken = yield* Config.redacted('DATABASE_TOKEN').pipe(
+				Effect.orElseSucceed(() => Redacted.make('')),
+			)
 
 			client = createClient({
 				url,
-				authToken: Redacted.value(authToken),
+				// Some libsql servers can accept empty token (local/dev); pass only if present
+				...(Redacted.value(authToken) ? { authToken: Redacted.value(authToken) } : {}),
 			})
 		} else {
 			client = createClient({
@@ -53,16 +58,18 @@ export class Database extends Effect.Service<Database>()('Database', {
 		}
 
 		const dialect = new LibSQLDialect({
-			client: createClient(
-				process.env.NODE_ENV === 'production'
+			client: createClient({
+				url,
+				...(isRemoteLibsql
 					? {
-							url,
 							authToken: Redacted.value(
-								yield* Config.redacted('DATABASE_TOKEN'),
+								yield* Config.redacted('DATABASE_TOKEN').pipe(
+									Effect.orElseSucceed(() => Redacted.make('')),
+								),
 							),
 						}
-					: { url },
-			),
+					: {}),
+			}),
 		})
 		const kysely = new Kysely<KyselyDatabase>({ dialect })
 

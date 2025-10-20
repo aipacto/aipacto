@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDocsIndexRouteImport } from './routes/_authenticated/docs/index'
 import { Route as AuthenticatedDocsDocIdRouteImport } from './routes/_authenticated/docs/$docId'
 
@@ -20,13 +22,22 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketingRoute = MarketingRouteImport.update({
+  id: '/_marketing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+const MarketingIndexRoute = MarketingIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MarketingRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDocsIndexRoute = AuthenticatedDocsIndexRouteImport.update({
@@ -42,40 +53,47 @@ const AuthenticatedDocsDocIdRoute = AuthenticatedDocsDocIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/': typeof MarketingIndexRoute
   '/docs/$docId': typeof AuthenticatedDocsDocIdRoute
   '/docs': typeof AuthenticatedDocsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/': typeof AuthenticatedIndexRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/': typeof MarketingIndexRoute
   '/docs/$docId': typeof AuthenticatedDocsDocIdRoute
   '/docs': typeof AuthenticatedDocsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_marketing': typeof MarketingRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_marketing/': typeof MarketingIndexRoute
   '/_authenticated/docs/$docId': typeof AuthenticatedDocsDocIdRoute
   '/_authenticated/docs/': typeof AuthenticatedDocsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/' | '/docs/$docId' | '/docs'
+  fullPaths: '/login' | '/dashboard' | '/' | '/docs/$docId' | '/docs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/' | '/docs/$docId' | '/docs'
+  to: '/login' | '/dashboard' | '/' | '/docs/$docId' | '/docs'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/_marketing'
     | '/login'
-    | '/_authenticated/'
+    | '/_authenticated/dashboard'
+    | '/_marketing/'
     | '/_authenticated/docs/$docId'
     | '/_authenticated/docs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  MarketingRoute: typeof MarketingRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
@@ -88,6 +106,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_marketing': {
+      id: '/_marketing'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MarketingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -95,11 +120,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/': {
-      id: '/_authenticated/'
+    '/_marketing/': {
+      id: '/_marketing/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      preLoaderRoute: typeof MarketingIndexRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/docs/': {
@@ -120,13 +152,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDocsDocIdRoute: typeof AuthenticatedDocsDocIdRoute
   AuthenticatedDocsIndexRoute: typeof AuthenticatedDocsIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDocsDocIdRoute: AuthenticatedDocsDocIdRoute,
   AuthenticatedDocsIndexRoute: AuthenticatedDocsIndexRoute,
 }
@@ -135,8 +167,21 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface MarketingRouteChildren {
+  MarketingIndexRoute: typeof MarketingIndexRoute
+}
+
+const MarketingRouteChildren: MarketingRouteChildren = {
+  MarketingIndexRoute: MarketingIndexRoute,
+}
+
+const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
+  MarketingRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  MarketingRoute: MarketingRouteWithChildren,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport

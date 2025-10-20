@@ -1,12 +1,11 @@
-import { ListSupportedLanguagesCodes } from '@aipacto/shared-domain'
 import { QueryClient } from '@tanstack/react-query'
-import { createRouter } from '@tanstack/react-router'
+import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 
 import { DefaultCatchBoundary, NotFound } from '~components'
 import { routeTree } from './routeTree.gen'
 
-export function getRouter() {
+export function createRouter() {
 	// Create a fresh QueryClient per request in SSR environments
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -18,9 +17,9 @@ export function getRouter() {
 		},
 	})
 
-	const router = createRouter({
+	const router = createTanStackRouter({
 		routeTree,
-		context: { queryClient, language: ListSupportedLanguagesCodes.eng },
+		context: { queryClient },
 		scrollRestoration: true,
 		defaultErrorComponent: DefaultCatchBoundary,
 		defaultNotFoundComponent: () => <NotFound />,
@@ -40,8 +39,10 @@ export function getRouter() {
 	return router
 }
 
+export const getRouter = createRouter
+
 declare module '@tanstack/react-router' {
 	interface Register {
-		router: ReturnType<typeof getRouter>
+		router: ReturnType<typeof createRouter>
 	}
 }
