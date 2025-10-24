@@ -30,7 +30,7 @@
 	},
 	"peerDependencies": {
 		"@aipacto/shared-domain": "workspace:*",
-		"react": "19.1.0"
+		"react": "19.2.0"
 	},
 	"devDependencies": {
 		"@inlang/cli": "^3.0.0",

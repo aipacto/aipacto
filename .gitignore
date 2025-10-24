@@ -77,3 +77,6 @@ logs/
 
 # Kraftcloud
 .unikraft
+
+# ESLint cache
+.eslintcache

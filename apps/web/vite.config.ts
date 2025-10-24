@@ -60,7 +60,11 @@ export default defineConfig(({ mode }) => ({
 			preset: 'node-server',
 			serveStatic: true,
 		}),
-		react(),
+		react({
+			babel: {
+				plugins: [['babel-plugin-react-compiler', {}]],
+			},
+		}),
 		wasm(),
 	],
 	server: {
