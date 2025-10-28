@@ -14,12 +14,13 @@
       {
           devShells.default = pkgs.mkShell {
          buildInputs = [
-            pkgs.nodejs_24
-            pkgs.typescript
-            pkgs.pnpm
+						pkgs.corepack_24
             pkgs.git
             pkgs.gh
+            pkgs.nodejs_24
+						pkgs.openfga-cli # OpenFGA CLI
             pkgs.starship # shell beautifier
+            pkgs.typescript
             pkgs.zsh # ensure zsh is available for nix develop -c zsh
           ];
 
